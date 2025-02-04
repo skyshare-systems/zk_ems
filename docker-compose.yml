@@ -1,0 +1,21 @@
+
+version: '3.8'
+
+services:
+  # node-app:
+  #   container_name: node-app-dev
+  #   command: yarn dev -L
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: zk_ems
+      POSTGRES_USER: zk_ems
+      POSTGRES_PASSWORD: zk_ems
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

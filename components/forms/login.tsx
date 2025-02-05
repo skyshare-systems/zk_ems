@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter()
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: authLogin,
     mutationKey: ["login"],
     onSuccess: (vars) => {
@@ -138,9 +138,16 @@ const LoginForm = () => {
             width={314}
             height={128}
             alt="Ellipse"
-            className="-z-10 w-full max-w-[218px] mx-auto absolute top-0 -left-1/translate-x-1/2 "
+            className="-z-10 absolute -top-3/4"
           />
-          <p className="ty-title text-[14px]">Login</p>
+
+          {isPending ? (
+            <Loader size={20} className="animate-spin" />
+          ) : (
+            <>
+              <p className="ty-title text-[14px]">Login</p>
+            </>
+          )}
         </Button>
       </form>
     </Form>

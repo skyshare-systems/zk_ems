@@ -40,14 +40,16 @@ export default function DashboardLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <div className="p-4">
-                <SidebarTrigger />
-                {children}
-              </div>
+            <div className="min-h-[100dvh] grid grid-rows-[1fr,auto]">
+              <SidebarProvider>
+                <AppSidebar />
+                <div className="p-4">
+                  <SidebarTrigger />
+                  {children}
+                </div>
+              </SidebarProvider>
               <Footer />
-            </SidebarProvider>
+            </div>
           </QueryProvider>
         </ThemeProvider>
         <Toaster />

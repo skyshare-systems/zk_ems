@@ -1,0 +1,74 @@
+"use client";
+
+import { useCreateEmailStore } from "@/store/create-email";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import MarkdownEditor from "@uiw/react-markdown-editor";
+import { ArrowUpRight } from "lucide-react";
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import TemplateSelection from "./template-selection";
+import { useCompanyStore } from "@/store/company";
+import { useUserStore } from "@/store/user";
+import { useQuery } from "@tanstack/react-query";
+import { getTemplates } from "@/lib/query/templates";
+import { Separator } from "./ui/separator";
+import Templates from "@/views/templates";
+import EmailEditor from "./email-editor";
+
+const TemplateRenderer = () => {
+  const { selectedTemplate } = useCreateEmailStore();
+  const [markdown, setMarkdown] = useState("");
+
+  const { user } = useUserStore();
+  const { company } = useCompanyStore();
+
+  const { data: templates } = useQuery({
+    queryKey: ["templates"],
+    queryFn: () =>
+      getTemplates({
+        params: `userId=${user?.id}&companyId=${company?.id}`,
+      }),
+  });
+
+  if (!selectedTemplate) return null;
+
+  return (
+    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] ">
+      <div className="flex flex-col justify-center items-start gap-4 self-stretch">
+        <div className="flex flex-col items-start gap-4 self-stretch">
+          <div className="flex items-center gap-2 self-stretch">
+            <p className="ty-descriptions text-white/[.32]">Subject</p>
+            <Input
+              placeholder="Something captivating..."
+              className="bg-white/[.08] w-full placeholder:ty-descriptions placeholder:text-white/[.32]"
+            />
+          </div>
+          <div className="flex items-center gap-2 self-stretch">
+            <p className="ty-descriptions text-white/[.32]">Recipients</p>
+            <Input
+              placeholder="To the amazing people!"
+              className="bg-white/[.08] w-full placeholder:ty-descriptions placeholder:text-white/[.32]"
+            />
+          </div>
+        </div>
+
+        <p className="ty-descriptions text-white/[.32]">Email Content</p>
+
+        <EmailEditor />
+      </div>
+
+      <div className="flex justify-end items-center gap-2 self-stretch">
+        <Button variant={"ghost"} className="bg-gold/[.04]">
+          <p className="text-gold">Show Preview</p>
+        </Button>
+        <Button variant={"ghost"} className="bg-white/[.08] flex items-center">
+          <p className="ty-title text-[14px] text-white/[.32]">Send now </p>
+          <ArrowUpRight size={14} className="text-white/[.32]" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default TemplateRenderer;

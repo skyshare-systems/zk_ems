@@ -5,10 +5,3 @@ export type ApiResponse<T> = {
   data: T;
   meta?: Meta;
 }
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-

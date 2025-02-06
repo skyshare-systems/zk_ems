@@ -1,45 +1,23 @@
 "use client";
 
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  MailPlus,
-  Send,
-  Bolt,
-  ChartNoAxesColumn
-  
-} from "lucide-react";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem
-} from "@/components/ui/sidebar";
-
+import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
   Bot,
   Command,
+  FileChartColumnIncreasing,
   Frame,
   GalleryVerticalEnd,
+  LayoutTemplate,
+  MailPlus,
   Map,
+  Notebook,
   PieChart,
+  Send,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
-import * as React from "react";
 
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -47,11 +25,16 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import CreateEmail from "./icons/create-email";
-import SentEmail from "./icons/sent-email";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 // This is sample data.
 const data = {
@@ -83,85 +66,24 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        /* {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        }, */
-      ],
     },
     {
       title: "Sent Emails",
       url: "#",
       icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+    
     },
     {
-      title: "Documentation",
+      title: "Templates",
       url: "#",
       icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      
     },
     {
       title: "Settings",
       url: "#",
       icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+    
     },
   ],
   projects: [
@@ -184,64 +106,100 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("t");
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
-      <SidebarContent className="my-8">
-        <div className="flex flex-col gap-6">
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70 hover:text-black">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Link href={`/dashboard?t=create-new-email`}>
+                <SidebarMenuButton
+                  tooltip={"Create new email"}
+                  className={cn(
+                    "hover:text-black ty-descriptions text-[#7f8082]",
+                    tab === "create-new-email" && "bg-gold text-black",
+                  )}
+                >
                   <MailPlus />
-                  <span>Create New Email</span>
+                  <span>Create new Email</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
+              </Link>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
 
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70 hover:text-black">
-                  <Send/>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Link href={`/dashboard?t=sent-emails`}>
+                <SidebarMenuButton
+                  tooltip={"Sent Emails"}
+                  className={cn(
+                    "hover:text-black ty-descriptions text-[#7f8082]",
+                    tab === "sent-emails" && "bg-gold text-black",
+                  )}
+                >
+                  <Send />
                   <span>Sent Emails</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70 hover:text-black">
-                  <Bolt />
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href={`/dashboard?t=templates`}>
+                <SidebarMenuButton
+                  tooltip={"Templates"}
+                  className={cn(
+                    "hover:text-black ty-descriptions text-[#7f8082]",
+                    tab === "templates" && "bg-gold text-black",
+                  )}
+                >
+                  <LayoutTemplate />
                   <span>Templates</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70 hover:text-black">
-                  <ChartNoAxesColumn />
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link href={`/dashboard?t=analytics`}>
+                <SidebarMenuButton
+                  tooltip={"Analytics"}
+                  className={cn(
+                    "hover:text-black ty-descriptions text-[#7f8082]",
+                    tab === "analytics" && "bg-gold text-black",
+                  )}
+                >
+                  <FileChartColumnIncreasing />
                   <span>Analytics</span>
-                  <div className="px-2 py-1 rounded-full bg-white/[.08]  ">
-                    <p className="ty-subtext">coming soon!</p>
-                  </div>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
+              </Link>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
 
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70 hover:text-black ">
-                  <MailPlus />
-                  <span>Address Book</span>{" "}
-                  <div className="px-2 py-1 rounded-full bg-white/[.08]  ">
-                    <p className="ty-subtext">coming soon!</p>
-                  </div>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Link href={`/dashboard?t=address-book`}>
+                <SidebarMenuButton
+                  tooltip={"Address Book"}
+                  className={cn(
+                    "hover:text-black ty-descriptions text-[#7f8082]",
+                    tab === "address-book" && "bg-gold text-black",
+                  )}
+                >
+                  <Notebook />
+                  <span>Address Book</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
-        </div>
+              </Link>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -9,18 +9,78 @@ datasource db {
 
 model User {
   id          String    @id @default(cuid())
+  email       String    @unique
   username    String    @unique
   password    String
-  role        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
   firstName   String
   lastName    String
-  email       String    @unique
+  image       String
+  role        Role      @default(ADMIN)
   isActivated Boolean   @default(false)
   lastLogin   DateTime?
-  company     Company[]
-  token       Token[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  companies   Company[] @relation("UserCompanies")
+  tokens      Token[]
+}
+
+model Company {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  image       String
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  users       User[]     @relation("UserCompanies")
+  templates   CompanyTemplates[] 
+}
+
+model Template {
+  id        String      @id @default(cuid())
+  description String
+  name      String
+  subject   String
+  header    String
+  body      String?
+  footer    String
+  tags      String[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  companyId String
+  emails    SentEmail[]
+  companies CompanyTemplates[]
+}
+
+model CompanyTemplates {
+  id        String    @id @default(cuid())
+  company   Company   @relation(fields: [companyId], references: [id])
+  companyId String
+  template  Template  @relation(fields: [templateId], references: [id])
+  templateId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  @@unique([companyId, templateId])
+}
+
+model SentEmail {
+  id         String      @id @default(cuid())
+  createdAt  DateTime    @default(now())
+  template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+  recipients Recipient[]
+}
+
+model Recipient {
+  id          String    @id @default(cuid())
+  email       String
+  phone       String?
+  company     String?
+  firstName   String
+  lastName    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  sentEmail   SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
+  sentEmailId String
 }
 
 model Token {
@@ -30,53 +90,8 @@ model Token {
   expires     DateTime
   blacklisted Boolean
   createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-}
-
-model Recipient {
-  id           String     @id @default(cuid())
-  email        String
-  phone        String?
-  company      String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  firstName    String
-  lastName     String
-  sentEmailsId String
-  sentEmails   SentEmails @relation(fields: [sentEmailsId], references: [id])
-}
-
-model Company {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  image       String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model Template {
-  id         String       @id @default(cuid())
-  subject    String
-  recipients String
-  header     String
-  body       String?
-  footer     String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  sentEmails SentEmails[]
-}
-
-model SentEmails {
-  id         String      @id @default(cuid())
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  templateId String
-  recipients Recipient[]
-  template   Template    @relation(fields: [templateId], references: [id])
 }
 
 enum Role {

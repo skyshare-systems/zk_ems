@@ -6,7 +6,7 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,33 +21,35 @@ import { useMutation } from "@tanstack/react-query";
 import { authLogin } from "@/lib/mutation/auth/login/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const router = useRouter()
+  const router = useRouter();
+  const { setUser } = useUserStore();
 
   const { mutate, isPending } = useMutation({
     mutationFn: authLogin,
     mutationKey: ["login"],
-    onSuccess: (vars) => {
-      toast.success(vars.message, {
+    onSuccess: ({ data, message }) => {
+      setUser(data);
+      toast.success(message, {
         style: {
           background: "#00a650",
         },
         duration: 1500,
         onAutoClose: () => {
-          router.push("/dashboard")
-        }
-        
-      })
+          router.push("/dashboard?t=create-new-email");
+        },
+      });
     },
     onError: (error: string) => {
       toast.error(error, {
         style: {
           background: "#e41414",
-        }
-      })
-    }
+        },
+      });
+    },
   });
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -58,16 +60,16 @@ const LoginForm = () => {
     },
   });
 
-   function onSubmit(values: z.infer<typeof loginSchema>) {
-     // Do something with the form values.
-     // ✅ This will be type-safe and validated.
-     console.log(values);
-   
+  function onSubmit(values: z.infer<typeof loginSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+
     mutate({
       username: values.username,
       password: values.password,
-    })
-    }
+    });
+  }
 
   return (
     <Form {...form}>

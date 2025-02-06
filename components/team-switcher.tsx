@@ -1,15 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -18,18 +15,35 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { getCompanies } from "@/lib/query/company";
+import { useCompanyStore } from "@/store/company";
+import { useUserStore } from "@/store/user";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useEffect } from "react";
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
-}) {
+export function TeamSwitcher() {
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+  const { user } = useUserStore();
+  const { company, setCompany } = useCompanyStore();
+
+  const { data } = useQuery({
+    queryKey: ["companies"],
+    queryFn: () =>
+      getCompanies({
+        params: `page=1&limit=10&userId=${user?.id}`,
+      }),
+    enabled: !!user,
+  });
+
+
+  useEffect(() => {
+    if (data?.data && !company) {
+      setCompany(data.data[0]);
+    }
+  }, [company, data, setCompany]);
+
+  if (!company) return null;
 
   return (
     <SidebarMenu>
@@ -40,14 +54,18 @@ export function TeamSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <activeTeam.logo className="size-4" />
+              <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Image
+                    src={company.image}
+                    width={64}
+                    height={64}
+                    alt={company.name}
+                    className="rounded-lg size-12"
+                  />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {activeTeam.name}
-                </span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate text-[10.24px] text-white/50">You are currently using</span>
+                <span className="truncate text-[14px]">{company.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -55,32 +73,30 @@ export function TeamSwitcher({
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             align="start"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? "bottom" : "bottom"}
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Teams
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
-              <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
-              >
-                <div className="flex size-6 items-center justify-center rounded-sm border">
-                  <team.logo className="size-4 shrink-0" />
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
-            </DropdownMenuItem>
+            {data &&
+              data.data.map((company) => (
+                <DropdownMenuItem
+                  key={company.name}
+                  onClick={() => setCompany(company)}
+                  className="gap-2 p-2"
+                >
+                  <div className="flex size-6 items-center justify-center rounded-sm border">
+                    <Image
+                      src={company.image}
+                      width={32}
+                      height={32}
+                      alt={company.name}
+                    />
+                  </div>
+                  {company.name}
+                </DropdownMenuItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

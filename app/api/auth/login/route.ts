@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         createdAt: true,
         updatedAt: true,
         isActivated: true,
-        lastLogin:true,
+        lastLogin: true,
       },
     });
 
@@ -38,7 +38,11 @@ export async function POST(request: Request) {
       throw new AuthenticationError("Account is deactivated");
     }
 
-    const isPasswordValid = await compare(validatedData.password, user.password);
+    const isPasswordValid = await compare(
+      validatedData.password,
+      user.password
+    );
+
     if (!isPasswordValid) {
       throw new AuthenticationError("Invalid email or password");
     }
@@ -62,16 +66,19 @@ export async function POST(request: Request) {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       lastLogin: user.lastLogin,
-    }
-
+    };
 
     return NextResponse.json(
       createApiResponse("Login successful. Redirecting...", sanitizedUser),
       { status: 200 }
     );
-
   } catch (error) {
-    console.error("Login error:", error);
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json(
+        createApiResponse("Database is unreachable", null),
+        { status: 500 }
+      );
+    }
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -81,22 +88,19 @@ export async function POST(request: Request) {
     }
 
     if (error instanceof AuthenticationError) {
-      return NextResponse.json(
-        createApiResponse(error.message, null),
-        { status: 401 }
-      );
+      return NextResponse.json(createApiResponse(error.message, null), {
+        status: 401,
+      });
     }
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        createApiResponse("Database error", null),
-        { status: 500 }
-      );
+      return NextResponse.json(createApiResponse("Database error", null), {
+        status: 500,
+      });
     }
 
-    return NextResponse.json(
-      createApiResponse("Internal server error", null),
-      { status: 500 }
-    );
+    return NextResponse.json(createApiResponse("Internal server error", null), {
+      status: 500,
+    });
   }
 }

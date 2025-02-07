@@ -7,7 +7,7 @@
     "seed": "cross-env NODE_ENV=development npx tsx prisma/seed.ts",
     "postinstall": "prisma migrate deploy",
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && prisma generate",
     "start": "next start",
     "lint": "next lint"
   },

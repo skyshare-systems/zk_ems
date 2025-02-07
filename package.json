@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "seed": "cross-env NODE_ENV=development npx tsx prisma/seed.ts",
-    "postinstall": "prisma migrate deploy",
+    "postinstall": "prisma generate",
     "dev": "next dev --turbopack",
-    "build": "next build && prisma generate",
+    "build": "next build && prisma migrate deploy",
     "start": "next start",
     "lint": "next lint"
   },

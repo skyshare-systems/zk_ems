@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 import twAnimate from "tailwindcss-animate";
+import twTypography from "@tailwindcss/typography";
 import { PluginAPI } from "tailwindcss/types/config";
 
 const config: Config = {
@@ -14,6 +15,44 @@ const config: Config = {
 
   theme: {
   	extend: {
+			typography: {
+        DEFAULT: {
+           css: {
+            '--tw-prose-body': "#fff",
+            '--tw-prose-headings': "#fff",
+            '--tw-prose-lead': "#fff",
+            '--tw-prose-links': "#fff",
+            '--tw-prose-bold': "#fff",
+            '--tw-prose-counters': "#fff",
+            '--tw-prose-bullets': "#fff",
+            '--tw-prose-hr': "#fff",
+            '--tw-prose-quotes': "#fff",
+            '--tw-prose-quote-borders': "#fff",
+            '--tw-prose-captions': "#fff",
+            '--tw-prose-code': "#fff",
+            '--tw-prose-pre-code': "#fff",
+            '--tw-prose-pre-bg': "rgb(0 0 0 / 50%)",
+            '--tw-prose-th-borders': "#fff",
+            '--tw-prose-td-borders': "#fff",
+            '--tw-prose-invert-body': "#fff",
+            '--tw-prose-invert-headings': "#fff",
+            '--tw-prose-invert-lead': "#fff",
+            '--tw-prose-invert-links': "#fff",
+            '--tw-prose-invert-bold': "#fff",
+            '--tw-prose-invert-counters': "#fff",
+            '--tw-prose-invert-bullets': "#fff",
+            '--tw-prose-invert-hr': "#fff",
+            '--tw-prose-invert-quotes': "#fff",
+            '--tw-prose-invert-quote-borders': "#fff",
+            '--tw-prose-invert-captions': "#fff",
+            '--tw-prose-invert-code': "#fff",
+            '--tw-prose-invert-pre-code': "#fff",
+            '--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 50%)',
+            '--tw-prose-invert-th-borders': "#fff",
+            '--tw-prose-invert-td-borders': "#fff",
+          },
+        },
+      },
   		container: {
   			center: true,
   			padding: '1rem',
@@ -91,7 +130,7 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [twAnimate,  plugin(function ({ addBase, addComponents, addUtilities }: PluginAPI) {
+  plugins: [twTypography,twAnimate,  plugin(function ({ addBase, addComponents, addUtilities }: PluginAPI) {
       addBase({});
       addComponents({
         ".ty-outline": {

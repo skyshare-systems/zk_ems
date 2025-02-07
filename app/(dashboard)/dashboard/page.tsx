@@ -1,10 +1,13 @@
-import React from "react";
+"use client";
+import React, { Suspense } from "react";
 import TabRenderer from "@/components/tab-renderer";
 
 const DashboardPage = () => {
   return (
-    <main className="">
-      <TabRenderer />
+    <main>
+      <Suspense>
+        <TabRenderer />
+      </Suspense>
     </main>
   );
 };

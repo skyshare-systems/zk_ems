@@ -8,6 +8,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,9 +42,9 @@ export default function DashboardLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <div className="min-h-[100dvh] grid grid-rows-[1fr,auto] ">
+            <div className="">
               <SidebarProvider>
-                <AppSidebar />
+                  <AppSidebar />
                 <div className="p-4 flex-1">
                   <SidebarTrigger />
                   {children}

@@ -67,8 +67,10 @@ async function main() {
         </div>
       `,
       description: "Welcome email for new users",
+      company:{ 
+        connect: { id: companies[0].id },
+      },
       name: "Welcome Email",
-      companyId: companies[0].id,
       body: "We're excited to have you join us...",
       footer: `
         <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif;">
@@ -94,8 +96,10 @@ async function main() {
           <div style="background-color: #34495e; height: 5px; width: 50px; margin: 20px auto;"></div>
         </div>
       `,
+      company:{ 
+        connect: { id: companies[1].id },
+      },
       description: "Monthly newsletter for subscribers",
-      companyId: companies[1].id,
       body: "Here's what's new with us...",
       footer: `
         <div style="background-color: #2c3e50; padding: 30px; text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif;">
@@ -161,7 +165,6 @@ async function cleanDatabase() {
     "Template",
     "Company",
     "User",
-    "CompanyTemplates"
   ];
 
   for (const table of tablenames) {

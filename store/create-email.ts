@@ -4,6 +4,12 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface CreateEmailStore {
+  body: string;
+  setBody: (body: string) => void;
+  subject: string;
+  setSubject: (subject: string) => void;
+  recipients: string[];
+  setRecipients: (recipients: string[]) => void;
   userTemplates: Template[];
   selectedTemplate: Template | null;
   setSelectedTemplate: (template: Template | null) => void;
@@ -13,6 +19,12 @@ interface CreateEmailStore {
 export const useCreateEmailStore = create<CreateEmailStore>()(
   persist(
     (set) => ({
+      body: "",
+      setBody: (body) => set({ body }),
+      subject: "",
+      setSubject: (subject) => set({ subject }),
+      recipients: [],
+      setRecipients: (recipients) => set({ recipients }),
       selectedTemplate: null,
       setSelectedTemplate: (template) => set({ selectedTemplate: template }),
       userTemplates: [],

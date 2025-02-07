@@ -6,6 +6,7 @@ export const GET = async (request: NextRequest) => {
   try {
     const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get("userId");
+    const companyId = searchParams.get("companyId");
 
     if (!userId) {
       return NextResponse.json(createApiResponse("User ID is required", null), {
@@ -13,36 +14,40 @@ export const GET = async (request: NextRequest) => {
       });
     }
 
-    const userCompanies = await prisma.company.findMany({
-      where: {
-        users: {
-          some: { id: userId },
-        },
-      },
-      select: { id: true },
-    });
-
-    if (userCompanies.length === 0) {
-      return NextResponse.json(
-        createApiResponse("User is not associated with any company", []),
-        { status: 403 }
-      );
+    if (!companyId) {
+      return NextResponse.json(createApiResponse("User ID is required", null), {
+        status: 400,
+      });
     }
 
-    const companyIds = userCompanies.map((company) => company.id);
+    //* is the user a member of the company
 
-    const templates = await prisma.template.findMany({
+    const company = await prisma.company.findFirst({
       where: {
-        companies: {
-          some: { companyId: { in: companyIds } },
+        id: companyId,
+        users: {
+          some: {
+            id: userId,
+          },
         },
+      },
+      include: {
+        templates: true,
       },
     });
 
-    return NextResponse.json(
-      createApiResponse("Templates found", templates),
-      { status: 200 }
-    );
+
+    if (!company) {
+      return NextResponse.json(createApiResponse("Company not found", null), {
+        status: 404,
+      });
+    }
+
+
+    return NextResponse.json(createApiResponse("Templates found", company), {
+      status: 200,
+    });
+
 
   } catch (error) {
     return createErrorMessage(error);

@@ -1,13 +1,17 @@
 'use client';
 
-import CreateNewEmail from '@/views/create-new-email';
-import Templates from '@/views/templates';
+import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import React from 'react'
 
+const CreateNewEmail = dynamic(() => import("@/views/create-new-email"), {
+  ssr: false,
+});
+
+const Templates = dynamic(() => import("@/views/templates"), { ssr: false });
+
+
 const TabRenderer = () => {
-
-
   const searchParams = useSearchParams();
   const tab = searchParams.get('t');
 

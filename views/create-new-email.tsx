@@ -17,7 +17,7 @@ const CreateNewEmail = () => {
   const { selectedTemplate } = useCreateEmailStore();
 
   const { data: templates } = useQuery({
-    queryKey: ["templates"],
+    queryKey: ["templates", company?.id, user?.id],
     queryFn: () =>
       getTemplates({
         params: `userId=${user?.id}&companyId=${company?.id}`,
@@ -25,14 +25,14 @@ const CreateNewEmail = () => {
   });
 
   return (
-    <div className="flex p-2 items-start gap-8 flex-1 self-stretch w-full mb-24 md:mb-28 overflow-hidden">
-      <div className="flex max-w-[320px] w-full min-w-[288px] flex-col items-start gap-4 self-stretch">
+    <div className="flex p-2 items-start gap-8 flex-1 self-stretch w-full overflow-hidden">
+      <div className="flex max-w-[320px] md:max-w-[unset] min-w-[288px] flex-col items-start gap-4 self-stretch">
         <p className="ty-subheading">Create new email</p>
 
         <Input placeholder="Search for a template" className="w-full" />
-        <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)] w-full">
+        <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)]  w-full">
           <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
-            {templates?.data.map((template) => (
+            {templates?.data.templates.map((template) => (
               <TemplateSelection template={template} key={template.id} />
             ))}
           </div>
@@ -65,7 +65,7 @@ const CreateNewEmail = () => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default CreateNewEmail;

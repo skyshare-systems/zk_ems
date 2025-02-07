@@ -44,7 +44,9 @@ export default function DashboardLayout({
           <QueryProvider>
             <div className="">
               <SidebarProvider>
+                <Suspense fallback={null}>
                   <AppSidebar />
+                </Suspense>
                 <div className="p-4 flex-1">
                   <SidebarTrigger />
                   {children}

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { Suspense } from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -36,7 +36,6 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -111,100 +110,100 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const tab = searchParams.get("t");
   
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher />
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Link href={`/dashboard?t=create-new-email`}>
-                <SidebarMenuButton
-                  tooltip={"Create new email"}
-                  className={cn(
-                    "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "create-new-email" && "bg-gold text-black",
-                  )}
-                >
-                  <MailPlus />
-                  <span>Create new Email</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <TeamSwitcher />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link href={`/dashboard?t=create-new-email`}>
+                  <SidebarMenuButton
+                    tooltip={"Create new email"}
+                    className={cn(
+                      "hover:text-black ty-descriptions text-[#7f8082]",
+                      tab === "create-new-email" && "bg-gold text-black"
+                    )}
+                  >
+                    <MailPlus />
+                    <span>Create new Email</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Link href={`/dashboard?t=sent-emails`}>
-                <SidebarMenuButton
-                  tooltip={"Sent Emails"}
-                  className={cn(
-                    "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "sent-emails" && "bg-gold text-black",
-                  )}
-                >
-                  <Send />
-                  <span>Sent Emails</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <Link href={`/dashboard?t=templates`}>
-                <SidebarMenuButton
-                  tooltip={"Templates"}
-                  className={cn(
-                    "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "templates" && "bg-gold text-black",
-                  )}
-                >
-                  <LayoutTemplate />
-                  <span>Templates</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <Link href={`/dashboard?t=analytics`}>
-                <SidebarMenuButton
-                  tooltip={"Analytics"}
-                  className={cn(
-                    "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "analytics" && "bg-gold text-black",
-                  )}
-                >
-                  <FileChartColumnIncreasing />
-                  <span>Analytics</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link href={`/dashboard?t=sent-emails`}>
+                  <SidebarMenuButton
+                    tooltip={"Sent Emails"}
+                    className={cn(
+                      "hover:text-black ty-descriptions text-[#7f8082]",
+                      tab === "sent-emails" && "bg-gold text-black"
+                    )}
+                  >
+                    <Send />
+                    <span>Sent Emails</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href={`/dashboard?t=templates`}>
+                  <SidebarMenuButton
+                    tooltip={"Templates"}
+                    className={cn(
+                      "hover:text-black ty-descriptions text-[#7f8082]",
+                      tab === "templates" && "bg-gold text-black"
+                    )}
+                  >
+                    <LayoutTemplate />
+                    <span>Templates</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href={`/dashboard?t=analytics`}>
+                  <SidebarMenuButton
+                    tooltip={"Analytics"}
+                    className={cn(
+                      "hover:text-black ty-descriptions text-[#7f8082]",
+                      tab === "analytics" && "bg-gold text-black"
+                    )}
+                  >
+                    <FileChartColumnIncreasing />
+                    <span>Analytics</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Link href={`/dashboard?t=address-book`}>
-                <SidebarMenuButton
-                  tooltip={"Address Book"}
-                  className={cn(
-                    "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "address-book" && "bg-gold text-black",
-                  )}
-                >
-                  <Notebook />
-                  <span>Address Book</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link href={`/dashboard?t=address-book`}>
+                  <SidebarMenuButton
+                    tooltip={"Address Book"}
+                    className={cn(
+                      "hover:text-black ty-descriptions text-[#7f8082]",
+                      tab === "address-book" && "bg-gold text-black"
+                    )}
+                  >
+                    <Notebook />
+                    <span>Address Book</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
   );
 }

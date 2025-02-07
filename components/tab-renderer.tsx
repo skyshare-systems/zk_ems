@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const CreateNewEmail = dynamic(() => import("@/views/create-new-email"), {
   ssr: false,
@@ -30,7 +30,7 @@ const TabRenderer = () => {
     }
   }
   
-  return <>{renderLayout()}</>;
+  return <Suspense fallback={null}>{renderLayout()}</Suspense>;
 }
 
 export default TabRenderer

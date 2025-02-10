@@ -18,6 +18,7 @@ import EmailEditor from "./email-editor";
 import { InputTags } from "./ui/input-tags";
 import axios from "axios";
 import { marked } from "marked";
+import { useModalStore } from "@/store/modal";
 
 const TemplateRenderer = () => {
   const { selectedTemplate, subject, recipients, setRecipients, body, setSubject } = useCreateEmailStore();
@@ -27,6 +28,7 @@ const TemplateRenderer = () => {
 
   const { user } = useUserStore();
   const { company } = useCompanyStore();
+  const { isOpen,onClose,onOpen} = useModalStore();
 
   const { data: templates } = useQuery({
     queryKey: ["templates"],
@@ -38,19 +40,12 @@ const TemplateRenderer = () => {
 
   if (!selectedTemplate) return null;
 
-    async function sendEmail() {
-      try {
-        const response = await axios.post("/api/email", {
-          subject: subject,
-          templateId: selectedTemplate?.id,
-          recipients: recipients,
-          body: marked(body),
-        });
-        return response.data;
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  
+
+  function sendEmailConfirmation() {
+    onOpen();
+  }
+
 
   return (
     <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] ">
@@ -90,7 +85,7 @@ const TemplateRenderer = () => {
           <p className="text-gold">Show Preview</p>
         </Button>
         <Button
-          onClick={sendEmail}
+          onClick={sendEmailConfirmation}
           variant={"ghost"}
           className="bg-white/[.08] flex items-center"
         >

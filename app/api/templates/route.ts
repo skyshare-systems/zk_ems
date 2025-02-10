@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = req.nextUrl.searchParams;
     const userId = searchParams.get("userId");
     const companyId = searchParams.get("companyId");
 
@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest) => {
         id: companyId,
         users: {
           some: {
-            id: userId,
+            userId: userId,
           },
         },
       },

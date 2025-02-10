@@ -14,6 +14,7 @@ interface CreateEmailStore {
   selectedTemplate: Template | null;
   setSelectedTemplate: (template: Template | null) => void;
   getUserTemplates: () => void;
+  reset: () => void;
 }
 
 export const useCreateEmailStore = create<CreateEmailStore>()(
@@ -32,6 +33,13 @@ export const useCreateEmailStore = create<CreateEmailStore>()(
         const response = await api("/templates");
         set({ userTemplates: response.data });
       },
+      reset: () =>
+        set({
+          body: "",
+          subject: "",
+          recipients: [],
+          selectedTemplate: null,
+        }),
     }),
     {
       name: "create-email-store",

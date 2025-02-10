@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
         hostname:"placeholder.com"
       },
       {
+        hostname:"picsum.photos"
+      },
+      {
         hostname: "scontent.fmnl3-1.fna.fbcdn.net",
       }
     ]

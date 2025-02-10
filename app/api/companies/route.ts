@@ -2,9 +2,9 @@ import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = req.nextUrl.searchParams;
     const page = parseInt(searchParams.get("page") ?? "1");
     const limit = parseInt(searchParams.get("limit") ?? "10");
     const userId = searchParams.get("userId");
@@ -28,11 +28,11 @@ export const GET = async (request: NextRequest) => {
     const count = await prisma.company.count({
       where: {
         users: {
-          some: { id: userId },
+          some: { userId: userId},
         },
-      }
+      },
     });
-    
+
     const totalPages = Math.ceil(count / limit);
 
     if (page > totalPages) {
@@ -46,11 +46,9 @@ export const GET = async (request: NextRequest) => {
       skip: (page - 1) * limit,
       where: {
         users: {
-          some: { id: userId },
+          some: { userId: userId },
         },
       },
-
-    
     });
 
     const meta: Meta = {
@@ -61,7 +59,7 @@ export const GET = async (request: NextRequest) => {
     };
 
     return NextResponse.json(
-      createApiResponse("Companies found",  companies , meta),
+      createApiResponse("Companies found", companies, meta),
       { status: 200 }
     );
   } catch (error) {

@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
-const LayoutContainer = () => {
+const LayoutContainer = ({children}:PropsWithChildren) => {
   return (
-      <div className="flex max-w-[320px] w-full min-w-[288px] flex-col items-start gap-4 self-stretch">
-        
-      </div>  )
+    <div className="flex p-2 items-start gap-8 flex-1 self-stretch w-full overflow-hidden">
+      {children}
+    </div>
+  );
 }
 
 export default LayoutContainer

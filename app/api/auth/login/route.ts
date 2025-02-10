@@ -8,13 +8,13 @@ import { compare } from "bcrypt";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
+    const body = await req.json();
     const validatedData = loginSchema.parse(body);
 
     const user = await prisma.user.findUnique({
-      where: { email: validatedData.username },
+      where: { emailAddress: validatedData.username },
     });
 
     if (!user) {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     const sanitizedUser: Omit<User, "password"> = {
       id: user.id,
-      email: user.email,
+      emailAddress: user.emailAddress,
       username: user.username,
       firstName: user.firstName,
       image: user.image,

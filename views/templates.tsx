@@ -14,33 +14,51 @@ import { useCreateEmailStore } from "@/store/create-email";
 import { useUserStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
 import { BadgeAlert } from "lucide-react";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "react-use";
 const Templates = () => {
   const { user } = useUserStore();
   const { company } = useCompanyStore();
-  const { selectedTemplate } = useCreateEmailStore();
+  const { selectedTemplate, setSelectedTemplate, reset } =
+    useCreateEmailStore();
+  const [title, setTitle] = useState("");
+  const [debouncedTitle, setDebouncedTitle] = useState("");
 
   const { data: templates } = useQuery({
-    queryKey: ["templates", company?.id],
+    queryKey: ["templates", company?.id, debouncedTitle],
     queryFn: () =>
       getTemplates({
-        params: `userId=${user?.id}&companyId=${company?.id}`,
+        params:
+          `userId=${user?.id}&companyId=${company?.id}` +
+          (debouncedTitle ? `&title=${debouncedTitle}` : ""),
       }),
   });
 
+  const [, cancel] = useDebounce(
+    () => {
+      setDebouncedTitle(title);
+    },
+    1500,
+    [title]
+  );
   return (
     <LayoutContainer classnames="relative">
       <ContainerSidebar>
         <p className="ty-subheading">Brand Email Templates</p>
-        {templates?.data.templates.length !== 0 && (
-          <Input placeholder="Search for a template" className="w-full" />
-        )}
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Search"
+          className="w-full"
+        />
+
         <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)] w-full">
           <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
-            {templates?.data.templates.map((template) => (
-              <TemplateSelection template={template} key={template.id} />
-            ))}
+            {templates?.data.templates
+              .filter((template) => template.name.includes(debouncedTitle))
+              .map((template) => (
+                <TemplateSelection template={template} key={template.id} />
+              ))}
 
             {templates?.data.templates.length === 0 && (
               <p className="ty-descriptions text-white/50">
@@ -51,14 +69,15 @@ const Templates = () => {
         </ScrollArea>
       </ContainerSidebar>
       <ContainerMain>
-        <p className="ty-subtitle self-stretch text-white/50">
-          Template Preview
-        </p>
+        {selectedTemplate && (
+          <p className="ty-subtitle self-stretch text-white/50">
+            Template Preview
+          </p>
+        )}
 
-        {selectedTemplate ? (
-          <TemplatePreview />
-        ) : (
-          <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
+        {selectedTemplate && <TemplatePreview />}
+
+        {/*   <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
             <div className="flex flex-col items-center gap-2">
               <BadgeAlert size={48} />
               <p className="ty-subheading">Select a template first!</p>
@@ -67,8 +86,7 @@ const Templates = () => {
             <p className="ty-descriptions text-white/50">
               Please select a template to view!
             </p>
-          </div>
-        )}
+          </div> */}
       </ContainerMain>
 
       {templates?.data.templates.length === 0 && (

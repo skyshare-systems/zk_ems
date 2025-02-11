@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     // Create email transporter once
 
     await prisma.$transaction(async (prisma) => {
-    /*   const transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
         host: "email-smtp.eu-west-1.amazonaws.com",
         port: 587,
         auth: {
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
 
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
-      } */
+      } 
 
   
 

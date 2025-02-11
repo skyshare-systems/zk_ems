@@ -121,9 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link
-              onClick={reset}
-              href={`/dashboard?t=create-new-email`}>
+              <Link onClick={reset} href={`/dashboard?t=create-new-email`}>
                 <SidebarMenuButton
                   tooltip={"Create new email"}
                   className={cn(
@@ -131,7 +129,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     "bg-gold/[.12] text-gold"
                   )}
                 >
-                  {tab === "create-new-email" && <div className="w-2 h-2 rounded-full bg-gold absolute right-2 top-1/2 -translate-y-1/2"></div>}
+                  {tab === "create-new-email" && (
+                    <div className="w-2 h-2 rounded-full bg-gold absolute right-2 top-1/2 -translate-y-1/2"></div>
+                  )}
                   <MailPlus />
                   <span>Create new Email</span>
                 </SidebarMenuButton>
@@ -143,9 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link
-              onClick={reset}
-              href={`/dashboard?t=sent-emails`}>
+              <Link onClick={reset} href={`/dashboard?t=sent-emails`}>
                 <SidebarMenuButton
                   tooltip={"Sent Emails"}
                   className={cn(
@@ -153,16 +151,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "sent-emails" && "text-white"
                   )}
                 >
-                  {tab === "sent-emails" && <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>}
+                  {tab === "sent-emails" && (
+                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
+                  )}
                   <Send />
                   <span>Sent Emails</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link
-              onClick={reset}
-              href={`/dashboard?t=templates`}>
+              <Link onClick={reset} href={`/dashboard?t=templates`}>
                 <SidebarMenuButton
                   tooltip={"Templates"}
                   className={cn(
@@ -170,7 +168,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "templates" && "text-white"
                   )}
                 >
-                  {tab === "templates" && <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>}
+                  {tab === "templates" && (
+                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
+                  )}
                   <LayoutTemplate />
                   <span>Templates</span>
                 </SidebarMenuButton>
@@ -178,8 +178,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link
-              onClick={reset}
-              href={`/dashboard?t=analytics`}>
+                onClick={reset}
+                href={`/dashboard?t=analytics`}
+                className="pointer-events-none"
+              >
                 <SidebarMenuButton
                   tooltip={"Analytics"}
                   className={cn(
@@ -187,9 +189,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "analytics" && "text-white"
                   )}
                 >
-                  {tab === "analytics" && <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>}
+                  {tab === "analytics" && (
+                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
+                  )}
                   <FileChartColumnIncreasing />
-                  <span>Analytics</span>
+                  <span>Analytics </span>
+                  <div className="rounded-full flex px-2 py-1 bg-white/[.05] ty-subtext">
+                    Coming soon!
+                  </div>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
@@ -200,8 +207,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <Link
-              onClick={reset}
-              href={`/dashboard?t=address-book`}>
+                onClick={reset}
+                href={`/dashboard?t=address-book`}
+                className="pointer-events-none"
+              >
                 <SidebarMenuButton
                   tooltip={"Address Book"}
                   className={cn(
@@ -211,6 +220,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 >
                   <Notebook />
                   <span>Address Book</span>
+                  <div className="rounded-full flex px-2 py-1 bg-white/[.05] ty-subtext">
+                    Coming soon!
+                  </div>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

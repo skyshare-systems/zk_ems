@@ -42,11 +42,11 @@ export function TeamSwitcher() {
   });
 
 
-/*   useEffect(() => {
+  useEffect(() => {
     if (data?.data && !company) {
       setCompany(data.data[0]);
     }
-  }, [company, data, setCompany]); */
+  }, [company, data, setCompany]);
 
   if (!company) return null;
 

@@ -7,6 +7,7 @@ export const GET = async (req: NextRequest) => {
     const searchParams = req.nextUrl.searchParams;
     const userId = searchParams.get("userId");
     const companyId = searchParams.get("companyId");
+    const title = searchParams.get("title");
 
     if (!userId) {
       return NextResponse.json(createApiResponse("User ID is required", null), {
@@ -21,7 +22,6 @@ export const GET = async (req: NextRequest) => {
     }
 
     //* is the user a member of the company
-
     const company = await prisma.company.findFirst({
       where: {
         id: companyId,
@@ -32,10 +32,18 @@ export const GET = async (req: NextRequest) => {
         },
       },
       include: {
-        templates: true,
+        templates: {
+          where: title
+            ? {
+                name: {
+                  contains: title,
+                  mode: "insensitive",
+                },
+              }
+            : undefined,
+        },
       },
     });
-
 
     if (!company) {
       return NextResponse.json(createApiResponse("Company not found", null), {
@@ -43,12 +51,9 @@ export const GET = async (req: NextRequest) => {
       });
     }
 
-
     return NextResponse.json(createApiResponse("Templates found", company), {
       status: 200,
     });
-
-
   } catch (error) {
     return createErrorMessage(error);
   }

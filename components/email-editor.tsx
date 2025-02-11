@@ -37,7 +37,7 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
 
  
   return (
-    <ScrollArea className="h-[440px] w-full">
+    <ScrollArea className="h-[400px] w-full">
       {isPreview ? (
         <div className="border border-dashed border-gold grow h-full w-full p-4 rounded-lg border-spacing-9 text-white">
           <div className="w-full overflow-auto">

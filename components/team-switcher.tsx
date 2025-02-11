@@ -21,14 +21,19 @@ import { useUserStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect } from "react";
+import { Company } from "@prisma/client";
+import { useSentEmailStore } from "@/store/sent-email";
+import { useCreateEmailStore } from "@/store/create-email";
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar();
   const { user } = useUserStore();
+  const { setSelectedSentEmail } = useSentEmailStore();
+  const { setSelectedTemplate } = useCreateEmailStore()
   const { company, setCompany } = useCompanyStore();
 
   const { data } = useQuery({
-    queryKey: ["companies"],
+    queryKey: ["companies", company?.id, user?.id],
     queryFn: () =>
       getCompanies({
         params: `page=1&limit=10&userId=${user?.id}`,
@@ -45,6 +50,12 @@ export function TeamSwitcher() {
 
   if (!company) return null;
 
+  function handleChangeCompany(company: Company){
+    setCompany(company);
+    setSelectedTemplate(null)
+    setSelectedSentEmail(null)
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -55,16 +66,18 @@ export function TeamSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Image
-                    src={company.image}
-                    width={64}
-                    height={64}
-                    alt={company.name}
-                    className="rounded-lg size-12"
-                  />
+                <Image
+                  src={company.image}
+                  width={64}
+                  height={64}
+                  alt={company.name}
+                  className="rounded-lg size-12"
+                />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-[10.24px] text-white/50">You are currently using</span>
+                <span className="truncate text-[10.24px] text-white/50">
+                  You are currently using
+                </span>
                 <span className="truncate text-[14px]">{company.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -83,7 +96,7 @@ export function TeamSwitcher() {
               data.data.map((company) => (
                 <DropdownMenuItem
                   key={company.name}
-                  onClick={() => setCompany(company)}
+                  onClick={() => handleChangeCompany(company)}
                   className="gap-2 p-2"
                 >
                   <div className="flex size-6 items-center justify-center rounded-sm border">

@@ -2,6 +2,8 @@ import "@/app/globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import Footer from "@/components/globals/footer";
 import { TailwindIndicator } from "@/components/globals/tailwind-indicator";
+import AuthProvider from "@/components/providers/auth";
+import ModalProvider from "@/components/providers/modal";
 import { QueryProvider } from "@/components/providers/query";
 import { ThemeProvider } from "@/components/providers/theme";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -33,7 +35,7 @@ export default function DashboardLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <ThemeProvider
           attribute="class"
@@ -42,19 +44,22 @@ export default function DashboardLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <div className="">
-              <SidebarProvider>
-                <Suspense fallback={null}>
-                  <AppSidebar />
-                </Suspense>
-                <div className="p-4 flex-1">
-                  <SidebarTrigger />
-                  {children}
+            <AuthProvider>
+                <div className="">
+                  <SidebarProvider>
+                    <Suspense fallback={null}>
+                      <AppSidebar />
+                    </Suspense>
+                    <div className="p-4 flex-1">
+                      <SidebarTrigger />
+                      {children}
+                    </div>
+                  </SidebarProvider>
+                  <Footer />
+                  <ModalProvider/>
+                  <TailwindIndicator />
                 </div>
-              </SidebarProvider>
-              <Footer /> 
-              <TailwindIndicator />
-            </div>
+            </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
         <Toaster />

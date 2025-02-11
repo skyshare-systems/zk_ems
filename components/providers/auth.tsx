@@ -1,11 +1,20 @@
-import React from 'react'
+'use client';
 
-const AuthProvider = () => {
+import { useUserStore } from "@/store/user";
+import { useRouter } from "next/navigation";
+import React, { PropsWithChildren, useEffect } from "react";
 
-  
-  return (
-    <div>AuthProvider</div>
-  )
-}
+const AuthProvider = ({ children }: PropsWithChildren) => {
+/*   const { user } = useUserStore();
+  const router = useRouter();
 
-export default AuthProvider
+  useEffect(() => {
+    if (user === null) {
+      router.push("/");
+    }
+  }, [user, router]);
+ */
+  return <>{children}</>;
+};
+
+export default AuthProvider;

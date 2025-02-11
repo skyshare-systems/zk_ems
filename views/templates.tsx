@@ -1,15 +1,139 @@
-import { ScrollArea } from '@/components/ui/scroll-area'
-import React from 'react'
+"use client";
 
+import ContainerMain from "@/components/container-main";
+import ContainerSidebar from "@/components/container-sidebar";
+import LayoutContainer from "@/components/layout-container";
+import TemplatePreview from "@/components/template-preview";
+import TemplateRenderer from "@/components/template-renderer";
+import TemplateSelection from "@/components/template-selection";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { getTemplates } from "@/lib/query/templates";
+import { useCompanyStore } from "@/store/company";
+import { useCreateEmailStore } from "@/store/create-email";
+import { useUserStore } from "@/store/user";
+import { useQuery } from "@tanstack/react-query";
+import { BadgeAlert } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "react-use";
 const Templates = () => {
+  const { user } = useUserStore();
+  const { company } = useCompanyStore();
+  const { selectedTemplate, setSelectedTemplate, reset } =
+    useCreateEmailStore();
+  const [title, setTitle] = useState("");
+  const [debouncedTitle, setDebouncedTitle] = useState("");
+
+  const { data: templates } = useQuery({
+    queryKey: ["templates", company?.id, debouncedTitle],
+    queryFn: () =>
+      getTemplates({
+        params:
+          `userId=${user?.id}&companyId=${company?.id}` +
+          (debouncedTitle ? `&title=${debouncedTitle}` : ""),
+      }),
+  });
+
+  const [, cancel] = useDebounce(
+    () => {
+      setDebouncedTitle(title);
+    },
+    1500,
+    [title]
+  );
   return (
+    <LayoutContainer classnames="relative">
+      <ContainerSidebar>
+        <p className="ty-subheading">Brand Email Templates</p>
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Search"
+          className="w-full"
+        />
 
-    <ScrollArea className='h-[450px] w-full'>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem molestiae distinctio, repellendus exercitationem quam inventore tempore magni corporis nemo eos placeat hic vitae! Quas expedita nesciunt optio, reprehenderit perferendis enim consectetur voluptas sequi quos voluptate facere in dignissimos repudiandae, cum reiciendis blanditiis suscipit. Error, esse deserunt. Ipsam magnam dolorum, amet, eius recusandae odit veniam beatae aliquam unde odio pariatur tenetur quas quod expedita suscipit optio, voluptatem fugit ipsum ad provident totam soluta architecto? Esse quaerat repellat dolores? Deserunt voluptas hic officia culpa architecto ab dolorum, id veritatis ducimus, aperiam mollitia ratione dolor ea repudiandae quas error deleniti sed quidem expedita in aspernatur. Eos labore harum error neque quibusdam eaque, obcaecati sed, dolor delectus veniam repellat veritatis unde, dolore architecto aliquam asperiores voluptatem voluptas rerum officiis omnis nisi. Molestias earum nemo temporibus laborum ducimus dolor consectetur libero, ut officia animi saepe labore amet tenetur perspiciatis ipsam praesentium facere recusandae exercitationem! Dolore, laborum. Error eum nemo dolore cupiditate aspernatur architecto reprehenderit, ut neque reiciendis, obcaecati provident officiis cumque quasi aperiam velit ipsam, sit accusamus a facilis. Obcaecati dolorem nemo ad rem. Vel ipsam laudantium dolore voluptate quasi incidunt, odit aliquid odio rem assumenda officia ducimus quidem rerum possimus magnam nam inventore? Ad dicta inventore sed molestias aspernatur doloremque! Necessitatibus ab praesentium laudantium nemo, assumenda beatae maxime autem fugiat eligendi tempora enim iusto veniam blanditiis. Iure, ducimus explicabo? Ad aut sapiente officia hic aliquid nostrum quam, mollitia repellendus. Animi, magni incidunt? Eum soluta tenetur ab consectetur ullam dolore id cumque est perferendis alias laudantium amet maiores perspiciatis voluptates eveniet non, facere voluptate illo. Deleniti odit reiciendis repellendus dolorem error minima officia, dignissimos harum animi perspiciatis molestiae ducimus minus doloremque provident molestias nobis explicabo et architecto quam nulla sed doloribus. Voluptas maiores atque vero, quam dignissimos consectetur iste neque beatae voluptatem placeat hic dolorem aut et nisi sapiente repellat! Quod a, numquam deleniti aut vero recusandae porro atque voluptatem quo temporibus asperiores nulla maxime ad pariatur sequi suscipit voluptates saepe architecto fugiat culpa autem! Quos hic magnam voluptatum aliquid quia in adipisci eligendi inventore eveniet quasi natus sequi asperiores, temporibus optio assumenda necessitatibus incidunt voluptates cupiditate beatae! Incidunt illo magni at laboriosam beatae veritatis adipisci, expedita recusandae autem sunt odit voluptatibus? Eius ex alias omnis iste eum iure delectus itaque cum qui recusandae officiis harum, doloremque, voluptatum placeat magnam dicta esse beatae. Rerum quibusdam repudiandae quisquam sit ipsa recusandae quos architecto doloremque nulla officia. Minima ea dolore eum in ipsum debitis veritatis quia nulla, eaque odit explicabo iusto non similique, sequi perferendis nostrum reiciendis facere harum ratione! Rerum tenetur fuga accusantium eaque laudantium! Fugit ullam perspiciatis quae harum quibusdam eum esse temporibus quo aliquid laudantium facilis similique porro nostrum ducimus repellendus quisquam nihil, repudiandae dolorum asperiores architecto ea delectus sed maiores totam! Harum nam suscipit asperiores illo nihil quasi perferendis quis earum ratione eos recusandae dicta vel iusto vero, nobis aliquam optio minima fuga sunt numquam minus? Earum maxime provident nulla, eaque ut, dolore libero neque sed, accusantium nam corporis tempore enim iure magni dignissimos quos. Porro sunt vero quos? Modi porro, harum fugiat doloremque facere quisquam, corporis minima, nihil quis suscipit debitis nam! Ab aperiam, necessitatibus placeat laboriosam amet officiis totam distinctio vitae labore? Exercitationem quisquam accusantium illum non deleniti ad maiores. Odio laborum debitis neque incidunt cumque unde ipsum. Nam neque consectetur veritatis molestiae facilis ducimus ipsam nisi, accusamus odio aut aspernatur alias sed dolor quasi minus, esse sunt excepturi placeat eligendi nesciunt aliquid? Tempore illum doloribus eum. Quidem cum odio porro sint! Nobis quibusdam facilis adipisci aut sequi consectetur architecto? Asperiores eius corporis veritatis consequatur deleniti, esse recusandae, vitae numquam fugiat eligendi laborum odit delectus suscipit cupiditate dolorem et earum. Minima voluptate debitis ut commodi incidunt alias provident cumque dolore culpa, odio nobis repellendus eum quam. Sequi optio reprehenderit dolorum rem natus eius molestiae accusamus facilis quasi. Perspiciatis nulla natus qui accusantium esse et ab magnam temporibus accusamus voluptatum distinctio quibusdam non dolor, repudiandae provident, quis nemo ratione dolores itaque. Blanditiis numquam a, recusandae repellendus aliquam modi. Laborum unde quisquam sunt debitis modi minima voluptas odio, doloremque nemo dolorem assumenda in, excepturi alias, vel inventore. Quo iusto vero corporis, omnis quos reprehenderit quidem consequatur neque tempora voluptatibus atque illo, illum earum rem officia ipsam hic. In alias expedita itaque. Harum nihil hic veniam nulla iste totam earum delectus? Enim, consequuntur iure saepe nulla cum vero dolore sequi, repudiandae ipsa, rerum sapiente voluptatem iste! Error soluta unde voluptate, fugiat, quia officia repudiandae quos ratione non nulla ex beatae! Autem nobis praesentium officia dolorem et accusantium, totam illo saepe possimus natus optio deserunt nesciunt error itaque incidunt corporis veniam perferendis alias enim fuga porro cumque mollitia eum? Aspernatur veniam quo facere non, doloribus recusandae tempora, architecto eum molestias possimus nesciunt velit, voluptas ab molestiae. Debitis iusto iste alias sint qui ipsam asperiores illo et pariatur sapiente, quam quaerat quisquam eos fugit recusandae, cumque nobis voluptatibus nemo maiores officia autem ex voluptates voluptas beatae? Unde natus earum amet magnam voluptatibus et culpa eius soluta. Nulla architecto non tenetur. Incidunt velit nisi quos, eveniet magni tempore magnam ad, eos, placeat quis reiciendis. Harum architecto voluptas exercitationem dolores perferendis alias porro voluptates reprehenderit dignissimos, quod quam, similique eum, odio itaque tempora laboriosam laborum enim officiis ducimus unde impedit natus repudiandae. Et libero ducimus explicabo fuga, voluptatum nostrum ut aliquid natus sit, molestias repellat fugiat ullam obcaecati? Labore illo ipsa molestias sequi iste a at, hic eligendi dolorum obcaecati ex. Dicta sequi voluptatem quia reprehenderit atque quas repellat dolor excepturi laudantium perspiciatis inventore natus tenetur, libero accusantium quidem, quisquam cumque consectetur mollitia voluptates ducimus ipsa id ex. Repellat rerum dolorem eaque commodi quisquam, omnis facilis voluptatibus ipsum perspiciatis enim cumque eum fuga, quasi ea, temporibus quia neque optio iure! Consequuntur dolores odio quibusdam, deleniti numquam inventore quidem officiis nostrum aliquam necessitatibus maxime laudantium incidunt mollitia sapiente fugiat. Molestiae quidem deleniti vel error ipsum libero ab iste? Ut recusandae autem adipisci ipsam, minima aut. Eligendi ut obcaecati odit saepe, repellendus, dolorum laudantium esse qui distinctio quidem ea. Ea.
-    </ScrollArea>
+        <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)] w-full">
+          <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
+            {templates?.data.templates
+              .filter((template) => template.name.includes(debouncedTitle))
+              .map((template) => (
+                <TemplateSelection template={template} key={template.id} />
+              ))}
 
-  )
+            {templates?.data.templates.length === 0 && (
+              <p className="ty-descriptions text-white/50">
+                No templates found. Please contact the administrators first.
+              </p>
+            )}
+          </div>
+        </ScrollArea>
+      </ContainerSidebar>
+      <ContainerMain>
+        {selectedTemplate && (
+          <p className="ty-subtitle self-stretch text-white/50">
+            Template Preview
+          </p>
+        )}
 
-}
+        {selectedTemplate && <TemplatePreview />}
 
-export default Templates
+        {/*   <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
+            <div className="flex flex-col items-center gap-2">
+              <BadgeAlert size={48} />
+              <p className="ty-subheading">Select a template first!</p>
+            </div>
+
+            <p className="ty-descriptions text-white/50">
+              Please select a template to view!
+            </p>
+          </div> */}
+      </ContainerMain>
+
+      {templates?.data.templates.length === 0 && (
+        <div className="absolute h-full grow flex-1 inset-0 flex items-center justify-center -z-10">
+          <div className="flex flex-col justify-center items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+            >
+              <path
+                d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+                stroke="#F3BC30"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16 34C17.8242 31.5712 20.7286 30 24 30C27.2714 30 30.1758 31.5712 32 34"
+                stroke="#F3BC30"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.0179 18H16M32 18H31.982"
+                stroke="#F3BC30"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <p className="text-gold">Uh-oh!</p>
+            <p className="text-[14px] text-white/50">
+              You have no template for this brand.
+            </p>
+            <p className="text-[14px] text-white/50">
+              Contact the developers to create one.
+            </p>
+          </div>
+        </div>
+      )}
+    </LayoutContainer>
+  );
+};
+
+export default Templates;

@@ -9,30 +9,40 @@ datasource db {
 
 model User {
   id          String    @id @default(cuid())
-  email       String    @unique
+  emailAddress       String    @unique
   username    String    @unique
   password    String
   firstName   String
   lastName    String
   image       String
-  role        Role      @default(ADMIN)
+  role        Role      @default(ADMIN)  // ✅ Fixed enum default
   isActivated Boolean   @default(false)
   lastLogin   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  companies   Company[]
   tokens      Token[]
+  companies   UserCompany[]  
 }
 
 model Company {
-  id          String     @id @default(cuid())
-  name        String     @unique
+  id          String      @id @default(cuid())
+  name        String      @unique
   image       String
   description String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  users       User[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  users       UserCompany[]  
   templates   Template[]
+  sentEmails  SentEmail[]
+}
+
+model UserCompany { 
+  userId    String
+  companyId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
 }
 
 model Template {
@@ -47,25 +57,24 @@ model Template {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   companyId   String
-  emails      SentEmail[]
+  sentEmails      SentEmail[]
   company     Company     @relation(fields: [companyId], references: [id])
 }
 
 model SentEmail {
   id         String      @id @default(cuid())
-  createdAt  DateTime    @default(now())
+  email       String
   templateId String
   template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
   recipients Recipient[]
+  companyId  String  
+  company    Company @relation(fields: [companyId], references: [id])
+  createdAt  DateTime    @default(now())
 }
 
 model Recipient {
   id          String    @id @default(cuid())
-  email       String
-  phone       String?
-  company     String?
-  firstName   String
-  lastName    String
+  emailAddress       String      
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   sentEmail   SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
@@ -74,7 +83,7 @@ model Recipient {
 
 model Token {
   id          String    @id @default(cuid())
-  token       String
+  token       String    @unique  
   type        TokenType
   expires     DateTime
   blacklisted Boolean

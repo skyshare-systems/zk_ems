@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 /* 
-api.interceptors.request.use(
+api.interceptors.req.use(
   async (config) => {
     const token = (await cookies()).get("token");
 

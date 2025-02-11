@@ -12,7 +12,7 @@ import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "../ui/input";
@@ -70,6 +70,11 @@ const LoginForm = () => {
       password: values.password,
     });
   }
+
+  useEffect(() => {
+
+    localStorage.clear()
+  },[])
 
   return (
     <Form {...form}>

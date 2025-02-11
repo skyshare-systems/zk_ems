@@ -1,5 +1,6 @@
 'use client';
 
+import SentEmails from '@/views/sent-emails';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense } from 'react'
@@ -19,6 +20,8 @@ const TabRenderer = () => {
     switch(tab) {
       case 'create-new-email':
         return <CreateNewEmail />
+      case 'sent-emails':
+        return <SentEmails />
       case 'templates':
         return <Templates />
       case 'analytics':

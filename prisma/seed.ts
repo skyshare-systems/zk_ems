@@ -1,224 +1,146 @@
-import { Prisma, PrismaClient, Role, TokenType } from "@prisma/client";
-import { hash } from "bcrypt";
+import { PrismaClient, Role, TokenType } from '@prisma/client'
+import { hash } from 'bcrypt'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
-  await cleanDatabase();
+  await prisma.$connect()
+  
+  // Clean the database
+  await prisma.$transaction([
+    prisma.token.deleteMany(),
+    prisma.recipient.deleteMany(),
+    prisma.sentEmail.deleteMany(),
+    prisma.template.deleteMany(),
+    prisma.userCompany.deleteMany(),
+    prisma.company.deleteMany(),
+    prisma.user.deleteMany(),
+  ])
+/* 
+  // Create 10 users
+  const users = await Promise.all(
+    Array.from({ length: 10 }).map(async (_, index) => {
+      return prisma.user.create({
+        data: {
+          email: `user${index + 1}@example.com`,
+          username: `user${index + 1}`,
+          password: await hash('password123', 10),
+          firstName: `FirstName${index + 1}`,
+          lastName: `LastName${index + 1}`,
+          image: `https://randomuser.me/api/portraits/${index % 2 ? 'men' : 'women'}/${index + 1}.jpg`,
+          role: index === 0 ? Role.ADMIN : Role.USER,
+          isActivated: true,
+          lastLogin: new Date(),
+        }
+      })
+    })
+  )
 
-  // Create Users
-  const users = await Promise.all([
-    createUser({
-      username: "admin.user",
-      firstName: "Admin",
-      lastName: "User",
-      email: "admin@example.com",
-      role: Role.ADMIN,
-      password: "Admin123!",
-      image: "https://picsum.photos/200",
-    }),
-    createUser({
-      username: "john.doe",
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@example.com",
-      role: Role.USER,
-      password: "User123!",
-      image: "https://picsum.photos/200",
-    }),
-    createUser({
-      username: "jane.smith",
-      firstName: "Jane",
-      lastName: "Smith",
-      email: "jane@example.com",
-      role: Role.USER,
-      password: "User123!",
-      image: "https://picsum.photos/200",
-    }),
-  ]);
-  // Create Companies
-  const companies = await Promise.all([
-    createCompany({
-      name: "Tech Corp",
-      image: "https://placeholder.com/tech-corp.jpg",
-      description: "Leading technology solutions provider",
-    }),
-    createCompany({
-      name: "Marketing Pro",
-      image: "https://placeholder.com/marketing-pro.jpg",
-      description: "Digital marketing excellence",
-    }),
-    createCompany({
-      name: "Design Studio",
-      image: "https://placeholder.com/design-studio.jpg",
-      description: "Creative design solutions",
-    }),
-  ]);
+  // Create 5 companies
+  const companies = await Promise.all(
+    Array.from({ length: 5 }).map((_, index) => {
+      return prisma.company.create({
+        data: {
+          name: `Company ${index + 1}`,
+          image: `https://picsum.photos/200/200?random=${index + 1}`,
+          description: `Description for Company ${index + 1}`,
+        }
+      })
+    })
+  )
 
-  // Create Templates
-  const templates = await Promise.all([
-    createTemplate({
-      subject: "Welcome to Our Service",
-      header: `
-        <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
-          <img src="{{company_logo}}" alt="Company Logo" style="max-width: 200px; margin-bottom: 20px;">
-          <h1 style="color: #333; font-family: Arial, sans-serif;">Welcome Aboard!</h1>
-          <p style="color: #666;">We're excited to have you join our community</p>
-        </div>
-      `,
-      description: "Welcome email for new users",
-      company:{ 
-        connect: { id: companies[0].id },
-      },
-      name: "Welcome Email",
-      body: "We're excited to have you join us...",
-      footer: `
-        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-          <p style="margin-bottom: 10px; color: #666;">Best regards,<br>The Team</p>
-          <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
-            <p style="font-size: 12px; color: #999;">
-              {{company_name}}<br>
-              {{company_address}}<br>
-              <a href="{{unsubscribe_link}}" style="color: #999; text-decoration: none;">Unsubscribe</a>
-            </p>
-          </div>
-        </div>
-      `,
-    }),
-    createTemplate({
-      subject: "Monthly Newsletter",
-      name: "Monthly Updates",
-      header: `
-        <div style="background-color: #2c3e50; padding: 30px; text-align: center;">
-          <img src="{{company_logo}}" alt="Company Logo" style="max-width: 150px; margin-bottom: 15px;">
-          <h1 style="color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif;">Monthly Updates</h1>
-          <p style="color: #ecf0f1;">Your Monthly Digest of {{company_name}} News</p>
-          <div style="background-color: #34495e; height: 5px; width: 50px; margin: 20px auto;"></div>
-        </div>
-      `,
-      company:{ 
-        connect: { id: companies[1].id },
-      },
-      description: "Monthly newsletter for subscribers",
-      body: "Here's what's new with us...",
-      footer: `
-        <div style="background-color: #2c3e50; padding: 30px; text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif;">
-          <div style="margin-bottom: 20px;">
-            <a href="{{social_facebook}}" style="color: #ffffff; margin: 0 10px;">Facebook</a>
-            <a href="{{social_twitter}}" style="color: #ffffff; margin: 0 10px;">Twitter</a>
-            <a href="{{social_linkedin}}" style="color: #ffffff; margin: 0 10px;">LinkedIn</a>
-          </div>
-          <p style="color: #ecf0f1; font-size: 14px;">
-            © {{current_year}} {{company_name}}. All rights reserved.<br>
-            {{company_address}}
-          </p>
-          <p style="font-size: 12px; color: #bdc3c7;">
-            <a href="{{unsubscribe_link}}" style="color: #bdc3c7; text-decoration: underline;">Unsubscribe</a> |
-            <a href="{{privacy_policy}}" style="color: #bdc3c7; text-decoration: underline;">Privacy Policy</a>
-          </p>
-        </div>
-      `,
-    }),
-  ]);
+  // Create user-company relationships (each user belongs to 2 companies)
+  await Promise.all(
+    users.flatMap(user => 
+      companies.slice(0, 2).map(company => 
+        prisma.userCompany.create({
+          data: {
+            userId: user.id,
+            companyId: company.id,
+          }
+        })
+      )
+    )
+  )
 
-  // Create SentEmails
-  const sentEmails = await Promise.all([
-    createSentEmail(templates[0].id),
-    createSentEmail(templates[1].id),
-  ]);
+  // Create 3 templates per company
+  const templates = await Promise.all(
+    companies.flatMap(company => 
+      Array.from({ length: 3 }).map((_, index) => 
+        prisma.template.create({
+          data: {
+            name: `Template ${index + 1} - ${company.name}`,
+            description: `Description for template ${index + 1}`,
+            subject: `Subject ${index + 1}`,
+            header: `Header ${index + 1}`,
+            body: `Body content ${index + 1}`,
+            footer: `Footer ${index + 1}`,
+            tags: [`tag${index + 1}`, 'email', company.name.toLowerCase()],
+            companyId: company.id,
+          }
+        })
+      )
+    )
+  )
 
-  // Create Recipients
-  await Promise.all([
-    createRecipient({
-      firstName: "Robert",
-      lastName: "Johnson",
-      email: "robert@example.com",
-      phone: "+1234567890",
-      company: "Client Corp",
-      sentEmail: {
-        connect: { id: sentEmails[0].id },
-      },
-    }),
-    createRecipient({
-      firstName: "Sarah",
-      lastName: "Williams",
-      email: "sarah@example.com",
-      phone: "+1987654321",
-      company: "Partner LLC",
-      sentEmail: {
-        connect: { id: sentEmails[1].id },
-      },
-    }),
-  ]);
+  // Create 2 sent emails per template
+  const sentEmails = await Promise.all(
+    templates.flatMap(template => 
+      Array.from({ length: 2 }).map(() => 
+        prisma.sentEmail.create({
+          data: {
+            body: `Email body based on template: ${template.name}`,
+            templateId: template.id,
+            companyId: template.companyId,
+          }
+        })
+      )
+    )
+  )
 
-  // Create Tokens
-  await Promise.all([createToken(users[0].id), createToken(users[1].id)]);
+  // Create 3 recipients per sent email
+  await Promise.all(
+    sentEmails.flatMap((sentEmail, emailIndex) => 
+      Array.from({ length: 3 }).map((_, index) => 
+        prisma.recipient.create({
+          data: {
+            email: `recipient${emailIndex * 3 + index + 1}@example.com`,
+            phone: `+1${String(Math.floor(Math.random() * 9000000000 + 1000000000))}`,
+            company: `Recipient Company ${index + 1}`,
+            firstName: `RecipientFirst${index + 1}`,
+            lastName: `RecipientLast${index + 1}`,
+            sentEmailId: sentEmail.id,
+          }
+        })
+      )
+    )
+  )
 
-  console.log("Database seeded successfully!");
-}
+  // Create tokens for each user (access and refresh)
+  await Promise.all(
+    users.flatMap(user => 
+      [TokenType.ACCESS, TokenType.REFRESH].map(type => 
+        prisma.token.create({
+          data: {
+            token: `${type}_${Math.random().toString(36).substring(7)}`,
+            type,
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            blacklisted: false,
+            userId: user.id,
+          }
+        })
+      )
+    )
+  ) */
 
-async function cleanDatabase() {
-  const tablenames = [
-    "Token",
-    "Recipient",
-    "SentEmail",
-    "Template",
-    "Company",
-    "User",
-  ];
-
-  for (const table of tablenames) {
-    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "${table}" CASCADE;`);
-  }
-}
-
-async function createUser(data: Prisma.UserCreateInput) {
-  const hashedPassword = await hash(data.password, 10);
-  return prisma.user.create({
-    data: {
-      ...data,
-      password: hashedPassword,
-      isActivated: true,
-      lastLogin: new Date(),
-    },
-  });
-}
-
-async function createCompany(data: Prisma.CompanyCreateInput) {
-  return prisma.company.create({ data });
-}
-
-async function createTemplate(data: Prisma.TemplateCreateInput) {
-  return prisma.template.create({ data });
-}
-
-async function createSentEmail(templateId: string) {
-  return prisma.sentEmail.create({
-    data: { templateId },
-  });
-}
-
-async function createRecipient(data: Prisma.RecipientCreateInput) {
-  return prisma.recipient.create({ data });
-}
-
-async function createToken(userId: string) {
-  return prisma.token.create({
-    data: {
-      userId,
-      token: "dummy-token-" + Math.random().toString(36),
-      type: TokenType.ACCESS,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-      blacklisted: false,
-    },
-  });
+  console.log('Seeding completed successfully!')
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

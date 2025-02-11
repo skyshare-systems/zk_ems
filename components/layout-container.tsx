@@ -1,10 +1,15 @@
-import React from 'react'
+import { cn } from "@/lib/utils";
+import React, { PropsWithChildren } from "react";
 
-const LayoutContainer = () => {
-  return (
-      <div className="flex max-w-[320px] w-full min-w-[288px] flex-col items-start gap-4 self-stretch">
-        
-      </div>  )
+interface Props {
+  classnames?: string;
 }
+const LayoutContainer = ({ children, classnames }: PropsWithChildren & Props) => {
+  return (
+    <div className={cn("flex p-2 items-start gap-8 ", classnames)}>
+      {children}
+    </div>
+  );
+};
 
-export default LayoutContainer
+export default LayoutContainer;

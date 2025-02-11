@@ -4,7 +4,7 @@ import {persist, createJSONStorage} from 'zustand/middleware'
 
 interface UserState {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
 }
 
 export const useUserStore = create<UserState>()(persist((set) => ({

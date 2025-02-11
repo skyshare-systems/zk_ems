@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className="fixed  flex-wrap  gap-4 bottom-0 z-50 w-full bg-background flex p-8 justify-between items-center shrink-0 self-stretch">
+    <footer className="fixed flex-wrap  gap-4 bottom-0 z-[999] w-full bg-background flex p-8 justify-between items-center shrink-0 self-stretch">
       <div className="flex  flex-wrap items-center justify-center gap-2 w-full lg:w-fit">
         <p className="ty-descriptions text-gold">
           ZK Summit{" "}

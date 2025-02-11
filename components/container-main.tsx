@@ -5,7 +5,7 @@ const ContainerMain = ({children}:PropsWithChildren) => {
   return (
       <div
             className={cn(
-              "flex w-full flex-col items-center gap-[18px] flex-1 self-stretch",
+              "flex w-full flex-col items-center gap-[18px]",
             )}
           >
             {children}

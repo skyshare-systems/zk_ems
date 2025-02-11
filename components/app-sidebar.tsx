@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -35,6 +35,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useCreateEmailStore } from "@/store/create-email";
 
 const data = {
   user: {

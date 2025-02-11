@@ -17,8 +17,11 @@ const SentEmailContent = () => {
   if(!selectedSentEmail) return null;
 
   return (
-    <ScrollArea className="h-[200px] w-full self-stretch flex-1 bg-white/[.04] p-4 rounded-2xl ">
-      <div className="prose self-stretch w-full flex-1" dangerouslySetInnerHTML={{__html: selectedSentEmail.email}}></div>
+    <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-390px)] w-full bg-white/[.04] p-4 rounded-2xl">
+      <div
+        className="prose self-stretch w-full flex-1 overflow-y-auto "
+        dangerouslySetInnerHTML={{ __html: selectedSentEmail.email }}
+      ></div>
     </ScrollArea>
   );
 };

@@ -45,7 +45,6 @@ export default function DashboardLayout({
         >
           <QueryProvider>
             <AuthProvider>
-                x
                 <div className="">
                   <SidebarProvider>
                     <Suspense fallback={null}>
@@ -56,7 +55,7 @@ export default function DashboardLayout({
                       {children}
                     </div>
                   </SidebarProvider>
-                  {/* <Footer /> */}
+                  <Footer />
                   <ModalProvider/>
                   <TailwindIndicator />
                 </div>

@@ -52,7 +52,7 @@ const SentEmailRenderer = () => {
 
 
   return (
-    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] mb-24 ">
+    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] ">
       <div className="flex flex-col justify-center items-start gap-4 self-stretch">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch ">
@@ -70,7 +70,9 @@ const SentEmailRenderer = () => {
                 className="px-2 py-1 flex justify-normal items-center gap-2 rounded-full bg-white/[.04]"
                 key={recipient.id}
               >
-                <p className="ty-subtext text-white/[.72]">{recipient.emailAddress}</p>
+                <p className="ty-subtext text-white/[.72]">
+                  {recipient.emailAddress}
+                </p>
               </div>
             ))}
 
@@ -90,7 +92,9 @@ const SentEmailRenderer = () => {
 
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
-        <SentEmailContent />
+        <div className="w-full ">
+          <SentEmailContent />
+        </div>
       </div>
     </div>
   );

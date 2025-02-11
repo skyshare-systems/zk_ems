@@ -48,6 +48,7 @@ const CreateNewEmail = () => {
         </ScrollArea>
       </ContainerSidebar>
       <ContainerMain>
+      
           <p className="ty-subtitle self-stretch text-white/50">
             {!selectedTemplate ? "Edit your email" : "Email Preview"}
           </p>

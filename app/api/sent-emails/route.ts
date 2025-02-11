@@ -17,7 +17,7 @@ export const GET = async (req: NextRequest) => {
       where: { id: userId },
     });
 
-    if (!user) {
+    if (!user) { 
       return createErrorMessage("User not found");
     }
 

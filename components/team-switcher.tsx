@@ -33,7 +33,7 @@ export function TeamSwitcher() {
   const { company, setCompany } = useCompanyStore();
 
   const { data } = useQuery({
-    queryKey: ["companies"],
+    queryKey: ["companies", company?.id, user?.id],
     queryFn: () =>
       getCompanies({
         params: `page=1&limit=10&userId=${user?.id}`,
@@ -42,11 +42,11 @@ export function TeamSwitcher() {
   });
 
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (data?.data && !company) {
       setCompany(data.data[0]);
     }
-  }, [company, data, setCompany]);
+  }, [company, data, setCompany]); */
 
   if (!company) return null;
 

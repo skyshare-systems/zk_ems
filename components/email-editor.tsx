@@ -39,11 +39,13 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
   return (
     <ScrollArea className="h-[440px] w-full">
       {isPreview ? (
-        <div className="border border-dashed border-gold grow h-full  w-full p-4 rounded-lg border-spacing-9 text-white">
-          <div
-            className="prose  text-current whitespace-nowrap w-full flex-1 grow"
-            dangerouslySetInnerHTML={{ __html: previewHTML }}
-          ></div>
+        <div className="border border-dashed border-gold grow h-full w-full p-4 rounded-lg border-spacing-9 text-white">
+          <div className="w-full overflow-auto">
+            <div
+              className="prose text-current whitespace-nowrap w-full"
+              dangerouslySetInnerHTML={{ __html: previewHTML }}
+            ></div>
+          </div>
         </div>
       ) : (
         <>

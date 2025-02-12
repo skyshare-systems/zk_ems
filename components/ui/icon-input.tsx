@@ -11,7 +11,7 @@ export interface InputProps
 const IconInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, startIcon, endIcon, endIconOnClick, ...props }, ref) => {
     return (
-      <div className="flex items-center border border-input rounded-md bg-[#EBF4FF14]">
+      <div className="w-full flex items-center border border-input rounded-md bg-[#EBF4FF14]">
         {startIcon && (
           <div className="pl-2">
             {typeof startIcon === "function"
@@ -25,7 +25,7 @@ const IconInput = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "flex-1  py-2 px-4 text-sm bg-transparent focus:outline-none border-none placeholder:text-muted-foreground",
+            "flex-1  py-2 px-4 text-sm bg-transparent focus:outline-none border-none placeholder:text-muted-foreground w-full",
             className
           )}
           ref={ref}

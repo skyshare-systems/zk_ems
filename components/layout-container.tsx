@@ -6,10 +6,11 @@ interface Props {
 }
 const LayoutContainer = ({ children, classnames }: PropsWithChildren & Props) => {
   return (
-    <div className={cn("flex p-2 items-start gap-8 ", classnames)}>
+    <div className={cn("flex items-start gap-8 p-8 w-full", classnames)}>
       {children}
     </div>
   );
 };
 
 export default LayoutContainer;
+

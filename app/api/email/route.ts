@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
         html: emailContent,
       });
 
-      console.log({emailResult})
+      
 
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);

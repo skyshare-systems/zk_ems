@@ -10,6 +10,7 @@ export const GET = async (req: NextRequest) => {
     const userId = searchParams.get("userId");
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
+    const title = searchParams.get("title");
 
     if (!companyId || !userId) {
       return createErrorMessage("Company or User not found");
@@ -19,7 +20,7 @@ export const GET = async (req: NextRequest) => {
       where: { id: userId },
     });
 
-    if (!user) { 
+    if (!user) {
       return createErrorMessage("User not found");
     }
 
@@ -32,10 +33,20 @@ export const GET = async (req: NextRequest) => {
     }
 
     const sentEmails = await prisma.sentEmail.findMany({
-      where: { companyId },
+      where: {
+        companyId,
+        template: title
+          ? {
+              name: {
+                contains: title,
+                mode: "insensitive",
+              },
+            }
+          : undefined,
+      },
       include: {
         _count: {
-          select: { recipients: true }, 
+          select: { recipients: true },
         },
         template: true,
         recipients: true,
@@ -45,23 +56,31 @@ export const GET = async (req: NextRequest) => {
     });
 
     const totalSentEmails = await prisma.sentEmail.count({
-      where: { companyId },
-    })
-
+      where: {
+        companyId,
+        template: {
+          name: {
+            contains: title ?? "",
+            mode: "insensitive",
+          },
+        },
+      },
+    });
 
     const meta: Meta = {
-      totalPage: Math.ceil(totalSentEmails / parseInt(limit ?? "10")) ,
+      totalPage: Math.ceil(totalSentEmails / parseInt(limit ?? "10")),
       page: parseInt(page ?? "1"),
-      remaining: totalSentEmails - (parseInt(page ?? "1") * parseInt(limit ?? "10")) < 0 ? 0 : totalSentEmails - (parseInt(page ?? "1") * parseInt(limit ?? "10")),
-    }
-
+      remaining:
+        totalSentEmails - parseInt(page ?? "1") * parseInt(limit ?? "10") < 0
+          ? 0
+          : totalSentEmails - parseInt(page ?? "1") * parseInt(limit ?? "10"),
+    };
 
     return NextResponse.json(
-      createApiResponse("Sent emails found", sentEmails,meta),
+      createApiResponse("Sent emails found", sentEmails, meta),
       { status: 200 }
     );
   } catch (error) {
     return createErrorMessage(error);
   }
 };
-

@@ -50,6 +50,10 @@ export const GET = async (req: NextRequest) => {
     const totalTemplates = await prisma.template.count({
       where: {
         companyId,
+        name: {
+          contains: title ?? "",
+          mode: "insensitive",
+        },
       },
     });
 

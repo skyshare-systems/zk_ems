@@ -332,11 +332,13 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   return (
-    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08]">
-      <div className="flex flex-col justify-center items-start gap-4 self-stretch">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow">
+      <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch">
-            <p className="ty-descriptions text-white/[.32] w-[100px]">Subject</p>
+            <p className="ty-descriptions text-white/[.32] w-[100px]">
+              Subject
+            </p>
             <Input
               value={subject}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -362,7 +364,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                   className="bg-white/[.08] flex-1 w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32]"
                 />
                 <Button
-                  disabled={!recipientInput || !validateEmail(recipientInput).isValid}
+                  disabled={
+                    !recipientInput || !validateEmail(recipientInput).isValid
+                  }
                   onClick={handleAddRecipient}
                   className="bg-white/[.8] text-black"
                 >
@@ -421,7 +425,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
 
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
-        <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+        <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
+          <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+        </div>
       </div>
 
       <div className="flex justify-end items-center gap-2 self-stretch">

@@ -10,8 +10,8 @@ const SentEmailRenderer = () => {
 
 
   return (
-    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] ">
-      <div className="flex flex-col justify-center items-start gap-4 self-stretch">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow">
+      <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch ">
             <p className="ty-descriptions text-white/[.32] w-[96px]">Subject</p>
@@ -48,9 +48,7 @@ const SentEmailRenderer = () => {
           </div>
         </div>
 
-        <p className="ty-descriptions text-white/[.32]">Email Content</p>
-
-        <div className="w-full ">
+        <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
           <SentEmailContent />
         </div>
       </div>

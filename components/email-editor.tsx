@@ -1,20 +1,15 @@
 import { useCreateEmailStore } from "@/store/create-email";
-import React, { useState } from "react";
-import MarkdownEditor, { preview } from "@uiw/react-markdown-editor";
-import { ScrollArea } from "./ui/scroll-area";
+import MDEditor, { getCommands } from "@uiw/react-md-editor";
 import { marked } from "marked";
-import MDEditor, { commands, getCommands } from "@uiw/react-md-editor";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import React from "react";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface Props {
   isPreview: boolean;
   setIsPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const EmailEditor = ({isPreview, setIsPreview}: Props) => {
+const EmailEditor = ({ isPreview }: Props) => {
   const { selectedTemplate, body, setBody } = useCreateEmailStore();
-
-
 
   if (!selectedTemplate) return null;
 
@@ -34,15 +29,13 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
 
   const previewHTML = buildPreview();
 
-
- 
   return (
-    <ScrollArea className="h-[400px] w-full">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white h-full grow">
       {isPreview ? (
-        <div className="border border-dashed border-gold grow h-full w-full p-4 rounded-lg border-spacing-9 text-white">
-          <div className="w-full overflow-auto">
+        <div className="border border-dashed border-gold grow h-full w-full p-4 rounded-lg border-spacing-9 text-white ">
+          <div className="w-full ">
             <div
-              className="prose text-current whitespace-nowrap w-full"
+              className="prose w-full max-w-none"
               dangerouslySetInnerHTML={{ __html: previewHTML }}
             ></div>
           </div>
@@ -50,11 +43,9 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
       ) : (
         <>
           <div className="flex flex-col items-start gap-2 self-stretch">
-            <p className="ty-subtext text-white/[.32]">Header</p>
-
             <div className="rounded-lg p-4 w-full border border-white/[.08]">
               <div
-                className=""
+                className="prose max-w-none"
                 dangerouslySetInnerHTML={{
                   __html: selectedTemplate.header,
                 }}
@@ -62,12 +53,12 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
             </div>
           </div>
           <div className="flex flex-col items-start gap-2 self-stretch h-full flex-1 my-4">
-            <p className="ty-subtext text-white/[.32]">Body</p>
+            <p className="ty-subtext text-black">Edit Email Body</p>
 
             <div className="max-w-[1250px] w-full">
               <MDEditor
                 value={body}
-                height="210px"
+                height="500px"
                 className="h-full"
                 onChange={(value, viewUpdate) => setBody(value || "")}
                 preview="edit"
@@ -77,11 +68,9 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
           </div>
 
           <div className="flex flex-col items-start gap-2 self-stretch">
-            <p className="ty-subtext text-white/[.32]">Footer</p>
-
             <div className="rounded-lg p-4 w-full border border-white/[.08]">
               <div
-                className=""
+                className="prose max-w-none"
                 dangerouslySetInnerHTML={{
                   __html: selectedTemplate.footer,
                 }}
@@ -90,7 +79,7 @@ const EmailEditor = ({isPreview, setIsPreview}: Props) => {
           </div>
         </>
       )}
-    </ScrollArea>
+    </div>
   );
 };
 

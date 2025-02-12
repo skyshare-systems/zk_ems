@@ -32,6 +32,7 @@ const Templates = () => {
           `userId=${user?.id}&companyId=${company?.id}` +
           (debouncedTitle ? `&title=${debouncedTitle}` : ""),
       }),
+    enabled: !!user && !!company,
   });
 
   const [, cancel] = useDebounce(

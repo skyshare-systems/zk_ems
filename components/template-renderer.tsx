@@ -77,6 +77,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
       getTemplates({
         params: `userId=${user?.id}&companyId=${company?.id}`,
       }),
+    enabled: !!user && !!company,
   });
 
   const validateEmail = (email: string): ValidationResult => {

@@ -45,6 +45,7 @@ const SentEmailRenderer = () => {
       getTemplates({
         params: `userId=${user?.id}&companyId=${company?.id}`,
       }),
+    enabled: !!user && !!company,
   });
 
 

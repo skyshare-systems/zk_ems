@@ -33,6 +33,7 @@ const LoginForm = () => {
     mutationKey: ["login"],
     onSuccess: ({ data, message }) => {
       setUser(data);
+      localStorage.setItem("token", data.token)
       toast.success(message, {
         style: {
           background: "#00a650",

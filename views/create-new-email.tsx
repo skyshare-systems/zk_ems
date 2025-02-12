@@ -24,6 +24,7 @@ const CreateNewEmail = () => {
       getTemplates({
         params: `userId=${user?.id}&companyId=${company?.id}`,
       }),
+    enabled: !!user && !!company,
   });
 
   return (

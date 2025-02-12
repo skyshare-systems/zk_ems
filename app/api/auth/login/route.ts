@@ -1,4 +1,4 @@
-import { generateToken, setAuthCookie } from "@/lib/auth";
+import { generateToken } from "@/lib/auth";
 import { AuthenticationError } from "@/lib/exceptions";
 import prisma from "@/lib/prisma";
 import { createApiResponse } from "@/lib/utils";
@@ -35,14 +35,15 @@ export async function POST(req: Request) {
     }
 
     const token = await generateToken(user.id);
-    setAuthCookie(token);
 
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
 
-    const sanitizedUser: Omit<User, "password"> = {
+    const sanitizedUser: Omit<User, "password"> & {
+      token: string;
+    } = {
       id: user.id,
       emailAddress: user.emailAddress,
       username: user.username,
@@ -54,7 +55,18 @@ export async function POST(req: Request) {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       lastLogin: user.lastLogin,
+      token
     };
+
+    await prisma.token.create({
+      data: {
+        blacklisted: false,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        token,
+        type: "ACCESS",
+        userId: user.id,
+      }
+    })
 
     return NextResponse.json(
       createApiResponse("Login successful. Redirecting...", sanitizedUser),

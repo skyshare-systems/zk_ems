@@ -16,15 +16,14 @@ async function main() {
     prisma.company.deleteMany(),
     prisma.user.deleteMany(),
   ])
-/* 
   // Create 10 users
   const users = await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
       return prisma.user.create({
         data: {
-          email: `user${index + 1}@example.com`,
+          emailAddress: `user${index + 1}@example.com`,
           username: `user${index + 1}`,
-          password: await hash('password123', 10),
+          password: await hash('a', 10),
           firstName: `FirstName${index + 1}`,
           lastName: `LastName${index + 1}`,
           image: `https://randomuser.me/api/portraits/${index % 2 ? 'men' : 'women'}/${index + 1}.jpg`,
@@ -89,7 +88,7 @@ async function main() {
       Array.from({ length: 2 }).map(() => 
         prisma.sentEmail.create({
           data: {
-            body: `Email body based on template: ${template.name}`,
+            email: `Email body based on template: ${template.name}`,
             templateId: template.id,
             companyId: template.companyId,
           }
@@ -104,11 +103,7 @@ async function main() {
       Array.from({ length: 3 }).map((_, index) => 
         prisma.recipient.create({
           data: {
-            email: `recipient${emailIndex * 3 + index + 1}@example.com`,
-            phone: `+1${String(Math.floor(Math.random() * 9000000000 + 1000000000))}`,
-            company: `Recipient Company ${index + 1}`,
-            firstName: `RecipientFirst${index + 1}`,
-            lastName: `RecipientLast${index + 1}`,
+            emailAddress: `recipient${emailIndex * 3 + index + 1}@example.com`,
             sentEmailId: sentEmail.id,
           }
         })
@@ -131,7 +126,7 @@ async function main() {
         })
       )
     )
-  ) */
+  )
 
   console.log('Seeding completed successfully!')
 }

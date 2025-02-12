@@ -44,6 +44,7 @@ const TemplatePreview = () => {
       getTemplates({
         params: `userId=${user?.id}&companyId=${company?.id}`,
       }),
+    enabled: !!user && !!company,
   });
 
   if (!selectedTemplate) return null;

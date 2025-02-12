@@ -50,12 +50,12 @@ export default function DashboardLayout({
                     <Suspense fallback={null}>
                       <AppSidebar />
                     </Suspense>
-                    <div className="p-4 flex-1">
-                      <SidebarTrigger />
+                    <div className="flex-1">
+                      {/* <SidebarTrigger /> */}
                       {children}
                     </div>
                   </SidebarProvider>
-                  <Footer />
+                  {/* <Footer /> */}
                   <ModalProvider/>
                   <TailwindIndicator />
                 </div>

@@ -88,3 +88,23 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+.linear {
+  background: linear-gradient(180deg, rgba(0, 2, 5, 0.00) 0%, #000205 100%);
+}
+
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+  background: gray;
+}
+::-webkit-scrollbar-thumb {
+  background: hsla(var(--gold));
+  height: 10px;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}

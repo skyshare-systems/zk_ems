@@ -16,7 +16,7 @@ const config: Config = {
   theme: {
   	extend: {
 			typography: {
-        DEFAULT: {
+        /* DEFAULT: {
            css: {
             '--tw-prose-body': "#fff",
             '--tw-prose-headings': "#fff",
@@ -51,7 +51,7 @@ const config: Config = {
             '--tw-prose-invert-th-borders': "#fff",
             '--tw-prose-invert-td-borders': "#fff",
           },
-        },
+        }, */
       },
   		container: {
   			center: true,

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { createApiResponse, createErrorMessage } from "@/lib/utils";
+import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -8,6 +8,8 @@ export const GET = async (req: NextRequest) => {
     const userId = searchParams.get("userId");
     const companyId = searchParams.get("companyId");
     const title = searchParams.get("title");
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
 
     if (!userId) {
       return NextResponse.json(createApiResponse("User ID is required", null), {
@@ -45,15 +47,34 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
+    const totalTemplates = await prisma.template.count({
+      where: {
+        companyId,
+        name: {
+          contains: title ?? "",
+          mode: "insensitive",
+        },
+      },
+    });
+
+      const meta: Meta = {
+      totalPage: Math.ceil(totalTemplates / parseInt(limit ?? "10")) ,
+      page: parseInt(page ?? "1"),
+      remaining: totalTemplates - (parseInt(page ?? "1") * parseInt(limit ?? "10")) < 0 ? 0 : totalTemplates - (parseInt(page ?? "1") * parseInt(limit ?? "10")),
+    }
+
     if (!company) {
       return NextResponse.json(createApiResponse("Company not found", null), {
         status: 404,
       });
     }
 
-    return NextResponse.json(createApiResponse("Templates found", company), {
-      status: 200,
-    });
+    return NextResponse.json(
+      createApiResponse("Templates found", company, meta),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     return createErrorMessage(error);
   }

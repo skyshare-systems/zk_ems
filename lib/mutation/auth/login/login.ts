@@ -10,7 +10,9 @@ export const authLogin = async ({
   password
 }: z.infer<typeof loginSchema>) => {
   try {
-    const response = await api.post<ApiResponse<User>>("/auth/login", {
+    const response = await api.post<ApiResponse<User & {
+      token: string
+    }>>("/auth/login", {
       username,
       password,
     });

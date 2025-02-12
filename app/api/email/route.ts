@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch template with company data
     const template = await prisma.template.findUnique({
       where: { id: templateId },
       select: {
@@ -51,28 +50,38 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Construct email content
+    const smtp = await prisma.smtpCredential.findFirst({
+      where: {
+        company: {
+          id: template.companyId,
+        },
+      },
+    });
+
+    if (!smtp) {
+      return NextResponse.json(createApiResponse("SMTP not found", null), {
+        status: 404,
+      });
+    }
+
     const emailContent = `
       ${template.header}
       <div style="padding: 20px; min-height: 100px;">${body}</div>
       ${template.footer}
     `.trim();
 
-    // Create email transporter once
-
     await prisma.$transaction(async (prisma) => {
-    const transporter = nodemailer.createTransport({
-        host: "email-smtp.eu-west-1.amazonaws.com",
-        port: 587,
+      const transporter = nodemailer.createTransport({
+        host: smtp.host,
+        port: smtp.port,
         auth: {
-          user: "AKIA33FBU3VU5BFLWDFZ",
-          pass: "BO3dk7L8/ZbjC0OHaHkdtvcNTEsn0XvxOjn4G1avUPxj",
+          user: smtp.username,
+          pass: smtp.password,
         },
       });
 
-  
       const emailResult = await transporter.sendMail({
-        from: "support@coinkings.tech",
+        from: smtp.from,
         to: recipients,
         subject,
         html: emailContent,
@@ -80,11 +89,9 @@ export async function POST(req: NextRequest) {
 
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
-      } 
+      }
 
-  
-
-      const sentEmail = await prisma.sentEmail.create({
+      await prisma.sentEmail.create({
         data: {
           email: emailContent,
           templateId,
@@ -95,23 +102,13 @@ export async function POST(req: NextRequest) {
                 emailAddress: recipient,
               })),
             },
-          }
+          },
         },
       });
-
-      console.log({sentEmail})
-/* 
-      await prisma.recipient.createMany({
-        data: recipients.map((recipient) => ({
-          emailAddress: recipient,
-          sentEmailId: sentEmail.id, // Associate with created SentEmail
-        })),
-      }); */
     });
 
     return NextResponse.json(createApiResponse("Email sent successfully", ""));
   } catch (error) {
-
     return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 }

@@ -33,6 +33,7 @@ const LoginForm = () => {
     mutationKey: ["login"],
     onSuccess: ({ data, message }) => {
       setUser(data);
+      localStorage.setItem("token", data.token)
       toast.success(message, {
         style: {
           background: "#00a650",
@@ -63,7 +64,7 @@ const LoginForm = () => {
   function onSubmit(values: z.infer<typeof loginSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    
 
     mutate({
       username: values.username,
@@ -132,12 +133,12 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Link
+        {/*   <Link
             href={"#"}
             className="text-white/50 ty-subtext text-center w-full"
           >
             Forgot Password
-          </Link>
+          </Link> */}
         </div>
         <Button type="submit" className="bg-gold w-full relative">
           <Image

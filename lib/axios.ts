@@ -1,6 +1,5 @@
 import axios from "axios";
-/* import { cookies } from "next/headers";
-import httpCodes from "http-codes"; */
+import httpCodes from "http-codes";
 
 const api = axios.create({
   baseURL: process.env.API_URL,
@@ -9,10 +8,10 @@ const api = axios.create({
   },
 });
 
-/* 
-api.interceptors.req.use(
+
+api.interceptors.request.use(
   async (config) => {
-    const token = (await cookies()).get("token");
+    const token = localStorage.getItem("token")
 
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
@@ -30,11 +29,10 @@ api.interceptors.response.use(
       const { status } = error.response;
       if (status === httpCodes.UNAUTHORIZED) {
         localStorage.clear();
-        (await cookies()).delete("token");
       }
     }
     return Promise.reject(error);
   }
-); */
+); 
 
 export default api;

@@ -1,40 +1,13 @@
 "use client";
 
 import { useCreateEmailStore } from "@/store/create-email";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import MarkdownEditor from "@uiw/react-markdown-editor";
+import { useModalStore } from "@/store/modal";
 import { ArrowUpRight, Upload } from "lucide-react";
-import React, { useState, useRef, KeyboardEvent, ChangeEvent } from "react";
+import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import { toast } from "sonner";
+import EmailEditor from "./email-editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import TemplateSelection from "./template-selection";
-import { useCompanyStore } from "@/store/company";
-import { useUserStore } from "@/store/user";
-import { useQuery } from "@tanstack/react-query";
-import { getTemplates } from "@/lib/query/templates";
-import { Separator } from "./ui/separator";
-import Templates from "@/views/templates";
-import EmailEditor from "./email-editor";
-import axios from "axios";
-import { marked } from "marked";
-import { useModalStore } from "@/store/modal";
-import { toast } from "sonner";
-
-interface Template {
-  id: string;
-  name: string;
-  content: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-}
-
-interface Company {
-  id: string;
-  name: string;
-}
 
 interface ValidationError {
   message: string;
@@ -58,7 +31,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     subject,
     recipients,
     setRecipients,
-    body,
     setSubject,
   } = useCreateEmailStore();
 
@@ -67,17 +39,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   const [isProcessingCSV, setIsProcessingCSV] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { user } = useUserStore();
-  const { company } = useCompanyStore();
-  const { isOpen, onClose, onOpen } = useModalStore();
 
-  const { data: templates } = useQuery({
-    queryKey: ["templates"],
-    queryFn: () =>
-      getTemplates({
-        params: `userId=${user?.id}&companyId=${company?.id}`,
-      }),
-  });
+  const { onOpen } = useModalStore();
+
 
   const validateEmail = (email: string): ValidationResult => {
     const errors: ValidationError[] = [];
@@ -368,11 +332,13 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   return (
-    <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08]">
-      <div className="flex flex-col justify-center items-start gap-4 self-stretch">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow">
+      <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch">
-            <p className="ty-descriptions text-white/[.32] w-[100px]">Subject</p>
+            <p className="ty-descriptions text-white/[.32] w-[100px]">
+              Subject
+            </p>
             <Input
               value={subject}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -398,7 +364,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                   className="bg-white/[.08] flex-1 w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32]"
                 />
                 <Button
-                  disabled={!recipientInput || !validateEmail(recipientInput).isValid}
+                  disabled={
+                    !recipientInput || !validateEmail(recipientInput).isValid
+                  }
                   onClick={handleAddRecipient}
                   className="bg-white/[.8] text-black"
                 >
@@ -457,7 +425,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
 
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
-        <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+        <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
+          <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+        </div>
       </div>
 
       <div className="flex justify-end items-center gap-2 self-stretch">

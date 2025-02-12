@@ -90,7 +90,7 @@ export function TeamSwitcher() {
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              Switch to
             </DropdownMenuLabel>
             {data &&
               data.data.map((company) => (
@@ -99,15 +99,16 @@ export function TeamSwitcher() {
                   onClick={() => handleChangeCompany(company)}
                   className="gap-2 p-2"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-sm border">
-                    <Image
-                      src={company.image}
-                      width={32}
-                      height={32}
-                      alt={company.name}
-                    />
+                  <div className="flex items-center gap-2 self-start opacity-[.72]">
+                    <div className="flex w-8 h-8 justify-center items-center rounded-lg border-[.70px] border-white/[.16] bg-black">
+                      <Image
+                        src={company.image}
+                        width={44}
+                        height={44}
+                        alt={company.name}
+                      />
+                    </div>
                   </div>
-                  {company.name}
                 </DropdownMenuItem>
               ))}
           </DropdownMenuContent>

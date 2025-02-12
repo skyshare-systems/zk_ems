@@ -10,7 +10,7 @@ export async function generateToken(userId: string): Promise<string> {
     throw new Error("User ID is required to generate a token");
   } */
 
-    console.log({userId})
+    
 
   const token = await new SignJWT({ userId })
     .setProtectedHeader({ alg: "HS256" })
@@ -21,10 +21,10 @@ export async function generateToken(userId: string): Promise<string> {
   return token;
 }
 
-export async function setAuthCookie(token: string) {
+/* export async function setAuthCookie(token: string) {
   (await cookies()).set("auth", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   })
-}
+} */

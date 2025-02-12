@@ -4,8 +4,8 @@ import ContainerMain from "@/components/container-main";
 import ContainerSidebar from "@/components/container-sidebar";
 import LayoutContainer from "@/components/layout-container";
 import TemplatePreview from "@/components/template-preview";
-import TemplateRenderer from "@/components/template-renderer";
 import TemplateSelection from "@/components/template-selection";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getTemplates } from "@/lib/query/templates";
@@ -13,8 +13,8 @@ import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useUserStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeAlert } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import { useDebounce } from "react-use";
 const Templates = () => {
   const { user } = useUserStore();
@@ -23,9 +23,11 @@ const Templates = () => {
     useCreateEmailStore();
   const [title, setTitle] = useState("");
   const [debouncedTitle, setDebouncedTitle] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const { data: templates } = useQuery({
-    queryKey: ["templates", company?.id, debouncedTitle],
+    queryKey: ["templates", company?.id, debouncedTitle, user?.id, page],
     queryFn: () =>
       getTemplates({
         params:
@@ -53,13 +55,11 @@ const Templates = () => {
           className="w-full"
         />
 
-        <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)] w-full">
+        <ScrollArea className="h-[calc(100vh-380px)] md:h-[calc(100vh-340px)] lg:h-[calc(100vh-300px)] w-full relative">
           <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
-            {templates?.data.templates
-              .filter((template) => template.name.includes(debouncedTitle))
-              .map((template) => (
-                <TemplateSelection template={template} key={template.id} />
-              ))}
+            {templates?.data.templates.map((template) => (
+              <TemplateSelection template={template} key={template.id} />
+            ))}
 
             {templates?.data.templates.length === 0 && (
               <p className="ty-descriptions text-white/50">
@@ -67,6 +67,45 @@ const Templates = () => {
               </p>
             )}
           </div>
+
+          {templates && templates?.data.templates.length > 0 && (
+            <>
+              <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
+              <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full">
+                <div className="flex items-center gap-2">
+                  <p className="ty-descriptions text-white/50">
+                    <span className="ty-subtitle text-white font-semibold">
+                      1-{templates?.data.templates.length}
+                    </span>{" "}
+                    of{" "}
+                    <span className="ty-subtitle text-white font-semibold">
+                      {templates?.meta?.totalPage}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex justify-center items-center gap-2">
+                  <Button
+                    disabled={page === 1}
+                    variant={"outline"}
+                    onClick={() => setPage((prev) => prev - 1)}
+                    className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
+                  >
+                    <ChevronLeft size={12} />
+                    <span className="sr-only">Previous Page</span>
+                  </Button>
+                  <Button
+                    disabled={page === templates?.meta?.totalPage}
+                    variant={"outline"}
+                    onClick={() => setPage((prev) => prev + 1)}
+                    className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
+                  >
+                    <ChevronRight size={12} />
+                    <span className="sr-only">Next Page</span>
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </ScrollArea>
       </ContainerSidebar>
       <ContainerMain>

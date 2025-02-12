@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { withSession } from "@/lib/session";
-import { createApiResponse, createErrorMessage } from "@/lib/utils";
+import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -8,6 +8,8 @@ export const GET = async (req: NextRequest) => {
     const searchParams = req.nextUrl.searchParams;
     const companyId = searchParams.get("companyId");
     const userId = searchParams.get("userId");
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
 
     if (!companyId || !userId) {
       return createErrorMessage("Company or User not found");
@@ -38,11 +40,24 @@ export const GET = async (req: NextRequest) => {
         template: true,
         recipients: true,
       },
+      take: parseInt(limit ?? "10"),
+      skip: (parseInt(page ?? "1") - 1) * parseInt(limit ?? "10"),
     });
+
+    const totalSentEmails = await prisma.sentEmail.count({
+      where: { companyId },
+    })
+
+
+    const meta: Meta = {
+      totalPage: Math.ceil(totalSentEmails / parseInt(limit ?? "10")) ,
+      page: parseInt(page ?? "1"),
+      remaining: totalSentEmails - (parseInt(page ?? "1") * parseInt(limit ?? "10")) < 0 ? 0 : totalSentEmails - (parseInt(page ?? "1") * parseInt(limit ?? "10")),
+    }
 
 
     return NextResponse.json(
-      createApiResponse("Sent emails found", sentEmails),
+      createApiResponse("Sent emails found", sentEmails,meta),
       { status: 200 }
     );
   } catch (error) {

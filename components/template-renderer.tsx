@@ -1,40 +1,13 @@
 "use client";
 
 import { useCreateEmailStore } from "@/store/create-email";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import MarkdownEditor from "@uiw/react-markdown-editor";
+import { useModalStore } from "@/store/modal";
 import { ArrowUpRight, Upload } from "lucide-react";
-import React, { useState, useRef, KeyboardEvent, ChangeEvent } from "react";
+import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import { toast } from "sonner";
+import EmailEditor from "./email-editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import TemplateSelection from "./template-selection";
-import { useCompanyStore } from "@/store/company";
-import { useUserStore } from "@/store/user";
-import { useQuery } from "@tanstack/react-query";
-import { getTemplates } from "@/lib/query/templates";
-import { Separator } from "./ui/separator";
-import Templates from "@/views/templates";
-import EmailEditor from "./email-editor";
-import axios from "axios";
-import { marked } from "marked";
-import { useModalStore } from "@/store/modal";
-import { toast } from "sonner";
-
-interface Template {
-  id: string;
-  name: string;
-  content: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-}
-
-interface Company {
-  id: string;
-  name: string;
-}
 
 interface ValidationError {
   message: string;
@@ -58,7 +31,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     subject,
     recipients,
     setRecipients,
-    body,
     setSubject,
   } = useCreateEmailStore();
 
@@ -67,18 +39,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   const [isProcessingCSV, setIsProcessingCSV] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { user } = useUserStore();
-  const { company } = useCompanyStore();
-  const { isOpen, onClose, onOpen } = useModalStore();
 
-  const { data: templates } = useQuery({
-    queryKey: ["templates"],
-    queryFn: () =>
-      getTemplates({
-        params: `userId=${user?.id}&companyId=${company?.id}`,
-      }),
-    enabled: !!user && !!company,
-  });
+  const { onOpen } = useModalStore();
+
 
   const validateEmail = (email: string): ValidationResult => {
     const errors: ValidationError[] = [];

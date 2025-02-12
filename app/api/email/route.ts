@@ -78,13 +78,13 @@ export async function POST(req: NextRequest) {
         html: emailContent,
       });
 
+      console.log({emailResult})
+
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
       } 
 
-  
-
-      const sentEmail = await prisma.sentEmail.create({
+      await prisma.sentEmail.create({
         data: {
           email: emailContent,
           templateId,
@@ -98,15 +98,6 @@ export async function POST(req: NextRequest) {
           }
         },
       });
-
-      console.log({sentEmail})
-/* 
-      await prisma.recipient.createMany({
-        data: recipients.map((recipient) => ({
-          emailAddress: recipient,
-          sentEmailId: sentEmail.id, // Associate with created SentEmail
-        })),
-      }); */
     });
 
     return NextResponse.json(createApiResponse("Email sent successfully", ""));

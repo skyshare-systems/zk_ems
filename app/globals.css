@@ -88,3 +88,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+.linear {
+  background: linear-gradient(180deg, rgba(0, 2, 5, 0.00) 0%, #000205 100%);
+}

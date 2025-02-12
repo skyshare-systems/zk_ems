@@ -1,57 +1,14 @@
 "use client";
 
 import { useCreateEmailStore } from "@/store/create-email";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import MarkdownEditor from "@uiw/react-markdown-editor";
-import { ArrowUpRight } from "lucide-react";
-import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import TemplateSelection from "./template-selection";
-import { useCompanyStore } from "@/store/company";
-import { useUserStore } from "@/store/user";
-import { useQuery } from "@tanstack/react-query";
-import { getTemplates } from "@/lib/query/templates";
-import { Separator } from "./ui/separator";
-import Templates from "@/views/templates";
-import EmailEditor from "./email-editor";
-import { InputTags } from "./ui/input-tags";
-import axios from "axios";
-import { marked } from "marked";
-import { useModalStore } from "@/store/modal";
+import { useState } from "react";
 import Preview from "./preview";
 
 const TemplatePreview = () => {
-  const {
-    selectedTemplate,
-    subject,
-    recipients,
-    setRecipients,
-    body,
-    setSubject,
-  } = useCreateEmailStore();
-  const [values, setValues] = useState<string[]>([]);
-  const [markdown, setMarkdown] = useState("");
+  const { selectedTemplate } = useCreateEmailStore();
   const [isPreview, setIsPreview] = useState(false);
 
-  const { user } = useUserStore();
-  const { company } = useCompanyStore();
-  const { isOpen, onClose, onOpen } = useModalStore();
-
-  const { data: templates } = useQuery({
-    queryKey: ["templates"],
-    queryFn: () =>
-      getTemplates({
-        params: `userId=${user?.id}&companyId=${company?.id}`,
-      }),
-    enabled: !!user && !!company,
-  });
-
   if (!selectedTemplate) return null;
-
-  function sendEmailConfirmation() {
-    onOpen();
-  }
 
   return (
     <div className="flex p-4 flex-col justify-center items-start gap-6 self-stretch rounded-2xl bg-white/[.08] ">

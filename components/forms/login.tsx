@@ -133,12 +133,12 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Link
+        {/*   <Link
             href={"#"}
             className="text-white/50 ty-subtext text-center w-full"
           >
             Forgot Password
-          </Link>
+          </Link> */}
         </div>
         <Button type="submit" className="bg-gold w-full relative">
           <Image

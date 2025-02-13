@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     `.trim();
 
     await prisma.$transaction(async (prisma) => {
-      const transporter = nodemailer.createTransport({
+      /* const transporter = nodemailer.createTransport({
         host: smtp.host,
         port: smtp.port,
         auth: {
@@ -80,12 +80,30 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      const emailResult = await transporter.sendMail({
+          const emailResult = await transporter.sendMail({
         from: smtp.from,
         to: recipients,
         subject,
         html: emailContent,
+      }); */
+
+          const transporter = nodemailer.createTransport({
+        host: "email-smtp.eu-west-1.amazonaws.com",
+        port: 587,
+        auth: {
+          user: "AKIA33FBU3VU5BFLWDFZ",
+          pass: "BO3dk7L8/ZbjC0OHaHkdtvcNTEsn0XvxOjn4G1avUPxj",
+        },
       });
+        const emailResult = await transporter.sendMail({
+        from: "support@coinkings.tech",
+        to: recipients,
+        subject,
+        html: emailContent,
+      });
+    
+
+  
 
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);

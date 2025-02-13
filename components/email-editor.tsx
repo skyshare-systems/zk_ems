@@ -19,9 +19,9 @@ const EmailEditor = ({ isPreview }: Props) => {
     const footerHTML = selectedTemplate.footer;
 
     return `
-            <div className="w-full border-red-500 border">
+            <div className="w-full">
                 <div>${headerHTML}</div>
-                <div className="w-full bg-red-500">${bodyHTML}</div>
+                <div className="w-full">${bodyHTML}</div>
                 <div>${footerHTML}</div>
             </div>
         `;
@@ -32,18 +32,21 @@ const EmailEditor = ({ isPreview }: Props) => {
   return (
     <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white h-full grow">
       {isPreview ? (
-        <div className="border border-dashed border-gold grow h-full w-full p-4 rounded-lg border-spacing-9 text-white max-w-[640px] mx-auto">
-          <div className="w-full ">
-            <div
-              className="prose w-full max-w-none"
-              dangerouslySetInnerHTML={{ __html: previewHTML }}
-            ></div>
+        <div className="flex justify-center items-center min-h-screen w-full  p-4">
+          <div className="border border-dashed border-gold w-full max-w-[640px] p-4 rounded-lg text-white bg-white shadow-lg">
+            <div className="w-full flex justify-center">
+              <div
+                className="prose w-full max-w-[640px] break-words text-center"
+                dangerouslySetInnerHTML={{ __html: previewHTML }}
+              ></div>
+            </div>
           </div>
         </div>
       ) : (
         <>
-          <div className="flex flex-col items-start gap-2 self-stretch">
-            <div className="rounded-lg p-4 w-full border border-white/[.08]">
+          {/* Header */}
+          <div className="flex flex-col items-center gap-2 w-full">
+            <div className="rounded-lg p-4 w-full max-w-[640px] border border-white/[.08] text-center">
               <div
                 className="prose max-w-none"
                 dangerouslySetInnerHTML={{
@@ -52,25 +55,19 @@ const EmailEditor = ({ isPreview }: Props) => {
               ></div>
             </div>
           </div>
-          <div className="flex flex-col items-start gap-2 self-stretch h-full flex-1 my-4">
+
+          {/* Body */}
+          <div className="flex flex-col items-center gap-2 w-full my-4">
             <p className="ty-subtext text-black">Edit Email Body</p>
-
             <div className="max-w-[1250px] w-full">
-              {/*   <MDEditor
-                value={body}
-                height="500px"
-                className="h-full"
-                onChange={(value, viewUpdate) => setBody(value || "")}
-                preview="edit"
-                commands={[...getCommands()]}
-              /> */}
-
-              <SimpleToolbar  />
+              {/* <MDEditor ... /> */}
+              <SimpleToolbar />
             </div>
           </div>
 
-          <div className="flex flex-col items-start gap-2 self-stretch">
-            <div className="rounded-lg p-4 w-full border border-white/[.08]">
+          {/* Footer */}
+          <div className="flex flex-col items-center gap-2 w-full">
+            <div className="rounded-lg p-4 w-full max-w-[640px] border border-white/[.08] text-center">
               <div
                 className="prose max-w-none"
                 dangerouslySetInnerHTML={{

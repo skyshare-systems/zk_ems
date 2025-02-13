@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.744.0",
     "@ckeditor/ckeditor5-react": "^9.4.0",
     "@hookform/resolvers": "^3.10.0",
     "@mdxeditor/editor": "^3.21.4",

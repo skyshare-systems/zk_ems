@@ -53,7 +53,7 @@ async function main() {
               password: `smtppassword${index + 1}`,
               from: `smtpuser${index + 1}`,
             }   
-          }
+          },
         },
       });
     })

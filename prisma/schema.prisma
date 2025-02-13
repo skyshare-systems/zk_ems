@@ -25,17 +25,17 @@ model User {
 }
 
 model Company {
-  id               String         @id @default(cuid())
-  name             String         @unique
-  image            String
-  description      String
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  users            UserCompany[]
-  templates        Template[]
-  sentEmails       SentEmail[]
-  smtpCredential   SmtpCredential @relation(fields: [smtpCredentialId], references: [id])
-  smtpCredentialId String         @unique
+  id             String          @id @default(cuid())
+  name           String          @unique
+  image          String
+  description    String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  users          UserCompany[]
+  templates      Template[]
+  sentEmails     SentEmail[]
+  smtpCredential SmtpCredential?
+  storageConfig  StorageConfig?
 }
 
 model UserCompany {
@@ -100,10 +100,24 @@ model SmtpCredential {
   port      Int
   username  String
   password  String
-  from     String
+  from      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  company   Company? 
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String   @unique
+}
+
+model StorageConfig {
+  id              String   @id @default(cuid())
+  endpoint String?
+  region          String?
+  bucketName      String?
+  accessKeyId     String?
+  secretAccessKey String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String   @unique
 }
 
 enum Role {

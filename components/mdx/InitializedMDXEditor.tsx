@@ -35,6 +35,7 @@ import {
 } from "@mdxeditor/editor";
 import { useCreateEmailStore } from "@/store/create-email";
 import "@mdxeditor/editor/style.css";
+import { useCompanyStore } from "@/store/company";
 
 /* import { ALL_PLUGINS, YoutubeDirectiveDescriptor, virtuosoSampleSandpackConfig } from './_boilerplate'
 import kitchenSinkMarkdown from './assets/kitchen-sink.md?raw'
@@ -145,6 +146,10 @@ export const ConditionalToolbar = () => {
 
 export const SimpleToolbar = () => {
   const { body, setBody } = useCreateEmailStore();
+  const {company} = useCompanyStore()
+
+
+  //* take 10 newly uploaded images
 
   return (
     <MDXEditor
@@ -199,11 +204,27 @@ export const SimpleToolbar = () => {
         imagePlugin({
           imageUploadHandler: async (fileData) => {
             try {
-              const buffer = await fileData.arrayBuffer(); // Call it as a method
-              const blob = new Blob([buffer], { type: "image/png" });
-              const url = URL.createObjectURL(blob);
+              if(!company) {
+                throw new Error("Company not found")
+              }
 
-              return url;
+              const formData =  new FormData();
+
+              formData.append("file", fileData);
+              formData.append("filename", fileData.name);
+              formData.append("companyId", company?.id);
+
+              const response = await fetch("/api/attachments", {
+                method: "POST",
+                body: formData,
+              })
+
+              const data= await response.json();
+              const url = data.filepath
+
+              return url
+
+
             } catch (error) {
               console.error("Error handling image upload:", error);
               throw error;

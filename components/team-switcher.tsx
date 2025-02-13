@@ -16,7 +16,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { getCompanies } from "@/lib/query/company";
-import { useCompanyStore } from "@/store/company";
+import { CompanyWithConfigs, useCompanyStore } from "@/store/company";
 import { useUserStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -50,7 +50,7 @@ export function TeamSwitcher() {
 
   if (!company) return null;
 
-  function handleChangeCompany(company: Company) {
+  function handleChangeCompany(company: CompanyWithConfigs) {
     setCompany(company);
     setSelectedTemplate(null);
     setSelectedSentEmail(null);

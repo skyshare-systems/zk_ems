@@ -5,22 +5,34 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = async (request: NextRequest) => {
   try {
-    const {  host, bucketName, accessKeyId, secretAccessKey, companyId } =
-      (await request.json()) as Prisma.StorageConfigUpdateInput & {
-        companyId: string;
-      };
+    const {
+      endpoint,
+      region,
+      bucketName,
+      accessKeyId,
+      secretAccessKey,
+      companyId,
+    } = (await request.json()) as Prisma.StorageConfigUpdateInput & {
+      companyId: string;
+    };
 
+    const authHeader = request.headers.get("authorization");
 
-      const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+    const token = authHeader.split(" ")[1];
+    console.log(token);
 
-  const token = authHeader.split(" ")[1];
-  console.log(token);
-
-    if (!host || !bucketName || !accessKeyId || !secretAccessKey || !companyId) {
+    if (
+      !endpoint ||
+      !region ||
+      !bucketName ||
+      !accessKeyId ||
+      !secretAccessKey ||
+      !companyId
+    ) {
       return createErrorMessage("Invalid request data");
     }
 
@@ -41,15 +53,17 @@ export const PATCH = async (request: NextRequest) => {
         id: storageConfig.id,
       },
       data: {
-        host,
+        endpoint,
+        region,
         bucketName,
         accessKeyId,
-        secretAccessKey
+        secretAccessKey,
       },
     });
 
-    return NextResponse.json(createApiResponse("SMTP credentials updated", updateStorageConfig));
-    
+    return NextResponse.json(
+      createApiResponse("SMTP credentials updated", updateStorageConfig)
+    );
   } catch (error) {
     return createErrorMessage(error);
   }

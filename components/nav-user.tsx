@@ -86,29 +86,33 @@ export function NavUser() {
               </p>
             </DropdownMenuLabel>
             <Separator />
-            <DropdownMenuItem
-              onClick={() => {
-                onOpenSmtpModal();
-                setIsOpen(false);
-              }}
-              className="py-3 cursor-pointer"
-            >
-              <ServerCog />
-              Configure <span className="text-gold">{company?.name}</span>
-              SMTP
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                onOpenStorageModal();
-                setIsOpen(false);
-              }}
-              className="py-3 cursor-pointer"
-            >
-              <Database />
-              Configure <span className="text-gold">{company?.name}</span>
-              Storage
-            </DropdownMenuItem>
-            <Separator />
+            {user.role === "ADMIN" && (
+              <>
+                <DropdownMenuItem
+                  onClick={() => {
+                    onOpenSmtpModal();
+                    setIsOpen(false);
+                  }}
+                  className="py-3 cursor-pointer"
+                >
+                  <ServerCog />
+                  Configure <span className="text-gold">{company?.name}</span>
+                  SMTP
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    onOpenStorageModal();
+                    setIsOpen(false);
+                  }}
+                  className="py-3 cursor-pointer"
+                >
+                  <Database />
+                  Configure <span className="text-gold">{company?.name}</span>
+                  Storage
+                </DropdownMenuItem>
+                <Separator />
+              </>
+            )}
             <DropdownMenuItem
               onClick={handleLogout}
               className="py-3 cursor-pointer"

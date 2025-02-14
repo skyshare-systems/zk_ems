@@ -64,14 +64,96 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const emailContent = `
-      ${template.header}
-      <div style="padding: 20px; min-height: 100px;">${body}</div>
-      ${template.footer}
-    `.trim();
+const emailContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            width: auto;
+            border-radius: 8px;
+        }
+        
+        @media screen and (max-width: 600px) {
+            img {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0;">
+    <div 
+        class="email-container" 
+        style="
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+            padding: 16px;
+        "
+    >
+        <!-- Centered White Container -->
+        <div 
+            class="email-content" 
+            style="
+                box-sizing: border-box;
+                background-color: #ffffff;
+                width: 100%;
+                max-width: 640px;
+                padding: 20px;
+                margin: 0 auto;
+                border-radius: 8px;
+                text-align: center;
+            "
+        >
+            <!-- Header -->
+            <div class="email-header" style="margin-bottom: 20px;">
+                ${template.header}
+            </div>
+
+            <!-- Email Body -->
+            <div 
+                class="email-body" 
+                style="
+                    box-sizing: border-box;
+                    padding: 20px;
+                    min-height: 100px;
+                    text-align: center;
+                    width: 100%;
+                "
+            >
+                <div style="max-width: 100%;
+                            width: 100%;
+                            position: relative;
+                            display: inline-block;">
+                    ${body}
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="email-footer" style="margin-top: 20px;">
+                ${template.footer}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+`
+
 
     await prisma.$transaction(async (prisma) => {
-      const transporter = nodemailer.createTransport({
+      /* const transporter = nodemailer.createTransport({
         host: smtp.host,
         port: smtp.port,
         auth: {
@@ -80,8 +162,23 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      const emailResult = await transporter.sendMail({
+          const emailResult = await transporter.sendMail({
         from: smtp.from,
+        to: recipients,
+        subject,
+        html: emailContent,
+      }); */
+
+      const transporter = nodemailer.createTransport({
+        host: "email-smtp.eu-west-1.amazonaws.com",
+        port: 587,
+        auth: {
+          user: "AKIA33FBU3VU5BFLWDFZ",
+          pass: "BO3dk7L8/ZbjC0OHaHkdtvcNTEsn0XvxOjn4G1avUPxj",
+        },
+      });
+      const emailResult = await transporter.sendMail({
+        from: "support@coinkings.tech",
         to: recipients,
         subject,
         html: emailContent,

@@ -3,9 +3,12 @@
 import {
   BadgeCheck,
   Bell,
+  ChevronRight,
   ChevronsUpDown,
   CreditCard,
+  Database,
   LogOut,
+  ServerCog,
   Sparkles,
 } from "lucide-react";
 
@@ -26,10 +29,19 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useUserStore } from "@/store/user";
+import { Separator } from "./ui/separator";
+import { useCompanyStore } from "@/store/company";
+import { useSmtpModalStore } from "@/store/smtp";
+import { useState } from "react";
+import { useStorageModalStore } from "@/store/storage";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { user, setUser } = useUserStore();
+  const { company } = useCompanyStore();
+  const { onOpen: onOpenSmtpModal } = useSmtpModalStore();
+  const { onOpen: onOpenStorageModal } = useStorageModalStore();
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!user) return null;
 
@@ -40,7 +52,7 @@ export function NavUser() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -53,19 +65,58 @@ export function NavUser() {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.username}</span>
-                <span className="truncate text-xs">{user.emailAddress}</span>
+                <span className="truncate font-semibold">
+                  {user.emailAddress}
+                </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronRight className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuLabel className="flex justify-between items-center text-xs text-muted-foreground py-3">
+              <p className="ty-descriptions">Account</p>
+              <p className="ty-descriptions">
+                Role: <span className="text-gold">{user.role}</span>
+              </p>
+            </DropdownMenuLabel>
+            <Separator />
+            {user.role === "ADMIN" && (
+              <>
+                <DropdownMenuItem
+                  onClick={() => {
+                    onOpenSmtpModal();
+                    setIsOpen(false);
+                  }}
+                  className="py-3 cursor-pointer"
+                >
+                  <ServerCog />
+                  Configure <span className="text-gold">{company?.name}</span>
+                  SMTP
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    onOpenStorageModal();
+                    setIsOpen(false);
+                  }}
+                  className="py-3 cursor-pointer"
+                >
+                  <Database />
+                  Configure <span className="text-gold">{company?.name}</span>
+                  Storage
+                </DropdownMenuItem>
+                <Separator />
+              </>
+            )}
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="py-3 cursor-pointer"
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

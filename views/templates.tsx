@@ -7,14 +7,13 @@ import TemplatePreview from "@/components/template-preview";
 import TemplateSelection from "@/components/template-selection";
 import { Button } from "@/components/ui/button";
 import { IconInput } from "@/components/ui/icon-input";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getTemplates } from "@/lib/query/templates";
 import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useUserStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeAlert, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useState } from "react";
 import { useDebounce } from "react-use";
 const Templates = () => {
@@ -60,7 +59,7 @@ const Templates = () => {
           <p className="ty-subheading ">Brand Email Templates</p>
           <IconInput
             startIcon={<Search size={16} />}
-            className="w-full flex-1"
+            className="w-full flex-1 bg-white/[.04]"
             value={title}
             onChange={onChange}
             placeholder="Search"

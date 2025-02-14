@@ -49,6 +49,10 @@ export const GET = async (req: NextRequest) => {
           some: { userId: userId },
         },
       },
+      include: {
+        storageConfig: true,
+        smtpCredential: true,
+      }
     });
 
     const meta: Meta = {

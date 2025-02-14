@@ -44,6 +44,9 @@ export const GET = async (req: NextRequest) => {
             }
           : undefined,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         _count: {
           select: { recipients: true },

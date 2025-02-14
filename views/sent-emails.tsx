@@ -58,7 +58,7 @@ const SentEmails = () => {
           <p className="ty-subheading">Sent Emails</p>
           <IconInput
             startIcon={<Search size={16} />}
-            className="w-full flex-1"
+            className="w-full flex-1 bg-white/[.04]"
             value={title}
             onChange={onChange}
             placeholder="Search"

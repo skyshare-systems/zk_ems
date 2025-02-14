@@ -34,7 +34,7 @@ export const middleware = async (req: NextRequest) => {
   }
 
   // List of public API routes (Not protected)
-  const publicRoutes = ["/api/auth/login",];
+  const publicRoutes = ["/api/auth/login", "/api/attachments", "/api/smtp-credentials", "/api/storage-config"];
 
   // Allow public routes without authentication
   if (publicRoutes.includes(path)) {

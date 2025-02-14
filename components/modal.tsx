@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogOverlay
+  DialogOverlay,
 } from "@/components/ui/dialog";
 
 interface ModalProps {

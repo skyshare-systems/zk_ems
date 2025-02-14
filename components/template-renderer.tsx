@@ -439,6 +439,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
           <p className="text-gold">Show Preview</p>
         </Button>
         <Button
+        disabled={recipients.length === 0 || subject.trim() === ""}
           onClick={sendEmailConfirmation}
           variant={"ghost"}
           className="bg-white/[.08] flex items-center"

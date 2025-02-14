@@ -11,7 +11,7 @@ export interface InputProps
 const IconInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, startIcon, endIcon, endIconOnClick, ...props }, ref) => {
     return (
-      <div className="w-full flex items-center border border-input rounded-md bg-[#EBF4FF14]">
+      <div className="w-full flex items-center border border-input rounded-md ">
         {startIcon && (
           <div className="pl-2">
             {typeof startIcon === "function"

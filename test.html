@@ -1,10 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    /* 1. Use a more-intuitive box-sizing model */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* 2. Remove default margin */
+    * {
+      margin: 0;
+    }
+
+    body {
+      /* 3. Add accessible line-height */
+      line-height: 1.5;
+      /* 4. Improve text rendering */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 5. Improve media defaults */
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* 6. Inherit fonts for form controls */
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    /* 7. Avoid text overflows */
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      overflow-wrap: break-word;
+    }
+
+    /* 8. Improve line wrapping */
+    p {
+      text-wrap: pretty;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-wrap: balance;
+    }
+
+    /*
+  9. Create a root stacking context
+*/
+    #root,
+    #__next {
+      isolation: isolate;
+    }
+  </style>
+  <body>
+    <!-- <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        flex: 1 0 0;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 16px;
+          align-self: stretch;
+        "
+      >
+        <img
+          src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/IBA-Official-Logo-Inverted.png"
+          width="56px"
+          height="64px"
+        />
+
+        <div
+          class="footer-content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            align-self: stretch;
+          "
+        >
+          <p
+            style="
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 700;
+              text-align: center;
+            "
+          >
+            Grow Beyond Your Limits
+          </p>
+          <p  
+            style="
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              text-align: center;
+            "
+          >
+            The pioneering agency in delivering tailored business solutions that
+            empower SMEs to scale, streamline, and succeed.
+          </p>
+
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              gap: 8px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                opacity: 0.5;
+              "
+            >
+            
+
+              <p style="font-size: 10.24px">
+                Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas Center,
+                Pasig
+              </p>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                opacity: 0.5;
+              "
+            >
+              
+
+              <p style="font-size: 10.24px">innovatedsolutionsph@gmail.com</p>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                opacity: 0.5;
+              "
+            >
+              
+
+              <p style="font-size: 10.24px">0927 547 8713</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 16px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            align-self: stretch;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              padding: 8px;
+              align-items: flex-start;
+              gap: 8px;
+              border-radius: 8px;
+              background: rgba(0, 2, 5, 0.04);
+            "
+          >
+            
+          </div>
+          <div
+            style="
+              display: flex;
+              padding: 8px;
+              align-items: flex-start;
+              gap: 8px;
+              border-radius: 8px;
+              background: rgba(0, 2, 5, 0.04);
+            "
+          >
+            
+          </div>
+          <div
+            style="
+              display: flex;
+              padding: 8px;
+              align-items: flex-start;
+              gap: 8px;
+              border-radius: 8px;
+              background: rgba(0, 2, 5, 0.04);
+            "
+          >
+            
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <table style="width: 100%; border-collapse: collapse">
+      <tr>
+        <td style="text-align: center;">
+        
+            <tr>
+              <td class="" style="line-height: 1;" >
+                <img
+                  src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/IBA-Official-Logo-Inverted.png"
+                  width="56px"
+                  height="64px"
+                  style="align-self: stretch; margin-inline: auto"  
+                />
+              </td>
+            </tr>
+            <tr>
+              <td class="" >
+                <p
+                  style="font-size: 14px; font-weight: 700; text-align: center; line-height:1;padding:0px;margin:0px;"
+                >
+                  Grow Beyond Your Limits
+                </p>
+                <p
+                  style="font-size: 14px; font-weight: 400; text-align: center; line-height:1;padding:0px;margin:0px;"
+                >
+                  The pioneering agency in delivering tailored business
+                  solutions that empower SMEs to scale, streamline, and succeed.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0">
+                <table style="width: 100%; text-align: center; opacity: 0.5">
+                  <tr>
+                    <td style="font-size: 10.24px; text-align: center;">
+                      Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas
+                      Center, Pasig
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-size: 10.24px; text-align: center;">
+                      innovatedsolutionsph@gmail.com
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-size: 10.24px; text-align: center;">0927 547 8713</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>

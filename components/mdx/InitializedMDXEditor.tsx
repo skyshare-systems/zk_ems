@@ -148,10 +148,9 @@ export const ConditionalToolbar = () => {
 
 interface Props {
   ref: React.RefObject<MDXEditorMethods | null>;
-};
+}
 
-
-export const Mdx = ({ref}: Props) => {
+export const Mdx = ({ ref }: Props) => {
   const { body, setBody } = useCreateEmailStore();
   const { company } = useCompanyStore();
 
@@ -163,12 +162,12 @@ export const Mdx = ({ref}: Props) => {
       ref={ref}
       markdown={body}
       onChange={setBody}
-      contentEditableClassName="prose grow max-w-none h-full"
-      className="h-full grow"
+      contentEditableClassName="prose grow max-w-none h-full mx-auto"
+      className="h-full grow w-full"
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (
-            <div className="flex flex-wrap gap-2 justify-start">
+            <div className="flex flex-wrap gap-2 justify w-full space-y-2">
               <DiffSourceToggleWrapper>
                 <BlockTypeSelect />
                 <Separator />
@@ -194,7 +193,9 @@ export const Mdx = ({ref}: Props) => {
                   ]}
                 />
                 <Separator />
-                <UndoRedo />
+                <div className="mr-auto">
+                  <UndoRedo />
+                </div>
               </DiffSourceToggleWrapper>
             </div>
           ),
@@ -233,7 +234,7 @@ export const Mdx = ({ref}: Props) => {
 
               return url;
             } catch (error) {
-              toast.error("Something went wrong.")
+              toast.error("Something went wrong.");
               console.error("Error handling image upload:", error);
               throw error;
             }

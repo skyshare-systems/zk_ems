@@ -41,7 +41,6 @@ const Templates = () => {
 
   const [, cancel] = useDebounce(
     () => {
-      reset();
       setDebouncedTitle(title);
     },
     1500,

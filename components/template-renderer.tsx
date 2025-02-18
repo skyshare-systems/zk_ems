@@ -426,7 +426,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
-          <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+          <EmailEditor isPreview={isPreview}  />
         </div>
       </div>
 

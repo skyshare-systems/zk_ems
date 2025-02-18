@@ -55,6 +55,7 @@ model Template {
   header      String
   body        String?
   footer      String
+  style       String
   tags        String[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -65,7 +66,10 @@ model Template {
 
 model SentEmail {
   id         String      @id @default(cuid())
-  email      String
+  header     String
+  body       String
+  footer     String
+  style      String
   templateId String
   template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
   recipients Recipient[]
@@ -109,7 +113,7 @@ model SmtpCredential {
 
 model StorageConfig {
   id              String   @id @default(cuid())
-  endpoint String?
+  endpoint        String?
   region          String?
   bucketName      String?
   accessKeyId     String?

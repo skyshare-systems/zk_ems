@@ -1,7 +1,7 @@
 "use client";
 
 import { useSentEmailStore } from "@/store/sent-email";
-import SentEmailContent from "./sent-email-content";
+import { SentEmailContent } from "./sent-email-content";
 
 const SentEmailRenderer = () => {
   const { selectedSentEmail } = useSentEmailStore();

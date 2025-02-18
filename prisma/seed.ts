@@ -85,6 +85,7 @@ async function main() {
             header: `Header ${index + 1}`,
             body: `Body content ${index + 1}`,
             footer: `Footer ${index + 1}`,
+            style: `Style ${index + 1}`,
             tags: [`tag${index + 1}`, "email", company.name.toLowerCase()],
             companyId: company.id,
           },
@@ -99,7 +100,10 @@ async function main() {
       Array.from({ length: 2 }).map(() =>
         prisma.sentEmail.create({
           data: {
-            email: `Email body based on template: ${template.name}`,
+            header: `Email header based on template: ${template.name}`,
+            body: `Email body based on template: ${template.name}`,
+            footer: `Email footer based on template: ${template.name}`,
+            style: `Email style based on template: ${template.name}`,
             templateId: template.id,
             companyId: template.companyId,
           },

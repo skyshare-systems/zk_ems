@@ -2,7 +2,7 @@
 
 import { useCreateEmailStore } from "@/store/create-email";
 import { useState } from "react";
-import Preview from "./preview";
+import { Preview } from "./preview";
 
 const TemplatePreview = () => {
   const { selectedTemplate } = useCreateEmailStore();

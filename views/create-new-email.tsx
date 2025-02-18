@@ -41,7 +41,6 @@ const CreateNewEmail = () => {
 
   const [, cancel] = useDebounce(
     () => {
-      reset();
       setDebouncedTitle(title);
     },
     1500,

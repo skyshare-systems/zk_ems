@@ -32,10 +32,12 @@ import {
   ShowSandpackInfo,
   InsertCodeBlock,
   InsertSandpack,
+  MDXEditorMethods,
 } from "@mdxeditor/editor";
 import { useCreateEmailStore } from "@/store/create-email";
 import "@mdxeditor/editor/style.css";
 import { useCompanyStore } from "@/store/company";
+import { toast } from "sonner";
 
 /* import { ALL_PLUGINS, YoutubeDirectiveDescriptor, virtuosoSampleSandpackConfig } from './_boilerplate'
 import kitchenSinkMarkdown from './assets/kitchen-sink.md?raw'
@@ -144,22 +146,29 @@ export const ConditionalToolbar = () => {
 }
  */
 
-export const SimpleToolbar = () => {
-  const { body, setBody } = useCreateEmailStore();
-  const {company} = useCompanyStore()
+interface Props {
+  ref: React.RefObject<MDXEditorMethods | null>;
+};
 
+
+export const Mdx = ({ref}: Props) => {
+  const { body, setBody } = useCreateEmailStore();
+  const { company } = useCompanyStore();
 
   //* take 10 newly uploaded images
 
   return (
     <MDXEditor
+      autoFocus
+      ref={ref}
       markdown={body}
       onChange={setBody}
-      contentEditableClassName="prose max-w-[640px] mx-auto"
+      contentEditableClassName="prose grow max-w-none h-full"
+      className="h-full grow"
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (
-            <>
+            <div className="flex flex-wrap gap-2 justify-start">
               <DiffSourceToggleWrapper>
                 <BlockTypeSelect />
                 <Separator />
@@ -187,7 +196,7 @@ export const SimpleToolbar = () => {
                 <Separator />
                 <UndoRedo />
               </DiffSourceToggleWrapper>
-            </>
+            </div>
           ),
         }),
         listsPlugin(),
@@ -204,11 +213,11 @@ export const SimpleToolbar = () => {
         imagePlugin({
           imageUploadHandler: async (fileData) => {
             try {
-              if(!company) {
-                throw new Error("Company not found")
+              if (!company) {
+                throw new Error("Company not found");
               }
 
-              const formData =  new FormData();
+              const formData = new FormData();
 
               formData.append("file", fileData);
               formData.append("filename", fileData.name);
@@ -217,15 +226,14 @@ export const SimpleToolbar = () => {
               const response = await fetch("/api/attachments", {
                 method: "POST",
                 body: formData,
-              })
+              });
 
-              const data= await response.json();
-              const url = data.filepath
+              const data = await response.json();
+              const url = data.filepath;
 
-              return url
-
-
+              return url;
             } catch (error) {
+              toast.error("Something went wrong.")
               console.error("Error handling image upload:", error);
               throw error;
             }

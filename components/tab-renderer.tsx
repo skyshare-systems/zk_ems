@@ -4,6 +4,7 @@ import SentEmails from '@/views/sent-emails';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense } from 'react'
+import { SidebarTrigger } from './ui/sidebar';
 
 const CreateNewEmail = dynamic(() => import("@/views/create-new-email"), {
   ssr: false,
@@ -33,7 +34,12 @@ const TabRenderer = () => {
     }
   }
   
-  return <Suspense fallback={null}>{renderLayout()}</Suspense>;
+  return (
+    <Suspense fallback={null}>
+        <SidebarTrigger />
+        {renderLayout()}
+    </Suspense>
+  );
 }
 
 export default TabRenderer

@@ -1,7 +1,8 @@
 import { useCreateEmailStore } from "@/store/create-email";
 import { marked } from "marked";
-import React from "react";
-import { SimpleToolbar } from "./mdx/InitializedMDXEditor";
+import React, { useRef } from "react";
+import { Mdx } from "./mdx/InitializedMDXEditor";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
 interface Props {
   isPreview: boolean;
@@ -11,6 +12,8 @@ interface Props {
 const EmailEditor = ({ isPreview }: Props) => {
   const { selectedTemplate, body, setBody } = useCreateEmailStore();
   const [markdown, setMarkdown] = React.useState("");
+  const ref = useRef<MDXEditorMethods>(null);
+
   if (!selectedTemplate) return null;
 
   const buildPreview = () => {
@@ -28,6 +31,10 @@ const EmailEditor = ({ isPreview }: Props) => {
   };
 
   const previewHTML = buildPreview();
+
+  const focus = () => {
+    ref.current?.focus();
+  };
 
   return (
     <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white h-full grow">
@@ -57,11 +64,14 @@ const EmailEditor = ({ isPreview }: Props) => {
           </div>
 
           {/* Body */}
-          <div className="flex flex-col items-center gap-2 w-full my-4">
+          <div
+            onClick={focus}
+            className="flex flex-col items-center gap-2 w-full my-4 grow"
+          >
             <p className="ty-subtext text-black">Edit Email Body</p>
-            <div className="max-w-[1250px] w-full">
-              {/* <MDEditor ... /> */}
-              <SimpleToolbar />
+            <div className="grow h-full w-full">
+            
+              <Mdx ref={ref} />
             </div>
           </div>
 

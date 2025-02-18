@@ -102,7 +102,7 @@ const SentEmail = ({ sentEmail }: Props) => {
       </div>
 
       {/* actions */}
-      <div className="flex p-2 items-center gap-1 "></div>
+    {/*   <div className="flex p-2 items-center gap-1 "></div> */}
     </div>
   );
 };

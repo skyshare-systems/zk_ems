@@ -28,7 +28,7 @@ const LoginForm = () => {
   const router = useRouter();
   const { setUser } = useUserStore();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, } = useMutation({
     mutationFn: authLogin,
     mutationKey: ["login"],
     onSuccess: ({ data, message }) => {
@@ -38,7 +38,6 @@ const LoginForm = () => {
         style: {
           background: "#00a650",
         },
-        duration: 1500,
         onAutoClose: () => {
           router.push("/dashboard?t=create-new-email");
         },
@@ -73,7 +72,6 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-
     localStorage.clear()
   },[])
 

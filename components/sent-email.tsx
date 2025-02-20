@@ -58,7 +58,7 @@ const SentEmail = ({ sentEmail }: Props) => {
 
       {/* CONTENT */}
       <div className="flex flex-col justify-center items-center gap-2 self-stretch">
-        <p className="ty-title self-stretch">{sentEmail.template.subject}</p>
+        <p className="ty-title self-stretch">{sentEmail.subject}</p>
         <p className="text-white/[.32] text-ellipsis overflow-hidden line-clamp-3 text-[12.24px] self-stretch">
           {sentEmail.template.description}
         </p>

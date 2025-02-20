@@ -154,6 +154,9 @@ export const Mdx = ({ ref }: Props) => {
               const response = await fetch("/api/attachments", {
                 method: "POST",
                 body: formData,
+                headers: {
+                  "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                }
               });
 
               const data = await response.json();

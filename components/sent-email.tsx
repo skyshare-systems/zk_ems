@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, localizedTime } from "@/lib/utils";
 import { useSentEmailStore } from "@/store/sent-email";
 import { Prisma } from "@prisma/client";
 import { format } from "date-fns";
@@ -34,7 +34,8 @@ const SentEmail = ({ sentEmail }: Props) => {
       }}
       className={cn(
         "flex p-3 flex-col justify-center items-start gap-2 self-stretch rounded-xl border border-white/[.08] duration-200 hover:bg-white/[.08]",
-        selectedSentEmail === sentEmail && "bg-white/[.08] border border-white/[.08]"
+        selectedSentEmail === sentEmail &&
+          "bg-white/[.08] border border-white/[.08]"
       )}
     >
       {/* BADGES */}
@@ -49,7 +50,9 @@ const SentEmail = ({ sentEmail }: Props) => {
         ))}
 
         <div className="bg-white/[.04] rounded-[4px] flex px-2 py-1 justify-center items-start gap-2 text-white/50 text-[12.24px]">
-          <p className="self-stretch line-clamp-1 text-ellipsis">{sentEmail.template.name}</p>
+          <p className="self-stretch line-clamp-1 text-ellipsis">
+            {sentEmail.template.name}
+          </p>
         </div>
       </div>
 
@@ -97,12 +100,12 @@ const SentEmail = ({ sentEmail }: Props) => {
         </div>
 
         <p className="text-[10.24px] text-white/[.8]">
-          {format(sentEmail.createdAt, "MMMM d yyyy • h:mm a")}
+          {localizedTime(sentEmail.createdAt, "MMMM d yyyy • h:mm a")}
         </p>
       </div>
 
       {/* actions */}
-    {/*   <div className="flex p-2 items-center gap-1 "></div> */}
+      {/*   <div className="flex p-2 items-center gap-1 "></div> */}
     </div>
   );
 };

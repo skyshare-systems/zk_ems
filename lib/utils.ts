@@ -5,9 +5,19 @@ import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { AuthenticationError } from "./exceptions";
 import { z } from "zod";
+import { fromZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function localizedTime(date: Date, formatString: string) {
+  const localCreatedAt = fromZonedTime(date, timeZone);
+
+  return format(localCreatedAt, formatString);
 }
 
 export const createErrorMessage = (error: unknown) => {

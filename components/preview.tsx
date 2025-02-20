@@ -9,7 +9,7 @@ export const Preview = () => {
   if (!selectedTemplate) return null;
 
   return (
-    <div className="flex flex-col flex-1 w-full bg-white p-4 h-full">
+    <div className="flex flex-col flex-1 w-full bg-white p-4 h-full clear-user-agent-styles">
       <EmailSection content={selectedTemplate.header} />
 
       <div className="flex flex-col grow p-4 justify-center items-center gap-2 self-stretch rounded-lg">

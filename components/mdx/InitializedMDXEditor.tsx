@@ -162,8 +162,8 @@ export const Mdx = ({ ref }: Props) => {
       ref={ref}
       markdown={body}
       onChange={setBody}
-      contentEditableClassName="prose grow max-w-none h-full mx-auto"
-      className="h-full grow w-full"
+      contentEditableClassName="prose grow max-w-[640px]  text-center h-full mx-auto"
+      className="h-full grow w-full mx-auto"
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import juice from "juice";
 
 // Type definitions for better type safety
 interface EmailRequest {
@@ -11,13 +12,29 @@ interface EmailRequest {
   recipients: string[];
 }
 
+const getTransporter = (smtp: {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+}) => {
+  return nodemailer.createTransport({
+    host: smtp.host,
+    port: smtp.port,
+    auth: {
+      user: smtp.username,
+      pass: smtp.password,
+    },
+  });
+};
+
 export async function POST(req: NextRequest) {
   try {
     const { subject, templateId, body, recipients } =
       (await req.json()) as EmailRequest;
 
     // Input validation
-    if (
+  /*   if (
       !subject?.trim() ||
       !templateId?.trim() ||
       !body?.trim() ||
@@ -28,19 +45,16 @@ export async function POST(req: NextRequest) {
         createApiResponse("Invalid request data", null),
         { status: 400 }
       );
-    }
+    } */
 
+    // Fetch template details
     const template = await prisma.template.findUnique({
       where: { id: templateId },
       select: {
         header: true,
         footer: true,
         companyId: true,
-        company: {
-          select: {
-            name: true,
-          },
-        },
+        company: { select: { name: true } },
       },
     });
 
@@ -50,51 +64,20 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const smtp = await prisma.smtpCredential.findFirst({
-      where: {
-        company: {
-          id: template.companyId,
-        },
-      },
-    });
+    const modifiedBody = body.replace(
+      /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
+      '<img width="100%" style="border-radius:12px" $1>'
+    );
 
-    if (!smtp) {
-      return NextResponse.json(createApiResponse("SMTP not found", null), {
-        status: 404,
-      });
-    }
+    console.log({ modifiedBody });
 
-const emailContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        img {
-            max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-            object-fit: contain;
-            width: auto;
-            border-radius: 8px;
-        }
-        
-        @media screen and (max-width: 600px) {
-            img {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body style="margin: 0; padding: 0;">
+    const fullHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
     <div 
         class="email-container" 
         style="
@@ -134,10 +117,8 @@ const emailContent = `
                 "
             >
                 <div style="max-width: 100%;
-                            width: 100%;
-                            position: relative;
-                            display: inline-block;">
-                    ${body}
+                            width: 100%;">
+                    ${modifiedBody}
                 </div>
             </div>
 
@@ -147,65 +128,66 @@ const emailContent = `
             </div>
         </div>
     </div>
-</body>
-</html>
-`
+    </body>
+      </html>
+    `;
 
+    // Fetch SMTP credentials
+    const smtp = await prisma.smtpCredential.findFirst({
+      where: { company: { id: template.companyId } },
+    });
 
+    if (!smtp) {
+      return NextResponse.json(createApiResponse("SMTP not found", null), {
+        status: 404,
+      });
+    }
+
+    const inlinedHtml = juice(fullHtml);
+
+    // Send email inside a database transaction
     await prisma.$transaction(async (prisma) => {
-      /* const transporter = nodemailer.createTransport({
-        host: smtp.host,
-        port: smtp.port,
-        auth: {
-          user: smtp.username,
-          pass: smtp.password,
-        },
-      });
+      const transporter = getTransporter(smtp);
 
-          const emailResult = await transporter.sendMail({
-        from: smtp.from,
-        to: recipients,
-        subject,
-        html: emailContent,
-      }); */
+      try {
+        // Store sent email details
+        const sentEmail = await prisma.sentEmail.create({
+          data: {
+            header: template.header,
+            body: modifiedBody,
+            footer: template.footer,
+            templateId,
+            companyId: template.companyId,
+            recipients: {
+              createMany: {
+                data: recipients.map((email) => ({ emailAddress: email })),
+              },
+            },
+          },
+        });
+        console.log({ sentEmail });
+      } catch (error) {
+        console.log({ error });
+      }
 
-      const transporter = nodemailer.createTransport({
-        host: "email-smtp.eu-west-1.amazonaws.com",
-        port: 587,
-        auth: {
-          user: "AKIA33FBU3VU5BFLWDFZ",
-          pass: "BO3dk7L8/ZbjC0OHaHkdtvcNTEsn0XvxOjn4G1avUPxj",
-        },
-      });
       const emailResult = await transporter.sendMail({
-        from: "support@coinkings.tech",
+        from: "support@coinkings.tech", // Use SMTP username as sender
         to: recipients,
         subject,
-        html: emailContent,
+        html: inlinedHtml,
       });
 
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
       }
-
-      await prisma.sentEmail.create({
-        data: {
-          email: emailContent,
-          templateId,
-          companyId: template.companyId,
-          recipients: {
-            createMany: {
-              data: recipients.map((recipient) => ({
-                emailAddress: recipient,
-              })),
-            },
-          },
-        },
-      });
     });
 
-    return NextResponse.json(createApiResponse("Email sent successfully", ""));
+    return NextResponse.json(
+      createApiResponse("Email sent successfully", null)
+    );
   } catch (error) {
-    return NextResponse.json(createErrorMessage(error), { status: 500 });
+    return NextResponse.json({
+      error
+    });
   }
 }

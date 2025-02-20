@@ -4,16 +4,20 @@ import { Template } from "@prisma/client";
 import React from "react";
 import { format } from "date-fns";
 import { useCreateEmailStore } from "@/store/create-email";
-import { cn } from "@/lib/utils";
-
+import { cn, localizedTime } from "@/lib/utils";
+import { fromZonedTime } from "date-fns-tz";
 interface Props {
   template: Template;
 }
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
+
 
 const TemplateSelection = ({ template }: Props) => {
   const { description, createdAt, tags, name } = template;
 
   const { selectedTemplate, setSelectedTemplate } = useCreateEmailStore();
+const localCreatedAt = fromZonedTime(createdAt, timeZone);
 
 
   return (
@@ -27,7 +31,8 @@ const TemplateSelection = ({ template }: Props) => {
       }}
       className={cn(
         "flex cursor-pointer hover:bg-white/[.16] p-3 flex-col justify-center items-start gap-2 self-stretch rounded-xl relative mr-2",
-        selectedTemplate?.id === template.id && "border border-gold bg-gold/[.04]"
+        selectedTemplate?.id === template.id &&
+          "border border-gold bg-gold/[.04]"
       )}
     >
       {selectedTemplate?.id === template.id && (
@@ -49,13 +54,15 @@ const TemplateSelection = ({ template }: Props) => {
         </div>
       )}
       <div className="flex flex-col items-start justify-center gap-2 self-stretch">
-        <p className="ty-title self-stretch font-bold line-clamp-2 text-ellipsis">{name}</p>
+        <p className="ty-title self-stretch font-bold line-clamp-2 text-ellipsis">
+          {name}
+        </p>
         <p className="line-clamp-3 text-ellipsis font-medium self-stretch text-[12.8px]">
           {description}
         </p>
 
         <p className="ty-subtitle text-white/[.32] self-stretch">
-          Created at {format(createdAt, "MMMM d yyyy • h:mm a")}
+          Created at {localizedTime(createdAt, "MMMM d yyyy • h:mm a")}
         </p>
 
         <div className="flex gap-2 items-center">

@@ -1,22 +1,17 @@
 import { useSentEmailStore } from "@/store/sent-email";
+import { EmailSection } from "./email-section";
 
-const SentEmailContent = () => {
+export const SentEmailContent = () => {
   const { selectedSentEmail } = useSentEmailStore();
   if (!selectedSentEmail) return null;
 
   return (
-  
-      <div className="flex justify-center items-center min-h-screen w-full bg-gray-100 p-4">
-        <div className="border border-dashed border-gold w-full max-w-[640px] p-4 rounded-lg text-white bg-white shadow-lg">
-          <div className="w-full flex justify-center">
-            <div
-              className="prose w-full max-w-[640px] break-words text-center"
-              dangerouslySetInnerHTML={{ __html: selectedSentEmail.email }}
-            ></div>
-          </div>
-        </div>
+    <div className="flex flex-col flex-1 w-full bg-white p-4 h-full">
+      <EmailSection content={selectedSentEmail.header} />
+      <div className="flex flex-col grow">
+        <EmailSection content={selectedSentEmail.body} />
+      </div>
+      <EmailSection content={selectedSentEmail.footer} />
     </div>
   );
 };
-
-export default SentEmailContent;

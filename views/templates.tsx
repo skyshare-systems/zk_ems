@@ -41,7 +41,6 @@ const Templates = () => {
 
   const [, cancel] = useDebounce(
     () => {
-      reset();
       setDebouncedTitle(title);
     },
     1500,
@@ -53,9 +52,9 @@ const Templates = () => {
   }
 
   return (
-    <div className="flex">
-      <LayoutContainer classnames="sticky w-fit h-screen p-0 top-0 left-0 pb-28">
-        <ContainerSidebar classname="p-8 w-full">
+    <div className="flex flex-col lg:flex-row">
+      <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
+        <ContainerSidebar classname="p-2 lg:p-8 w-full">
           <p className="ty-subheading ">Brand Email Templates</p>
           <IconInput
             startIcon={<Search size={16} />}
@@ -119,7 +118,7 @@ const Templates = () => {
           </ScrollArea>
         </ContainerSidebar>
       </LayoutContainer>
-      <LayoutContainer classnames="relative">
+      <LayoutContainer classnames="relative p-2 lg:p-8 lg:pl-0">
         <ContainerMain>
           {selectedTemplate && (
             <p className="ty-subtitle self-stretch text-white/50">

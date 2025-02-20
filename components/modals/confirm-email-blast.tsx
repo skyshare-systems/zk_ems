@@ -23,7 +23,6 @@ const ConfirmEmailBlast = () => {
       toast.success("Email sent successfully", {
         onAutoClose: () => {
           onClose();
-          reset();
         },
       });
     },

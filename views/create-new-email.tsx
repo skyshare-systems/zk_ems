@@ -41,7 +41,6 @@ const CreateNewEmail = () => {
 
   const [, cancel] = useDebounce(
     () => {
-      reset();
       setDebouncedTitle(title);
     },
     1500,
@@ -53,9 +52,9 @@ const CreateNewEmail = () => {
   }
 
   return (
-    <div className="flex">
-      <LayoutContainer classnames="sticky w-fit h-screen p-0 top-0 left-0 pb-28">
-        <ContainerSidebar classname="p-8 w-full">
+    <div className="flex flex-col lg:flex-row">
+      <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
+        <ContainerSidebar classname="p-2 lg:p-8 w-full">
           <p className="ty-subheading">Create new email</p>
           <IconInput
             startIcon={<Search size={16} />}
@@ -118,7 +117,7 @@ const CreateNewEmail = () => {
           </ScrollArea>
         </ContainerSidebar>
       </LayoutContainer>
-      <LayoutContainer classnames="relative pb-28">
+      <LayoutContainer classnames="relative p-2 lg:p-8 lg:pl-0">
         <ContainerMain>
           <p className="ty-subtitle self-stretch text-white/50">
             {!selectedTemplate ? "Edit your email" : "Email Preview"}

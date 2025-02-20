@@ -1,7 +1,7 @@
 "use client";
 
 import { useSentEmailStore } from "@/store/sent-email";
-import SentEmailContent from "./sent-email-content";
+import { SentEmailContent } from "./sent-email-content";
 
 const SentEmailRenderer = () => {
   const { selectedSentEmail } = useSentEmailStore();
@@ -10,7 +10,7 @@ const SentEmailRenderer = () => {
 
 
   return (
-    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow w-full">
       <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch ">
@@ -19,7 +19,7 @@ const SentEmailRenderer = () => {
               {selectedSentEmail?.template.subject}
             </p>
           </div>
-          <div className="flex items-center gap-2 self-stretch  ">
+          <div className="flex items-center gap-2 self-stretch flex-wrap ">
             <p className="ty-descriptions text-white/[.32] w-[96px]">
               Recipients
             </p>

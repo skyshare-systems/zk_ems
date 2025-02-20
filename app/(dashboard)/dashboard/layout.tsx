@@ -123,7 +123,6 @@ export default function DashboardLayout({
                       <AppSidebar />
                     </Suspense>
                     <div className="flex-1">
-                      {/* <SidebarTrigger /> */}
                       {children}
                     </div>
                   </SidebarProvider>

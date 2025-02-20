@@ -2,7 +2,7 @@
 
 import { useCreateEmailStore } from "@/store/create-email";
 import { useState } from "react";
-import Preview from "./preview";
+import { Preview } from "./preview";
 
 const TemplatePreview = () => {
   const { selectedTemplate } = useCreateEmailStore();
@@ -30,11 +30,14 @@ const TemplatePreview = () => {
             <p className="ty-descriptions text-white/[.32] w-24">
               {selectedTemplate.tags.length > 1 ? "Categories" : "Category"}
             </p>
-            {selectedTemplate.tags.map((tag) => (
-              <p className="text-ellipsis line-clamp-1 text-gold" key={tag}>
-                {tag}
-              </p>
-            ))}
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {selectedTemplate.tags.map((tag) => (
+                <p className="text-ellipsis line-clamp-1 text-gold" key={tag}>
+                  {tag}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
 

@@ -332,11 +332,11 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   return (
-    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow">
+    <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow w-full">
       <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
-        <div className="flex flex-col items-start gap-4 self-stretch">
-          <div className="flex items-center gap-2 self-stretch">
-            <p className="ty-descriptions text-white/[.32] w-[100px]">
+        <div className="flex flex-col items-start justify-start gap-4 self-stretch">
+          <div className="flex flex-col 2xl:flex-row items-center gap-2 self-stretch">
+            <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
               Subject
             </p>
             <Input
@@ -345,15 +345,15 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 setSubject(e.target.value)
               }
               placeholder="Something captivating..."
-              className="bg-white/[.08] w-full placeholder:ty-descriptions placeholder:text-white/[.32]"
+              className="bg-white/[.08] w-full placeholder:ty-descriptions placeholder:text-white/[.32] p-3"
             />
           </div>
           <div className="flex flex-col gap-2 self-stretch">
-            <div className="flex  gap-2 self-stretch">
-              <p className="ty-descriptions text-white/[.32] w-[100px]">
+            <div className="flex flex-col 2xl:flex-row gap-2 self-stretch">
+              <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
                 Recipients ({recipients.length}/{maxRecipientsAllowed})
               </p>
-              <div className="flex gap-2 w-full items-center">
+              <div className="flex flex-col 2xl:flex-row gap-2 w-full items-center">
                 <Input
                   value={recipientInput}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -361,14 +361,14 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                   }
                   onKeyDown={handleKeyPress}
                   placeholder="Enter email address"
-                  className="bg-white/[.08] flex-1 w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32]"
+                  className="bg-white/[.08] flex-1 w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32] p-3"
                 />
                 <Button
                   disabled={
                     !recipientInput || !validateEmail(recipientInput).isValid
                   }
                   onClick={handleAddRecipient}
-                  className="bg-white/[.8] text-black"
+                  className="bg-white/[.8] text-black w-full 2xl:w-fit"
                 >
                   Add
                 </Button>
@@ -381,7 +381,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 />
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-white/[.8] text-black flex items-center gap-2"
+                  className="bg-white/[.8] text-black flex items-center gap-2 w-full 2xl:w-fit"
                   disabled={isProcessingCSV}
                 >
                   <Upload size={16} />
@@ -426,23 +426,23 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
-          <EmailEditor isPreview={isPreview} setIsPreview={setIsPreview} />
+          <EmailEditor isPreview={isPreview}  />
         </div>
       </div>
 
-      <div className="flex justify-end items-center gap-2 self-stretch">
+      <div className="flex flex-wrap lg:flex-nowrap  justify-end items-center gap-2 self-stretch">
         <Button
           onClick={() => setIsPreview(!isPreview)}
           variant={"ghost"}
-          className="bg-gold/[.04]"
+          className="bg-gold/[.04] w-full lg:w-fit"
         >
           <p className="text-gold">Show Preview</p>
         </Button>
         <Button
-        disabled={recipients.length === 0 || subject.trim() === ""}
+          disabled={recipients.length === 0 || subject.trim() === ""}
           onClick={sendEmailConfirmation}
           variant={"ghost"}
-          className="bg-white/[.08] flex items-center"
+          className="bg-white/[.08] flex items-center w-full lg:w-fit"
         >
           <p className="ty-title text-[14px] text-white/[.32]">Send now </p>
           <ArrowUpRight size={14} className="text-white/[.32]" />

@@ -74,7 +74,7 @@ export function NavUser() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -93,7 +93,7 @@ export function NavUser() {
                     onOpenSmtpModal();
                     setIsOpen(false);
                   }}
-                  className="py-3 cursor-pointer"
+                  className="py-3 cursor-pointer whitespace-nowrap"
                 >
                   <ServerCog />
                   Configure <span className="text-gold">{company?.name}</span>
@@ -104,7 +104,7 @@ export function NavUser() {
                     onOpenStorageModal();
                     setIsOpen(false);
                   }}
-                  className="py-3 cursor-pointer"
+                  className="py-3 cursor-pointer whitespace-nowrap"
                 >
                   <Database />
                   Configure <span className="text-gold">{company?.name}</span>

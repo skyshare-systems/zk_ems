@@ -25,6 +25,9 @@ const getTransporter = (smtp: {
       user: smtp.username,
       pass: smtp.password,
     },
+    options: {
+      
+    }
   });
 };
 
@@ -34,7 +37,7 @@ export async function POST(req: NextRequest) {
       (await req.json()) as EmailRequest;
 
     // Input validation
-  if (
+    if (
       !subject?.trim() ||
       !templateId?.trim() ||
       !body?.trim() ||
@@ -45,7 +48,7 @@ export async function POST(req: NextRequest) {
         createApiResponse("Invalid request data", null),
         { status: 400 }
       );
-    } 
+    }
 
     // Fetch template details
     const template = await prisma.template.findUnique({
@@ -146,30 +149,25 @@ export async function POST(req: NextRequest) {
     const inlinedHtml = juice(fullHtml);
 
     // Send email inside a database transaction
-    await prisma.$transaction(async (prisma) => {
       const transporter = getTransporter(smtp);
 
-      try {
-        // Store sent email details
-        const sentEmail = await prisma.sentEmail.create({
-          data: {
-            subject,
-            header: template.header,
-            body: modifiedBody,
-            footer: template.footer,
-            templateId,
-            companyId: template.companyId,
-            recipients: {
-              createMany: {
-                data: recipients.map((email) => ({ emailAddress: email })),
-              },
+      // Store sent email details
+      const sentEmail = await prisma.sentEmail.create({
+        data: {
+          subject,
+          header: template.header,
+          body: modifiedBody,
+          footer: template.footer,
+          templateId,
+          companyId: template.companyId,
+          recipients: {
+            createMany: {
+              data: recipients.map((email) => ({ emailAddress: email })),
             },
           },
-        });
-        console.log({ sentEmail });
-      } catch (error) {
-        console.log({ error });
-      }
+        },
+      });
+      console.log({ sentEmail });
 
       const emailResult = await transporter.sendMail({
         from: smtp.from, // Use SMTP username as sender
@@ -181,14 +179,13 @@ export async function POST(req: NextRequest) {
       if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
       }
-    });
 
     return NextResponse.json(
       createApiResponse("Email sent successfully", null)
     );
   } catch (error) {
     return NextResponse.json({
-      error
+      error,
     });
   }
 }

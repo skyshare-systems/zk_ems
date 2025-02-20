@@ -9,17 +9,17 @@ datasource db {
 
 model User {
   id           String        @id @default(cuid())
-  emailAddress String        @unique
   username     String        @unique
   password     String
   firstName    String
   lastName     String
   image        String
-  role         Role          @default(ADMIN) // ✅ Fixed enum default
+  role         Role          @default(ADMIN)
   isActivated  Boolean       @default(false)
   lastLogin    DateTime?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  emailAddress String        @unique
   tokens       Token[]
   companies    UserCompany[]
 }
@@ -31,18 +31,18 @@ model Company {
   description    String
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
-  users          UserCompany[]
-  templates      Template[]
   sentEmails     SentEmail[]
   smtpCredential SmtpCredential?
   storageConfig  StorageConfig?
+  templates      Template[]
+  users          UserCompany[]
 }
 
 model UserCompany {
   userId    String
   companyId String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, companyId])
 }
@@ -51,7 +51,6 @@ model Template {
   id          String      @id @default(cuid())
   description String
   name        String
-  subject     String
   header      String
   footer      String
   tags        String[]
@@ -64,25 +63,25 @@ model Template {
 
 model SentEmail {
   id         String      @id @default(cuid())
-  subject    String
-  header     String
+  createdAt  DateTime    @default(now())
+  templateId String
+  companyId  String
   body       String
   footer     String
-  templateId String
-  template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  header     String
+  subject    String
   recipients Recipient[]
-  companyId  String
   company    Company     @relation(fields: [companyId], references: [id])
-  createdAt  DateTime    @default(now())
+  template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
 }
 
 model Recipient {
   id           String    @id @default(cuid())
-  emailAddress String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  sentEmail    SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
   sentEmailId  String
+  emailAddress String
+  sentEmail    SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
 }
 
 model Token {
@@ -92,8 +91,8 @@ model Token {
   expires     DateTime
   blacklisted Boolean
   createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SmtpCredential {
@@ -102,11 +101,11 @@ model SmtpCredential {
   port      Int
   username  String
   password  String
-  from      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  from      String
   companyId String   @unique
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model StorageConfig {
@@ -118,8 +117,8 @@ model StorageConfig {
   secretAccessKey String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String   @unique
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

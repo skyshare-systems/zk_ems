@@ -16,7 +16,7 @@ const SentEmailRenderer = () => {
           <div className="flex items-center gap-2 self-stretch ">
             <p className="ty-descriptions text-white/[.32] w-[96px]">Subject</p>
             <p className="ty-title text-white">
-              {selectedSentEmail?.template.subject}
+              {selectedSentEmail?.subject}
             </p>
           </div>
           <div className="flex items-center gap-2 self-stretch flex-wrap ">

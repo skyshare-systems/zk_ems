@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       (await req.json()) as EmailRequest;
 
     // Input validation
-  /*   if (
+  if (
       !subject?.trim() ||
       !templateId?.trim() ||
       !body?.trim() ||
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
         createApiResponse("Invalid request data", null),
         { status: 400 }
       );
-    } */
+    } 
 
     // Fetch template details
     const template = await prisma.template.findUnique({
@@ -153,6 +153,7 @@ export async function POST(req: NextRequest) {
         // Store sent email details
         const sentEmail = await prisma.sentEmail.create({
           data: {
+            subject,
             header: template.header,
             body: modifiedBody,
             footer: template.footer,
@@ -171,7 +172,7 @@ export async function POST(req: NextRequest) {
       }
 
       const emailResult = await transporter.sendMail({
-        from: "support@coinkings.tech", // Use SMTP username as sender
+        from: smtp.from, // Use SMTP username as sender
         to: recipients,
         subject,
         html: inlinedHtml,

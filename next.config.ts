@@ -3,15 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        hostname:"placeholder.com"
+     {
+        protocol: "https",
+        hostname: "**", 
       },
-      {
-        hostname:"picsum.photos"
-      },
-      {
-        hostname: "scontent.fmnl3-1.fna.fbcdn.net",
-      }
     ]
   },
   env: {

@@ -19,11 +19,11 @@ const getTransporter = (smtp: {
   password: string;
 }) => {
   return nodemailer.createTransport({
-    host: "email-smtp.eu-west-1.amazonaws.com",
-    port: 587,
+    host: smtp.host,
+    port: smtp.port,
     auth: {
-      user: "AKIA33FBU3VU5BFLWDFZ",
-      pass: "BO3dk7L8/ZbjC0OHaHkdtvcNTEsn0XvxOjn4G1avUPxj",
+      user: smtp.username,
+      pass: smtp.password,
     },
   });
 };
@@ -170,16 +170,16 @@ export async function POST(req: NextRequest) {
         console.log({ error });
       }
 
-    /*   const emailResult = await transporter.sendMail({
+      const emailResult = await transporter.sendMail({
         from: "support@coinkings.tech", // Use SMTP username as sender
         to: recipients,
         subject,
         html: inlinedHtml,
       });
- */
-    /*   if (emailResult.rejected.length > 0) {
+
+      if (emailResult.rejected.length > 0) {
         console.error("Failed to send emails to:", emailResult.rejected);
-      } */
+      }
     });
 
     return NextResponse.json(

@@ -34,7 +34,7 @@ export const middleware = async (req: NextRequest) => {
   }
 
   // List of public API routes (Not protected)
-  const publicRoutes = ["/api/auth/login", "/api/attachments", "/api/smtp-credentials", "/api/storage-config"];
+  const publicRoutes = ["/api/auth/login", ];
 
   // Allow public routes without authentication
   if (publicRoutes.includes(path)) {
@@ -46,7 +46,9 @@ export const middleware = async (req: NextRequest) => {
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      const url = req.nextUrl.clone()
+      url.pathname = '/auth/login'
+      return NextResponse.rewrite(new URL('/auth',req.url))
     }
 
     const token = authHeader.split(" ")[1];

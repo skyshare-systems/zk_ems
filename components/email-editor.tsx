@@ -6,18 +6,20 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import { EmailSection } from "./email-section";
 import { cn } from "@/lib/utils";
 const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
-  const { selectedTemplate, body } = useCreateEmailStore();
+  const { selectedTemplate, body, alignment } = useCreateEmailStore();
   const ref = useRef<MDXEditorMethods>(null);
 
   if (!selectedTemplate) return null;
 
   const previewHTML = `
-    <div className="w-full prose">
-      <div>${selectedTemplate.header}</div>
-      <div className="w-full">${marked.parse(body)}</div>
-      <div>${selectedTemplate.footer}</div>
+  <div style="width: 100%; font-family: Arial, sans-serif;">
+    <div style="margin-bottom: 20px">${selectedTemplate.header}</div>
+    <div style="text-align: ${alignment}; padding: 20px;">
+      ${marked.parse(body)}
     </div>
-  `;
+    <div style="margin-top: 20px">${selectedTemplate.footer}</div>
+  </div>
+`;
 
   return (
     <div className="flex p-4 flex-col gap-6 self-stretch rounded-2xl bg-white h-full grow">
@@ -27,7 +29,7 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
             <div className="w-full flex justify-center ">
               <div
                 className={cn(
-                  "prose max-w-[640px] mx-auto p-0 text-center",
+                  "prose max-w-[640px] w-full mx-auto ",
                   // Complete table reset
                   "[&_table]:w-full [&_table]:border-0 [&_table]:m-0 [&_table]:p-0 [&_table]:border-collapse",
                   // Reset spacing and layout for all table elements
@@ -46,7 +48,8 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
                   "prose-tr:border-0",
                   "prose-td:align-middle",
                   // Reset images within tables
-                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block"
+                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block",
+                  
                 )}
                 dangerouslySetInnerHTML={{ __html: previewHTML }}
               />
@@ -63,6 +66,7 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
             onClick={() => ref.current?.focus()}
           >
             <p className="ty-subtext text-black">Edit Email Body</p>
+            <p className="text-black/[.5] text-[10.24px]">Note: Alignment Plugin will make all content to follow the selected alignment. Since markdown doesn&rsquo;t support alignment at all.</p>
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden">
               <Mdx ref={ref} />
             </div>

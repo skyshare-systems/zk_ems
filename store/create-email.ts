@@ -14,6 +14,8 @@ interface CreateEmailStore {
   selectedTemplate: Template | null;
   setSelectedTemplate: (template: Template | null) => void;
   getUserTemplates: () => void;
+  alignment: "left" | "center" | "right";
+  setAlignment: (alignment: "left" | "center" | "right") => void;
   reset: () => void;
 }
 
@@ -33,6 +35,8 @@ export const useCreateEmailStore = create<CreateEmailStore>()(
         const response = await api("/templates");
         set({ userTemplates: response.data });
       },
+      alignment: "left",
+      setAlignment: (alignment) => set({ alignment }),
       reset: () =>
         set({
           body: "",

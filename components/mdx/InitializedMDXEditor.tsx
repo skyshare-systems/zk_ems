@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AdmonitionDirectiveDescriptor,
   MDXEditor,
@@ -50,6 +50,10 @@ export const Mdx = ({ ref }: Props) => {
   const { company } = useCompanyStore();
 
   //* take 10 newly uploaded images
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, [ref]);
 
   return (
     <MDXEditor

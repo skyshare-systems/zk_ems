@@ -5,8 +5,11 @@ import { Mdx } from "./mdx/InitializedMDXEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { EmailSection } from "./email-section";
 import { cn } from "@/lib/utils";
+// import EditorPreview from "./mdx/preview";
+// import Editor from "./mdx/editor";
 const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
-  const { selectedTemplate, body, alignment } = useCreateEmailStore();
+  const { selectedTemplate, body, alignment, editorData } =
+    useCreateEmailStore();
   const ref = useRef<MDXEditorMethods>(null);
 
   if (!selectedTemplate) return null;
@@ -33,7 +36,7 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
                   // Complete table reset
                   "[&_table]:w-full [&_table]:border-0 [&_table]:m-0 [&_table]:p-0 [&_table]:border-collapse",
                   // Reset spacing and layout for all table elements
-                  "[&_*]:border-0 [&_*]:m-0 [&_*]:p-0",
+                  "[&_*]:border-0 ",
                   // Specific table element resets
                   "[&_td]:w-fit [&_td]:text-left",
                   "[&_tr]:w-full",
@@ -48,11 +51,11 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
                   "prose-tr:border-0",
                   "prose-td:align-middle",
                   // Reset images within tables
-                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block",
-                  
+                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block"
                 )}
                 dangerouslySetInnerHTML={{ __html: previewHTML }}
               />
+              {/* <EditorPreview /> */}
             </div>
           </div>
         </div>
@@ -66,9 +69,14 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
             onClick={() => ref.current?.focus()}
           >
             <p className="ty-subtext text-black">Edit Email Body</p>
-            <p className="text-black/[.5] text-[10.24px]">Note: Alignment Plugin will make all content to follow the selected alignment. Since markdown doesn&rsquo;t support alignment at all.</p>
+            <p className="text-black/[.5] text-[10.24px]">
+              Note: Alignment Plugin will make all content to follow the
+              selected alignment. Since markdown doesn&rsquo;t support alignment
+              at all.
+            </p>
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden">
               <Mdx ref={ref} />
+              {/* <Editor /> */}
             </div>
           </div>
 

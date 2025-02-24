@@ -18,13 +18,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
+/* const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
 
 // Convert secret key to Uint8Array for `jose`
 const secret = new TextEncoder().encode(SECRET_KEY);
-
-export const middleware = async (req: NextRequest) => {
-  const url = req.nextUrl.clone();
+ */
+export const middleware = async (request: NextRequest) => {
+  const url = request.nextUrl.clone();
   const path = url.pathname;
 
   // Redirect "/" to "/auth/login"
@@ -32,7 +32,7 @@ export const middleware = async (req: NextRequest) => {
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
-
+/* 
   // List of public API routes (Not protected)
   const publicRoutes = ["/api/auth/login", ];
 
@@ -57,9 +57,12 @@ export const middleware = async (req: NextRequest) => {
       await jwtVerify(token, secret);
       return NextResponse.next();
     } catch (error) {
+      const url = req.nextUrl.clone()
+      url.pathname = '/auth/login'
+      return NextResponse.rewrite(new URL('/auth',req.url))
       return NextResponse.json({ error: "Invalid token" }, { status: 403 });
     }
-  }
+  } */
 
   return NextResponse.next();
 };

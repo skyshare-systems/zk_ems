@@ -8,35 +8,37 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { authLogin } from "@/lib/mutation/auth/login/login";
 import { loginSchema } from "@/schema/login";
+import { useUserStore } from "@/store/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
-import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "../ui/input";
-import Image from "next/image";
-import { useMutation } from "@tanstack/react-query";
-import { authLogin } from "@/lib/mutation/auth/login/login";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/user";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const { setUser } = useUserStore();
 
-  const { mutate, isPending, } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: authLogin,
     mutationKey: ["login"],
     onSuccess: ({ data, message }) => {
       setUser(data);
-      localStorage.setItem("token", data.token)
+      localStorage.setItem("token", data.token);
       toast.success(message, {
         style: {
           background: "#00a650",
+        },
+        onDismiss(toast) {
+          router.push("/dashboard?t=create-new-email");
         },
         onAutoClose: () => {
           router.push("/dashboard?t=create-new-email");
@@ -63,7 +65,6 @@ const LoginForm = () => {
   function onSubmit(values: z.infer<typeof loginSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    
 
     mutate({
       username: values.username,
@@ -72,8 +73,8 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    localStorage.clear()
-  },[])
+    localStorage.clear();
+  }, []);
 
   return (
     <Form {...form}>
@@ -131,7 +132,7 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-        {/*   <Link
+          {/*   <Link
             href={"#"}
             className="text-white/50 ty-subtext text-center w-full"
           >

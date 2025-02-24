@@ -1,9 +1,17 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = authorize(async (req: AuthenticatedRequest) => {
   try {
+
+    if(!req.user) {
+      return NextResponse.json(createApiResponse("Forbidden", null), {
+        status: 403,
+      });
+    }
+    
     const searchParams = req.nextUrl.searchParams;
     const page = parseInt(searchParams.get("page") ?? "1");
     const limit = parseInt(searchParams.get("limit") ?? "10");
@@ -28,7 +36,7 @@ export const GET = async (req: NextRequest) => {
     const count = await prisma.company.count({
       where: {
         users: {
-          some: { userId: userId},
+          some: { userId: userId },
         },
       },
     });
@@ -52,7 +60,7 @@ export const GET = async (req: NextRequest) => {
       include: {
         storageConfig: true,
         smtpCredential: true,
-      }
+      },
     });
 
     const meta: Meta = {
@@ -69,4 +77,4 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     return createErrorMessage(error);
   }
-};
+});

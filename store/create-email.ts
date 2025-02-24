@@ -1,49 +1,54 @@
-import api from "@/lib/axios";
-import { Template } from "@prisma/client";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import api from '@/lib/axios';
+import { Template } from '@prisma/client';
 
-interface CreateEmailStore {
+interface CreateEmailState {
+  editorData: { blocks: any[] };
   body: string;
-  setBody: (body: string) => void;
   subject: string;
-  setSubject: (subject: string) => void;
   recipients: string[];
-  setRecipients: (recipients: string[]) => void;
-  userTemplates: Template[];
   selectedTemplate: Template | null;
+  userTemplates: Template[];
+  alignment: 'left' | 'center' | 'right';
+}
+
+interface CreateEmailActions {
+  setEditorData: (data: { blocks: any[] }) => void;
+  setBody: (body: string) => void;
+  setSubject: (subject: string) => void;
+  setRecipients: (recipients: string[]) => void;
   setSelectedTemplate: (template: Template | null) => void;
-  getUserTemplates: () => void;
-  alignment: "left" | "center" | "right";
-  setAlignment: (alignment: "left" | "center" | "right") => void;
+  getUserTemplates: () => Promise<void>;
+  setAlignment: (alignment: 'left' | 'center' | 'right') => void;
   reset: () => void;
 }
 
-export const useCreateEmailStore = create<CreateEmailStore>()(
+const initialState: CreateEmailState = {
+  editorData: { blocks: [] },
+  body: '',
+  subject: '',
+  recipients: [],
+  selectedTemplate: null,
+  userTemplates: [],
+  alignment: 'left',
+};
+
+export const useCreateEmailStore = create<CreateEmailState & CreateEmailActions>()(
   persist(
     (set) => ({
-      body: "",
+      ...initialState,
+      setEditorData: (data) => set({ editorData: data }),
       setBody: (body) => set({ body }),
-      subject: "",
       setSubject: (subject) => set({ subject }),
-      recipients: [],
       setRecipients: (recipients) => set({ recipients }),
-      selectedTemplate: null,
       setSelectedTemplate: (template) => set({ selectedTemplate: template }),
-      userTemplates: [],
       getUserTemplates: async () => {
-        const response = await api("/templates");
+        const response = await api('/templates');
         set({ userTemplates: response.data });
       },
-      alignment: "left",
       setAlignment: (alignment) => set({ alignment }),
-      reset: () =>
-        set({
-          body: "",
-          subject: "",
-          recipients: [],
-          selectedTemplate: null,
-        }),
+      reset: () => set(initialState),
     }),
     {
       name: "create-email-store",

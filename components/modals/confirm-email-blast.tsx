@@ -65,40 +65,40 @@ const ConfirmEmailBlast = () => {
           <path
             d="M29.9734 43.1729L29.9733 29.5669C29.9734 25.855 29.9733 23.9991 30.25 22.2276C30.8177 18.5929 32.2453 15.1463 34.4139 12.1749C35.4711 10.7264 36.7834 9.41409 39.4081 6.7894C39.5452 6.6523 39.6607 6.66256 39.7877 6.78947C42.4123 9.41416 43.7247 10.7265 44.7816 12.1748C46.9503 15.1464 48.378 18.5929 48.9457 22.2275C49.2225 23.999 49.2223 25.855 49.2225 29.5668L49.2223 43.1729"
             stroke="#F3BC30"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
-            stroke-linejoin="round"
+            strokeLinejoin="round"
           />
           <path
             d="M30.4233 35.8978C27.6136 38.7075 23.4871 41.6436 21.947 45.3617C20.8186 48.0861 21.2487 51.3514 21.2486 54.247L29.0408 51.1301C31.1059 50.3041 32.0464 53.0119 33.0036 54.4477C34.0702 56.0477 34.1342 56.082 36.0571 56.082L43.1385 56.082C45.0614 56.0819 45.1255 56.0478 46.192 54.4477C47.1493 53.0119 48.0898 50.3041 50.1547 51.1302L57.9471 54.2471C57.9471 51.3514 58.3772 48.0861 57.2486 45.3618C55.7086 41.6435 51.582 38.7075 48.7724 35.8978"
             stroke="#F3BC30"
-            stroke-width="1.5"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
           />
           <path
             d="M52.7974 52.7973V56.0971"
             stroke="#F3BC30"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
-            stroke-linejoin="round"
+            strokeLinejoin="round"
           />
           <path
             d="M26.3985 52.7973V56.0971"
             stroke="#F3BC30"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
-            stroke-linejoin="round"
+            strokeLinejoin="round"
           />
           <path
             d="M31.4805 21.5808C33.7574 19.8979 36.6282 18.611 38.9734 18.6417C41.759 18.47 44.5478 19.2049 47.7156 21.5808"
             stroke="#F3BC30"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             strokeLinecap="square"
           />
           <path
             d="M39.598 19.997L39.598 24.7488"
             stroke="#F3BC30"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
         </svg>

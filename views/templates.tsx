@@ -156,23 +156,23 @@ const Templates = () => {
               <path
                 d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
                 stroke="#F3BC30"
-                stroke-width="3"
+                strokeWidth="3"
                 strokeLinecap="round"
-                stroke-linejoin="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M16 34C17.8242 31.5712 20.7286 30 24 30C27.2714 30 30.1758 31.5712 32 34"
                 stroke="#F3BC30"
-                stroke-width="3"
+                strokeWidth="3"
                 strokeLinecap="round"
-                stroke-linejoin="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M16.0179 18H16M32 18H31.982"
                 stroke="#F3BC30"
-                stroke-width="4"
+                strokeWidth="4"
                 strokeLinecap="round"
-                stroke-linejoin="round"
+                strokeLinejoin="round"
               />
             </svg>
 

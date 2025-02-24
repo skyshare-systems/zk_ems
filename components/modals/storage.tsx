@@ -80,6 +80,7 @@ const StorageModal = () => {
 
     updateCredentials({
       companyId: company?.id,
+      region: values.region,
       endpoint: values.endpoint,
       bucketName: values.bucketName,
       accessKeyId: values.credentials.accessKeyId,

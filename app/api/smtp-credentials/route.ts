@@ -1,9 +1,10 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-export const PATCH = async (request: NextRequest) => {
+export const PATCH = authorize(async (request: AuthenticatedRequest) => {
   try {
     const { from, host, port, username, password, companyId } =
       (await request.json()) as Prisma.SmtpCredentialUpdateInput & {
@@ -39,9 +40,10 @@ export const PATCH = async (request: NextRequest) => {
       },
     });
 
-    return NextResponse.json(createApiResponse("SMTP credentials updated", updatedSmtp));
-    
+    return NextResponse.json(
+      createApiResponse("SMTP credentials updated", updatedSmtp)
+    );
   } catch (error) {
     return createErrorMessage(error);
   }
-};
+});

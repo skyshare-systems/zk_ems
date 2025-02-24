@@ -15,20 +15,20 @@ const SentEmail = ({ ...props }: LucideProps) => {
         stroke="white"
         strokeWidth="0.875"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         d="M1.16663 4L5.19922 6.28936C6.67253 7.12579 7.32738 7.12579 8.80071 6.28936L12.8333 4"
         stroke="white"
         strokeWidth="0.875"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         d="M12.8333 10.7083H8.16663M12.8333 10.7083C12.8333 10.2999 11.67 9.53671 11.375 9.25M12.8333 10.7083C12.8333 11.1168 11.67 11.88 11.375 12.1667"
         stroke="white"
         strokeWidth="0.875"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

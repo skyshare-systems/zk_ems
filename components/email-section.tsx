@@ -1,29 +1,43 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-// import DOMPurify from "dompurify";
+import DOMPurify from "dompurify";
 
-export const EmailSection = ({ content }: { content: string }) => {
+export const EmailSection = ({
+  content,
+  className,
+}: {
+  className?: string;
+  content: string;
+}) => {
   // Sanitize the HTML content
-/*   const sanitizedContent = DOMPurify.sanitize(content);
- */
+  const sanitizedContent = DOMPurify.sanitize(content);
+
   return (
-    <div className="rounded-lg w-full text-center">
+    <div className={cn("rounded-lg w-full text-center", className)}>
       <div
         className={cn(
-          "prose max-w-[640px] mx-auto p-0",
-          // Group related table styles together
-          "prose-table:border-collapse prose-table:w-full prose-table:m-0 prose-table:p-0",
-          // Remove borders and spacing from table elements
-          "[&_td]:border-0 [&_td]:m-0 [&_td]:p-0 [&_td]:w-fit",
-          "[&_th]:border-0 [&_th]:m-0 [&_th]:p-0",
-          "[&_tr]:border-0 [&_tr]:m-0 [&_tr]:p-0",
-          "[&_thead]:border-0 [&_thead]:m-0 [&_thead]:p-0",
-          "[&_tbody]:border-0 [&_tbody]:m-0 [&_tbody]:p-0",
-          "[&_tfoot]:border-0 [&_tfoot]:m-0 [&_tfoot]:p-0",
-          // Image styling
-          "prose-img:m-0 prose-img:p-0"
+          "prose max-w-[640px] w-full mx-auto ",
+          // Complete table reset
+          "[&_table]:w-full [&_table]:border-0 [&_table]:m-0 [&_table]:p-0 [&_table]:border-collapse",
+          // Reset spacing and layout for all table elements
+          "[&_*]:border-0 ",
+          // Specific table element resets
+          "[&_td]:w-fit [&_td]:text-left",
+          "[&_tr]:w-full",
+          "[&_th]:font-normal [&_th]:text-left",
+          // Remove any inherited styles
+          "[&_table]:shadow-none",
+          "[&_thead]:bg-transparent",
+          "[&_tbody]:bg-transparent",
+          "[&_tfoot]:bg-transparent",
+          // Reset any prose-specific styles
+          "prose-table:shadow-none",
+          "prose-tr:border-0",
+          "prose-td:align-middle",
+          // Reset images within tables
+          "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block"
         )}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
     </div>
   );

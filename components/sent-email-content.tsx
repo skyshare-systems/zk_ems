@@ -6,12 +6,12 @@ export const SentEmailContent = () => {
   if (!selectedSentEmail) return null;
 
   return (
-    <div className="flex flex-col flex-1 w-full bg-white p-4 h-full">
-      <EmailSection content={selectedSentEmail.header} />
-      <div className="flex flex-col grow">
+    <div className="flex flex-col flex-1 w-full bg-white p-4 h-full ">
+      <EmailSection className="mb-[20px]" content={selectedSentEmail.header} />
+      <div className="flex flex-col grow p-[20px]">
         <EmailSection content={selectedSentEmail.body} />
       </div>
-      <EmailSection content={selectedSentEmail.footer} />
+      <EmailSection className="mt-[20px]" content={selectedSentEmail.footer} />
     </div>
   );
 };

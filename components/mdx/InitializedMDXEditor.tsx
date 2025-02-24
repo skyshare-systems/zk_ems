@@ -58,7 +58,7 @@ export const Mdx = ({ ref }: Props) => {
       markdown={body}
       onChange={setBody}
       contentEditableClassName={cn(
-        "prose grow max-w-[640px]   h-full mx-auto",
+        "prose grow max-w-[640px] m-0 p-0 h-full mx-auto",
         {
           "text-left": alignment === "left",
           "text-center": alignment === "center",
@@ -100,7 +100,7 @@ export const Mdx = ({ ref }: Props) => {
                   color="gray"
                   className="self-center hover:stroke-black"
                   onClick={() => {
-                    setAlignment("left")
+                    setAlignment("left");
                   }}
                 />
                 <AlignCenter
@@ -116,7 +116,7 @@ export const Mdx = ({ ref }: Props) => {
                   color="gray"
                   className="self-center hover:stroke-black"
                   onClick={() => {
-                    setAlignment("right")
+                    setAlignment("right");
                   }}
                 />
                 <Separator />
@@ -155,8 +155,8 @@ export const Mdx = ({ ref }: Props) => {
                 method: "POST",
                 body: formData,
                 headers: {
-                  "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                }
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
               });
 
               const data = await response.json();

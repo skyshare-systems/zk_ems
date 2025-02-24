@@ -1,9 +1,10 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-export const PATCH = async (request: NextRequest) => {
+export const PATCH = authorize(async (request: AuthenticatedRequest) => {
   try {
     const {
       endpoint,
@@ -23,7 +24,6 @@ export const PATCH = async (request: NextRequest) => {
     }
 
     const token = authHeader.split(" ")[1];
-    console.log(token);
 
     if (
       !endpoint ||
@@ -67,4 +67,4 @@ export const PATCH = async (request: NextRequest) => {
   } catch (error) {
     return createErrorMessage(error);
   }
-};
+});

@@ -1,11 +1,11 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
-import { withSession } from "@/lib/session";
 import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = authorize( async (request: AuthenticatedRequest) => {
   try {
-    const searchParams = req.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams;
     const companyId = searchParams.get("companyId");
     const userId = searchParams.get("userId");
     const page = searchParams.get("page");
@@ -86,4 +86,4 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     return createErrorMessage(error);
   }
-};
+})

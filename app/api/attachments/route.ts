@@ -1,14 +1,14 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import { createErrorMessage } from "@/lib/utils";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
 
-
 interface FileUpload extends File {
   arrayBuffer: () => Promise<ArrayBuffer>;
 }
 
-export const POST = async (request: NextRequest) => {
+export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
     const formData = await request.formData();
     const files = formData.getAll("file") as FileUpload[];
@@ -33,8 +33,7 @@ export const POST = async (request: NextRequest) => {
     const bucketCredentials = await prisma.storageConfig.findFirst({
       where: { company: { id: companyId } },
     });
-  
-    console.log({bucketCredentials})
+
 
     if (!bucketCredentials) {
       return NextResponse.json(
@@ -90,8 +89,7 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ filepath: fileUrl });
   } catch (error) {
     return NextResponse.json(createErrorMessage(error), {
-      status: 500
+      status: 500,
     });
   }
-};
-
+});

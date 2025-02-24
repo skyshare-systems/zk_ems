@@ -1,10 +1,11 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import { createApiResponse, createErrorMessage, Meta } from "@/lib/utils";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = authorize(async (request: AuthenticatedRequest) => {
   try {
-    const searchParams = req.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get("userId");
     const companyId = searchParams.get("companyId");
     const title = searchParams.get("title");
@@ -57,11 +58,14 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-      const meta: Meta = {
-      totalPage: Math.ceil(totalTemplates / parseInt(limit ?? "10")) ,
+    const meta: Meta = {
+      totalPage: Math.ceil(totalTemplates / parseInt(limit ?? "10")),
       page: parseInt(page ?? "1"),
-      remaining: totalTemplates - (parseInt(page ?? "1") * parseInt(limit ?? "10")) < 0 ? 0 : totalTemplates - (parseInt(page ?? "1") * parseInt(limit ?? "10")),
-    }
+      remaining:
+        totalTemplates - parseInt(page ?? "1") * parseInt(limit ?? "10") < 0
+          ? 0
+          : totalTemplates - parseInt(page ?? "1") * parseInt(limit ?? "10"),
+    };
 
     if (!company) {
       return NextResponse.json(createApiResponse("Company not found", null), {
@@ -78,4 +82,4 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     return createErrorMessage(error);
   }
-};
+});

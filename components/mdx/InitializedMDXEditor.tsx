@@ -58,14 +58,14 @@ export const Mdx = ({ ref }: Props) => {
       markdown={body}
       onChange={setBody}
       contentEditableClassName={cn(
-        "prose grow max-w-[640px] m-0 p-0 h-full mx-auto",
+        "prose flex flex-col grow max-w-[640px] m-0 p-0 h-full mx-auto",
         {
           "text-left": alignment === "left",
           "text-center": alignment === "center",
           "text-right": alignment === "right",
         }
       )}
-      className="h-full grow w-full mx-auto"
+      className="h-full flex flex-col grow w-full mx-auto"
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (

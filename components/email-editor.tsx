@@ -1,6 +1,6 @@
 import { useCreateEmailStore } from "@/store/create-email";
 import { marked } from "marked";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Mdx } from "./mdx/InitializedMDXEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { EmailSection } from "./email-section";
@@ -11,6 +11,10 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
   const { selectedTemplate, body, alignment, editorData } =
     useCreateEmailStore();
   const ref = useRef<MDXEditorMethods>(null);
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
 
   if (!selectedTemplate) return null;
 
@@ -64,17 +68,14 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
           <EmailSection content={selectedTemplate.header} />
 
           {/* Body */}
-          <div
-            className="flex flex-col items-center gap-2 w-full my-4 grow"
-            onClick={() => ref.current?.focus()}
-          >
+          <div className="flex flex-col items-center gap-2 w-full my-4 grow">
             <p className="ty-subtext text-black">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
               Note: Alignment Plugin will make all content to follow the
               selected alignment. Since markdown doesn&rsquo;t support alignment
               at all.
             </p>
-            <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden">
+            <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden min-h-[450px]">
               <Mdx ref={ref} />
               {/* <Editor /> */}
             </div>

@@ -29,7 +29,7 @@ const SentEmails = () => {
   const [title, setTitle] = useState("");
   const [debouncedTitle, setDebouncedTitle] = useState("");
 
-  const { data: sentEmails } = useQuery({
+  const { data: sentEmails, isLoading: sentEmailsIsLoading } = useQuery({
     queryKey: ["sent-emails", company?.id, debouncedTitle, user?.id, page],
     queryFn: () =>
       getSentEmails({
@@ -66,6 +66,14 @@ const SentEmails = () => {
 
           <ScrollArea className="w-full h-full">
             <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
+              {sentEmailsIsLoading && (
+                <>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <SentEmail.Skeleton key={index} />
+                  ))}
+                </>
+              )}
+
               {sentEmails?.data.map((sentEmail) => (
                 <SentEmail sentEmail={sentEmail} key={sentEmail.id} />
               ))}

@@ -6,19 +6,18 @@ import { format } from "date-fns";
 import { useCreateEmailStore } from "@/store/create-email";
 import { cn, localizedTime } from "@/lib/utils";
 import { fromZonedTime } from "date-fns-tz";
+import { Skeleton } from "./ui/skeleton";
 interface Props {
   template: Template;
 }
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
 
-
 const TemplateSelection = ({ template }: Props) => {
   const { description, createdAt, tags, name } = template;
 
   const { selectedTemplate, setSelectedTemplate } = useCreateEmailStore();
-const localCreatedAt = fromZonedTime(createdAt, timeZone);
-
+  const localCreatedAt = fromZonedTime(createdAt, timeZone);
 
   return (
     <div
@@ -81,3 +80,9 @@ const localCreatedAt = fromZonedTime(createdAt, timeZone);
 };
 
 export default TemplateSelection;
+
+export function TemplateSelectionSeketlon() {
+  return <Skeleton className="h-40 w-full" />;
+}
+
+TemplateSelection.Skeleton = TemplateSelectionSeketlon;

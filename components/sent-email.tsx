@@ -4,6 +4,7 @@ import { cn, localizedTime } from "@/lib/utils";
 import { useSentEmailStore } from "@/store/sent-email";
 import { Prisma } from "@prisma/client";
 import { format } from "date-fns";
+import { Skeleton } from "./ui/skeleton";
 
 export type SentEmailWithTemplateAndCount = Prisma.SentEmailGetPayload<{
   include: {
@@ -20,7 +21,6 @@ interface Props {
 }
 
 const SentEmail = ({ sentEmail }: Props) => {
-
   const { setSelectedSentEmail, selectedSentEmail } = useSentEmailStore();
 
   return (
@@ -111,3 +111,9 @@ const SentEmail = ({ sentEmail }: Props) => {
 };
 
 export default SentEmail;
+
+export function SentEmailSeketlon() {
+  return <Skeleton className="h-40 w-full" />;
+}
+
+SentEmail.Skeleton = SentEmailSeketlon;

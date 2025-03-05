@@ -26,22 +26,15 @@ interface TemplateRendererProps {
 const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   maxRecipientsAllowed = 1000, // Default max recipients
 }) => {
-  const {
-    selectedTemplate,
-    subject,
-    recipients,
-    setRecipients,
-    setSubject,
-  } = useCreateEmailStore();
+  const { selectedTemplate, subject, recipients, setRecipients, setSubject } =
+    useCreateEmailStore();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [isProcessingCSV, setIsProcessingCSV] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
   const { onOpen } = useModalStore();
-
 
   const validateEmail = (email: string): ValidationResult => {
     const errors: ValidationError[] = [];
@@ -163,163 +156,163 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     }
   };
 
-   const processCSVContent = (
-     content: string
-   ): {
-     validEmails: string[];
-     duplicates: string[];
-   } => {
-     const rows = content.split(/[\r\n]+/);
-     const validEmails: string[] = [];
-     const errors: string[] = [];
-     const duplicatesInFile: string[] = [];
-     const duplicatesWithExisting: string[] = [];
+  const processCSVContent = (
+    content: string
+  ): {
+    validEmails: string[];
+    duplicates: string[];
+  } => {
+    const rows = content.split(/[\r\n]+/);
+    const validEmails: string[] = [];
+    const errors: string[] = [];
+    const duplicatesInFile: string[] = [];
+    const duplicatesWithExisting: string[] = [];
 
-     rows.forEach((row, index) => {
-       const cleanRow = row.replace(/^\uFEFF/, "");
-       if (!cleanRow) return;
+    rows.forEach((row, index) => {
+      const cleanRow = row.replace(/^\uFEFF/, "");
+      if (!cleanRow) return;
 
-       const matches = cleanRow.match(/(?:^|,)("([^"]*)"|([^,]*))/g);
-       if (!matches) return;
+      const matches = cleanRow.match(/(?:^|,)("([^"]*)"|([^,]*))/g);
+      if (!matches) return;
 
-       matches.forEach((match) => {
-         const email = match.replace(/^,/, "").replace(/^"|"$/g, "").trim();
+      matches.forEach((match) => {
+        const email = match.replace(/^,/, "").replace(/^"|"$/g, "").trim();
 
-         if (email) {
-           const validation = validateEmail(email);
-           if (validation.isValid) {
-             // Check if email is already in recipients list
-             if (recipients.includes(email)) {
-               duplicatesWithExisting.push(email);
-             }
-             // Check if email is already found in current CSV
-             else if (validEmails.includes(email)) {
-               duplicatesInFile.push(email);
-             }
-             // Only add if it's not a duplicate
-             else {
-               validEmails.push(email);
-             }
-           } else {
-             errors.push(
-               `Row ${index + 1}: ${email} - ${validation.errors[0].message}`
-             );
-           }
-         }
-       });
-     });
+        if (email) {
+          const validation = validateEmail(email);
+          if (validation.isValid) {
+            // Check if email is already in recipients list
+            if (recipients.includes(email)) {
+              duplicatesWithExisting.push(email);
+            }
+            // Check if email is already found in current CSV
+            else if (validEmails.includes(email)) {
+              duplicatesInFile.push(email);
+            }
+            // Only add if it's not a duplicate
+            else {
+              validEmails.push(email);
+            }
+          } else {
+            errors.push(
+              `Row ${index + 1}: ${email} - ${validation.errors[0].message}`
+            );
+          }
+        }
+      });
+    });
 
-     if (errors.length > 0) {
-       toast.warning(
-         `Some emails were invalid:\n${errors.slice(0, 5).join("\n")}${
-           errors.length > 5 ? "\n..." : ""
-         }`
-       );
-     }
+    if (errors.length > 0) {
+      toast.warning(
+        `Some emails were invalid:\n${errors.slice(0, 5).join("\n")}${
+          errors.length > 5 ? "\n..." : ""
+        }`
+      );
+    }
 
-     if (duplicatesInFile.length > 0) {
-       toast.warning(
-         `Duplicates found within CSV:\n${duplicatesInFile
-           .slice(0, 5)
-           .join("\n")}${duplicatesInFile.length > 5 ? "\n..." : ""}`
-       );
-     }
+    if (duplicatesInFile.length > 0) {
+      toast.warning(
+        `Duplicates found within CSV:\n${duplicatesInFile
+          .slice(0, 5)
+          .join("\n")}${duplicatesInFile.length > 5 ? "\n..." : ""}`
+      );
+    }
 
-     if (duplicatesWithExisting.length > 0) {
-       toast.warning(
-         `Emails already in recipients list:\n${duplicatesWithExisting
-           .slice(0, 5)
-           .join("\n")}${duplicatesWithExisting.length > 5 ? "\n..." : ""}`
-       );
-     }
+    if (duplicatesWithExisting.length > 0) {
+      toast.warning(
+        `Emails already in recipients list:\n${duplicatesWithExisting
+          .slice(0, 5)
+          .join("\n")}${duplicatesWithExisting.length > 5 ? "\n..." : ""}`
+      );
+    }
 
-     return {
-       validEmails,
-       duplicates: [...duplicatesInFile, ...duplicatesWithExisting],
-     };
-   };
+    return {
+      validEmails,
+      duplicates: [...duplicatesInFile, ...duplicatesWithExisting],
+    };
+  };
 
-   const handleFileUpload = async (
-     event: ChangeEvent<HTMLInputElement>
-   ): Promise<void> => {
-     try {
-       setIsProcessingCSV(true);
-       const file = event.target.files?.[0];
+  const handleFileUpload = async (
+    event: ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    try {
+      setIsProcessingCSV(true);
+      const file = event.target.files?.[0];
 
-       if (!file) {
-         toast.error("No file selected");
-         return;
-       }
+      if (!file) {
+        toast.error("No file selected");
+        return;
+      }
 
-       if (!file.type && !file.name.endsWith(".csv")) {
-         toast.error("Please upload a CSV file");
-         return;
-       }
+      if (!file.type && !file.name.endsWith(".csv")) {
+        toast.error("Please upload a CSV file");
+        return;
+      }
 
-       if (file.size > 5 * 1024 * 1024) {
-         toast.error("File size too large. Maximum size is 5MB");
-         return;
-       }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size too large. Maximum size is 5MB");
+        return;
+      }
 
-       const reader = new FileReader();
+      const reader = new FileReader();
 
-       reader.onload = (e: ProgressEvent<FileReader>) => {
-         const text = e.target?.result as string;
-         const { validEmails, duplicates } = processCSVContent(text);
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const text = e.target?.result as string;
+        const { validEmails, duplicates } = processCSVContent(text);
 
-         if (validEmails.length === 0) {
-           if (duplicates.length > 0) {
-             toast.error("All emails in CSV are duplicates");
-           } else {
-             toast.error("No valid email addresses found in the CSV file");
-           }
-           return;
-         }
+        if (validEmails.length === 0) {
+          if (duplicates.length > 0) {
+            toast.error("All emails in CSV are duplicates");
+          } else {
+            toast.error("No valid email addresses found in the CSV file");
+          }
+          return;
+        }
 
-         // Only add non-duplicate emails
-         const combinedEmails = [...validEmails, ...recipients];
+        // Only add non-duplicate emails
+        const combinedEmails = [...validEmails, ...recipients];
 
-         const listValidation = validateRecipientsList(combinedEmails);
-         if (!listValidation.isValid) {
-           listValidation.errors.forEach((error) => {
-             if (error.type === "error") {
-               toast.error(error.message);
-             } else {
-               toast.warning(error.message);
-             }
-           });
-           return;
-         }
+        const listValidation = validateRecipientsList(combinedEmails);
+        if (!listValidation.isValid) {
+          listValidation.errors.forEach((error) => {
+            if (error.type === "error") {
+              toast.error(error.message);
+            } else {
+              toast.warning(error.message);
+            }
+          });
+          return;
+        }
 
-         setRecipients(combinedEmails);
-         toast.success(
-           `Added ${validEmails.length} new email${
-             validEmails.length === 1 ? "" : "s"
-           }${
-             duplicates.length > 0
-               ? `\nSkipped ${duplicates.length} duplicate${
-                   duplicates.length === 1 ? "" : "s"
-                 }`
-               : ""
-           }`
-         );
-       };
+        setRecipients(combinedEmails);
+        toast.success(
+          `Added ${validEmails.length} new email${
+            validEmails.length === 1 ? "" : "s"
+          }${
+            duplicates.length > 0
+              ? `\nSkipped ${duplicates.length} duplicate${
+                  duplicates.length === 1 ? "" : "s"
+                }`
+              : ""
+          }`
+        );
+      };
 
-       reader.onerror = () => {
-         toast.error("Error reading file");
-       };
+      reader.onerror = () => {
+        toast.error("Error reading file");
+      };
 
-       reader.readAsText(file);
-     } catch (error) {
-       toast.error("Error processing CSV file");
-       console.error("CSV processing error:", error);
-     } finally {
-       setIsProcessingCSV(false);
-       if (event.target) {
-         event.target.value = "";
-       }
-     }
-   };
+      reader.readAsText(file);
+    } catch (error) {
+      toast.error("Error processing CSV file");
+      console.error("CSV processing error:", error);
+    } finally {
+      setIsProcessingCSV(false);
+      if (event.target) {
+        event.target.value = "";
+      }
+    }
+  };
 
   const removeRecipient = (indexToRemove: number): void => {
     setRecipients(recipients.filter((_, index) => index !== indexToRemove));
@@ -426,7 +419,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
-          <EmailEditor isPreview={isPreview}  />
+          <EmailEditor isPreview={isPreview} />
         </div>
       </div>
 
@@ -436,7 +429,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
           variant={"ghost"}
           className="bg-gold/[.04] w-full lg:w-fit"
         >
-          <p className="text-gold">Show Preview</p>
+          <p className="text-gold">{isPreview ? "Hide" : "Show"} Preview</p>
         </Button>
         <Button
           disabled={recipients.length === 0 || subject.trim() === ""}

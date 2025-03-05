@@ -21,6 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { getAnalytics } from "@/lib/query/analytics";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,27 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import numeral from "numeral";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+interface EllipseIndicatorProps {
+  color: string;
+}
+
+function EllipseIndicator({ color }: EllipseIndicatorProps) {
+  const { open } = useSidebar();
+
+  if (!open) {
+    return null;
+  }
+  return (
+    <div
+      className={cn(
+        "w-2 h-2 rounded-full absolute right-2 top-1/2 -translate-y-1/2",
+        `bg-${color}`
+      )}
+    ></div>
+  );
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const searchParams = useSearchParams();
@@ -122,7 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   )}
                 >
                   {tab === "create-new-email" && (
-                    <div className="w-2 h-2 rounded-full bg-black absolute right-2 top-1/2 -translate-y-1/2"></div>
+                    <EllipseIndicator color="black" />
                   )}
                   <MailPlus />
                   <span>Create new Email</span>
@@ -143,9 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "sent-emails" && "text-white"
                   )}
                 >
-                  {tab === "sent-emails" && (
-                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
-                  )}
+                  {tab === "sent-emails" && <EllipseIndicator color="white" />}
                   <Send />
                   <span>Sent Emails</span>
                 </SidebarMenuButton>
@@ -160,9 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "templates" && "text-white"
                   )}
                 >
-                  {tab === "templates" && (
-                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
-                  )}
+                  {tab === "templates" && <EllipseIndicator color="white" />}
                   <LayoutTemplate />
                   <span>Templates</span>
                 </SidebarMenuButton>
@@ -181,9 +199,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     tab === "analytics" && "text-white"
                   )}
                 >
-                  {tab === "analytics" && (
-                    <div className="w-2 h-2 rounded-full bg-white absolute right-2 top-1/2 -translate-y-1/2"></div>
-                  )}
+                  {tab === "analytics" && <EllipseIndicator color="white" />}
                   <FileChartColumnIncreasing />
                   <span>Analytics </span>
                   <div className="rounded-full flex px-2 py-1 bg-white/[.05] ty-subtext">

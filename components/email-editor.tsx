@@ -14,6 +14,8 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
 
   if (!selectedTemplate) return null;
 
+  console.log({ html: marked.parse(body) });
+
   const previewHTML = `
   <div style="width: 100%; font-family: Arial, sans-serif;">
     <div style="margin-bottom: 20px">${selectedTemplate.header}</div>
@@ -50,6 +52,7 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
                   "prose-table:shadow-none",
                   "prose-tr:border-0",
                   "prose-td:align-middle",
+                  "prose-code:bg-none",
                   // Reset images within tables
                   "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block"
                 )}

@@ -1,7 +1,17 @@
-import React from "react";
+import { cn } from "@/lib/utils";
+import { useCompanyStore } from "@/store/company";
+import { useCreateEmailStore } from "@/store/create-email";
 import {
   AdmonitionDirectiveDescriptor,
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  CreateLink,
+  DiffSourceToggleWrapper,
+  InsertImage,
+  ListsToggle,
   MDXEditor,
+  MDXEditorMethods,
+  Separator,
   UndoRedo,
   codeBlockPlugin,
   codeMirrorPlugin,
@@ -15,31 +25,14 @@ import {
   listsPlugin,
   markdownShortcutPlugin,
   quotePlugin,
-  sandpackPlugin,
   tablePlugin,
   thematicBreakPlugin,
-  toolbarPlugin,
-  Separator,
-  BlockTypeSelect,
-  BoldItalicUnderlineToggles,
-  CreateLink,
-  DiffSourceToggleWrapper,
-  InsertImage,
-  ListsToggle,
-  KitchenSinkToolbar,
-  ConditionalContents,
-  ChangeCodeMirrorLanguage,
-  ShowSandpackInfo,
-  InsertCodeBlock,
-  InsertSandpack,
-  MDXEditorMethods,
+  toolbarPlugin
 } from "@mdxeditor/editor";
-import { useCreateEmailStore } from "@/store/create-email";
 import "@mdxeditor/editor/style.css";
-import { useCompanyStore } from "@/store/company";
-import { toast } from "sonner";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 interface Props {
   ref: React.RefObject<MDXEditorMethods | null>;
@@ -49,7 +42,9 @@ export const Mdx = ({ ref }: Props) => {
   const { body, setBody, alignment, setAlignment } = useCreateEmailStore();
   const { company } = useCompanyStore();
 
-  //* take 10 newly uploaded images
+  useEffect(() => {
+    ref.current?.focus();
+  }, [ref]);
 
   return (
     <MDXEditor
@@ -79,21 +74,6 @@ export const Mdx = ({ ref }: Props) => {
                 <Separator />
                 <InsertImage />
                 <CreateLink />
-                <ConditionalContents
-                  options={[
-                    {
-                      when: (editor) => editor?.editorType === "codeblock",
-                      contents: () => <ChangeCodeMirrorLanguage />,
-                    },
-                    {
-                      fallback: () => (
-                        <>
-                          <InsertCodeBlock />
-                        </>
-                      ),
-                    },
-                  ]}
-                />
                 <Separator />
                 <AlignLeft
                   size={24}

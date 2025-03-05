@@ -24,6 +24,8 @@ import { Input } from "../ui/input";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
+
   const router = useRouter();
   const { setUser } = useUserStore();
 
@@ -32,6 +34,7 @@ const LoginForm = () => {
     mutationKey: ["login"],
     onSuccess: ({ data, message }) => {
       setUser(data);
+      setIsRedirecting(true);
       localStorage.setItem("token", data.token);
       toast.success(message, {
         style: {
@@ -63,9 +66,6 @@ const LoginForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-
     mutate({
       username: values.username,
       password: values.password,
@@ -74,6 +74,10 @@ const LoginForm = () => {
 
   useEffect(() => {
     localStorage.clear();
+
+    return () => {
+      setIsRedirecting(false);
+    };
   }, []);
 
   return (
@@ -139,7 +143,11 @@ const LoginForm = () => {
             Forgot Password
           </Link> */}
         </div>
-        <Button type="submit" className="bg-gold w-full relative">
+        <Button
+          disabled={isPending || isRedirecting}
+          type="submit"
+          className="bg-gold w-full relative"
+        >
           <Image
             src={"/ellipse.svg"}
             width={314}

@@ -8,7 +8,12 @@ import { QueryProvider } from "@/components/providers/query";
 import { ThemeProvider } from "@/components/providers/theme";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constant";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from "@/lib/constant";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
@@ -22,7 +27,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -117,19 +121,17 @@ export default function DashboardLayout({
         >
           <QueryProvider>
             <AuthProvider>
-                <div className="">
-                  <SidebarProvider>
-                    <Suspense fallback={null}>
-                      <AppSidebar />
-                    </Suspense>
-                    <div className="flex-1">
-                      {children}
-                    </div>
-                  </SidebarProvider>
-                  {/* <Footer /> */}
-                  <ModalProvider/>
-                  <TailwindIndicator />
-                </div>
+              <div className="">
+                <SidebarProvider>
+                  <Suspense fallback={null}>
+                    <AppSidebar />
+                  </Suspense>
+                  <div className="flex-1">{children}</div>
+                </SidebarProvider>
+                <Footer />
+                <ModalProvider />
+                <TailwindIndicator />
+              </div>
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>

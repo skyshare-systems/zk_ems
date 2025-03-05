@@ -47,7 +47,7 @@ const CreateNewEmail = () => {
       setDebouncedTitle(title);
     },
     1500,
-    [title]
+    [title],
   );
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,7 +59,7 @@ const CreateNewEmail = () => {
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
         <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="" />
+            <SidebarTrigger className=" sm:static" />
 
             <p className="ty-subheading">Create new email</p>
           </div>

@@ -8,7 +8,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { authLogin } from "@/lib/mutation/auth/login/login";
+import { authLogin } from "@/lib/mutation/auth/login";
 import { loginSchema } from "@/schema/login";
 import { useUserStore } from "@/store/user";
 import { zodResolver } from "@hookform/resolvers/zod";

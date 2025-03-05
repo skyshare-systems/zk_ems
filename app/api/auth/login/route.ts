@@ -5,12 +5,12 @@ import { createApiResponse } from "@/lib/utils";
 import { loginSchema } from "@/schema/login";
 import { Prisma, User } from "@prisma/client";
 import { compare } from "bcrypt";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const validatedData = loginSchema.parse(body);
 
     const user = await prisma.user.findUnique({
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       data: { lastLogin: new Date() },
     });
 
-    const sanitizedUser: Omit<User, "password"> & {
+    const sanitizedUser: Omit<User, "password" | "lastLogout"> & {
       token: string;
     } = {
       id: user.id,

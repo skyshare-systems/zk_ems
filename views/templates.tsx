@@ -27,7 +27,7 @@ const Templates = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const { data: templates } = useQuery({
+  const { data: templates, isLoading: templatesIsLoading } = useQuery({
     queryKey: ["templates", company?.id, debouncedTitle, user?.id, page],
     queryFn: () =>
       getTemplates({
@@ -70,6 +70,14 @@ const Templates = () => {
 
           <ScrollArea className="w-full h-full relative">
             <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
+              {templatesIsLoading && (
+                <>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <TemplateSelection.Skeleton key={index} />
+                  ))}
+                </>
+              )}
+
               {templates?.data.templates.map((template) => (
                 <TemplateSelection template={template} key={template.id} />
               ))}

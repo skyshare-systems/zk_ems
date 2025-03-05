@@ -13,7 +13,7 @@ export const EmailSection = ({
   const sanitizedContent = DOMPurify.sanitize(content);
 
   return (
-    <div className={cn("rounded-lg w-full text-center", className)}>
+    <div className={cn("rounded-lg w-full", className)}>
       <div
         className={cn(
           "prose max-w-[640px] w-full mx-auto ",

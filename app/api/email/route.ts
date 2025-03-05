@@ -11,6 +11,7 @@ interface EmailRequest {
   templateId: string;
   body: string;
   recipients: string[];
+  alignment: "left" | "center" | "right";
 }
 
 const getTransporter = (smtp: {
@@ -31,7 +32,7 @@ const getTransporter = (smtp: {
 
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
-    const { subject, templateId, body, recipients } =
+    const { subject, templateId, body, recipients, alignment } =
       (await request.json()) as EmailRequest;
 
     // Input validation
@@ -97,7 +98,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
                 padding: 20px;
                 margin: 0 auto;
                 border-radius: 8px;
-                text-align: center;
+                text-alignment: ${alignment};
             "
         >
             <!-- Header -->
@@ -112,7 +113,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
                     box-sizing: border-box;
                     padding: 20px;
                     min-height: 100px;
-                    text-align: center;
                     width: 100%;
                 "
             >

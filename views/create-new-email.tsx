@@ -8,6 +8,7 @@ import TemplateSelection from "@/components/template-selection";
 import { Button } from "@/components/ui/button";
 import { IconInput } from "@/components/ui/icon-input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getTemplates } from "@/lib/query/templates";
 import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
@@ -19,7 +20,8 @@ import { useDebounce } from "react-use";
 const CreateNewEmail = () => {
   const { user } = useUserStore();
   const { company } = useCompanyStore();
-  const { selectedTemplate, reset } = useCreateEmailStore();
+  const { selectedTemplate, reset, setSelectedTemplate } =
+    useCreateEmailStore();
 
   const [title, setTitle] = useState("");
   const [debouncedTitle, setDebouncedTitle] = useState("");
@@ -41,6 +43,7 @@ const CreateNewEmail = () => {
 
   const [, cancel] = useDebounce(
     () => {
+      setSelectedTemplate(null);
       setDebouncedTitle(title);
     },
     1500,
@@ -54,16 +57,20 @@ const CreateNewEmail = () => {
   return (
     <div className="flex flex-col lg:flex-row">
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
-        <ContainerSidebar classname="p-2 lg:p-8 w-full">
-          <p className="ty-subheading">Create new email</p>
+        <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
+          <div className="flex items-center gap-4">
+            <SidebarTrigger className="" />
+
+            <p className="ty-subheading">Create new email</p>
+          </div>
           <IconInput
             startIcon={<Search size={16} />}
             className="w-full flex-1 bg-white/[.04]"
             value={title}
             onChange={onChange}
-            placeholder="Search"
+            placeholder="Type a template name to search..."
           />
-          <ScrollArea className="w-full h-full">
+          <ScrollArea className="w-full h-full relative">
             <div className="flex flex-col items-start gap-2 flex-1 self-stretch rounded-lg">
               {templatesIsLoading && (
                 <>
@@ -82,49 +89,48 @@ const CreateNewEmail = () => {
                 </p>
               )}
             </div>
-
-            {templates && templates?.data.templates.length > 0 && (
-              <>
-                <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
-                <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full">
-                  <div className="flex items-center gap-2">
-                    <p className="ty-descriptions text-white/50">
-                      <span className="ty-subtitle text-white font-semibold">
-                        1-{templates?.data.templates.length}
-                      </span>{" "}
-                      of{" "}
-                      <span className="ty-subtitle text-white font-semibold">
-                        {templates?.meta?.totalPage}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex justify-center items-center gap-2">
-                    <Button
-                      disabled={page === 1}
-                      variant={"outline"}
-                      onClick={() => setPage((prev) => prev - 1)}
-                      className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
-                    >
-                      <ChevronLeft size={12} />
-                      <span className="sr-only">Previous Page</span>
-                    </Button>
-                    <Button
-                      disabled={page === templates?.meta?.totalPage}
-                      variant={"outline"}
-                      onClick={() => setPage((prev) => prev + 1)}
-                      className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
-                    >
-                      <ChevronRight size={12} />
-                      <span className="sr-only">Next Page</span>
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
+            <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
           </ScrollArea>
+          {templates && templates?.data.templates.length > 0 && (
+            <>
+              <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full px-8">
+                <div className="flex items-center gap-2">
+                  <p className="ty-descriptions text-white/50">
+                    <span className="ty-subtitle text-white font-semibold">
+                      1-{templates?.data.templates.length}
+                    </span>{" "}
+                    of{" "}
+                    <span className="ty-subtitle text-white font-semibold">
+                      {templates?.meta?.totalPage}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex justify-center items-center gap-2">
+                  <Button
+                    disabled={page === 1}
+                    variant={"outline"}
+                    onClick={() => setPage((prev) => prev - 1)}
+                    className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
+                  >
+                    <ChevronLeft size={12} />
+                    <span className="sr-only">Previous Page</span>
+                  </Button>
+                  <Button
+                    disabled={page === templates?.meta?.totalPage}
+                    variant={"outline"}
+                    onClick={() => setPage((prev) => prev + 1)}
+                    className="h-fit flex p-1 items-start gap-2 rounded border border-gray/[.16]"
+                  >
+                    <ChevronRight size={12} />
+                    <span className="sr-only">Next Page</span>
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </ContainerSidebar>
       </LayoutContainer>
-      <LayoutContainer classnames="relative p-2 lg:p-8 lg:pl-0">
+      <LayoutContainer classnames="relative p-2 lg:p-8 lg:pl-0 mb-24">
         <ContainerMain>
           <p className="ty-subtitle self-stretch text-white/50">
             {!selectedTemplate ? "Edit your email" : "Email Preview"}

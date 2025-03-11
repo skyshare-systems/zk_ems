@@ -72,8 +72,8 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: "/favicon/favicon.svg",
-    shortcut: "/favicon/favicon.svg",
+    icon: "/favicon/favicon.ico",
+    shortcut: "/favicon/favicon.ico",
     apple: [
       {
         url: "/favicon/apple-touch-icon.png",

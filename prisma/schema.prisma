@@ -72,6 +72,7 @@ model SentEmail {
   footer     String
   header     String
   subject    String
+  attachments String[]
   recipients Recipient[]
   company    Company     @relation(fields: [companyId], references: [id])
   template   Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)

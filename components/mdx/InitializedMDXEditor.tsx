@@ -113,7 +113,9 @@ export const Mdx = ({ ref }: Props) => {
             </div>
           ),
         }),
-        listsPlugin(),
+        listsPlugin({
+          
+        }),
         quotePlugin(),
         codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
         codeMirrorPlugin({

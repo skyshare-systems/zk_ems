@@ -11,6 +11,7 @@ interface CreateEmailState {
   selectedTemplate: Template | null;
   userTemplates: Template[];
   alignment: 'left' | 'center' | 'right';
+  files: File[];
 }
 
 interface CreateEmailActions {
@@ -21,6 +22,7 @@ interface CreateEmailActions {
   setSelectedTemplate: (template: Template | null) => void;
   getUserTemplates: () => Promise<void>;
   setAlignment: (alignment: 'left' | 'center' | 'right') => void;
+  setFiles: (file: File[]) => void;
   reset: () => void;
 }
 
@@ -32,12 +34,14 @@ const initialState: CreateEmailState = {
   selectedTemplate: null,
   userTemplates: [],
   alignment: 'left',
+  files: [],
 };
 
 export const useCreateEmailStore = create<CreateEmailState & CreateEmailActions>()(
   persist(
     (set) => ({
       ...initialState,
+      setFiles: (files) => set({ files }),
       setEditorData: (data) => set({ editorData: data }),
       setBody: (body) => set({ body }),
       setSubject: (subject) => set({ subject }),

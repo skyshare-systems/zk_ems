@@ -13,7 +13,7 @@ import { sendEmail } from "@/lib/mutation/email/send-email";
 
 const ConfirmEmailBlast = () => {
   const { isOpen, onClose } = useModalStore();
-  const { selectedTemplate, subject, recipients, body, reset } =
+  const { selectedTemplate, subject, recipients, body, reset, files } =
     useCreateEmailStore();
 
   const { mutate: sendNow, isPending } = useMutation({
@@ -49,6 +49,7 @@ const ConfirmEmailBlast = () => {
       selectedTemplate,
       recipients,
       body,
+      attachments: files,
     });
   }
 

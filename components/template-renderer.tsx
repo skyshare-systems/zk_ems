@@ -3,7 +3,13 @@
 import { useCreateEmailStore } from "@/store/create-email";
 import { useModalStore } from "@/store/modal";
 import { ArrowUpRight, Upload } from "lucide-react";
-import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
 import EmailEditor from "./email-editor";
 import { Button } from "./ui/button";
@@ -26,8 +32,15 @@ interface TemplateRendererProps {
 const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   maxRecipientsAllowed = 1000, // Default max recipients
 }) => {
-  const { selectedTemplate, subject, recipients, setRecipients, setSubject } =
-    useCreateEmailStore();
+  const {
+    selectedTemplate,
+    subject,
+    recipients,
+    setRecipients,
+    setSubject,
+    attachments,
+    setAttachments,
+  } = useCreateEmailStore();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
   const [isPreview, setIsPreview] = useState<boolean>(false);
@@ -62,7 +75,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     if (
       domain &&
       !/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(
-        domain
+        domain,
       )
     ) {
       errors.push({
@@ -86,7 +99,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   const validateRecipientsList = (
-    newRecipients: string[]
+    newRecipients: string[],
   ): ValidationResult => {
     const errors: ValidationError[] = [];
 
@@ -100,7 +113,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
 
     // Check for duplicates
     const duplicates = newRecipients.filter(
-      (email, index) => newRecipients.indexOf(email) !== index
+      (email, index) => newRecipients.indexOf(email) !== index,
     );
     if (duplicates.length > 0) {
       errors.push({
@@ -157,7 +170,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   const processCSVContent = (
-    content: string
+    content: string,
   ): {
     validEmails: string[];
     duplicates: string[];
@@ -195,7 +208,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             }
           } else {
             errors.push(
-              `Row ${index + 1}: ${email} - ${validation.errors[0].message}`
+              `Row ${index + 1}: ${email} - ${validation.errors[0].message}`,
             );
           }
         }
@@ -206,7 +219,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
       toast.warning(
         `Some emails were invalid:\n${errors.slice(0, 5).join("\n")}${
           errors.length > 5 ? "\n..." : ""
-        }`
+        }`,
       );
     }
 
@@ -214,7 +227,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
       toast.warning(
         `Duplicates found within CSV:\n${duplicatesInFile
           .slice(0, 5)
-          .join("\n")}${duplicatesInFile.length > 5 ? "\n..." : ""}`
+          .join("\n")}${duplicatesInFile.length > 5 ? "\n..." : ""}`,
       );
     }
 
@@ -222,7 +235,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
       toast.warning(
         `Emails already in recipients list:\n${duplicatesWithExisting
           .slice(0, 5)
-          .join("\n")}${duplicatesWithExisting.length > 5 ? "\n..." : ""}`
+          .join("\n")}${duplicatesWithExisting.length > 5 ? "\n..." : ""}`,
       );
     }
 
@@ -233,7 +246,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   };
 
   const handleFileUpload = async (
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     try {
       setIsProcessingCSV(true);
@@ -294,7 +307,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                   duplicates.length === 1 ? "" : "s"
                 }`
               : ""
-          }`
+          }`,
         );
       };
 
@@ -318,11 +331,21 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setRecipients(recipients.filter((_, index) => index !== indexToRemove));
   };
 
-  if (!selectedTemplate) return null;
-
   const sendEmailConfirmation = (): void => {
     onOpen();
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setAttachments([...attachments, ...Array.from(e.target.files)]);
+    }
+  };
+
+  useEffect(() => {
+    setAttachments([]);
+  }, [setAttachments]);
+
+  if (!selectedTemplate) return null;
 
   return (
     <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow w-full">
@@ -415,6 +438,49 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             </div>
           </div>
         </div>
+
+        {selectedTemplate.company.name === "Skyshare Labs" && (
+          <div className="flex gap-4 items-center self-stretch">
+            <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
+              Add Attachments
+            </p>
+
+            <div className="mt-1 flex items-center">
+              <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50">
+                Add File
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                  multiple
+                />
+              </label>
+            </div>
+
+            {attachments.length > 0 && (
+              <div className="flex items-center flex-wrap gap-2">
+                {attachments.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between bg-white/[.08] p-2 rounded gap-2"
+                  >
+                    <p className="text-sm text-white">{file.name}</p>
+                    <button
+                      className="text-red-500 text-xs"
+                      onClick={() =>
+                        setAttachments(
+                          attachments.filter((_, i) => i !== index),
+                        )
+                      }
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 

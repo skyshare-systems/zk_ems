@@ -9,15 +9,27 @@ import { useCreateEmailStore } from "@/store/create-email";
 import { marked } from "marked";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { sendEmail } from "@/lib/mutation/email/send-email";
+import { sendEmail, sendEmailSkyshare } from "@/lib/mutation/email/send-email";
+import { useUserStore } from "@/store/user";
 
 const ConfirmEmailBlast = () => {
   const { isOpen, onClose } = useModalStore();
-  const { selectedTemplate, subject, recipients, body, reset, files } =
-    useCreateEmailStore();
+  const {
+    selectedTemplate,
+    subject,
+    recipients,
+    body,
+    reset,
+    attachments,
+    alignment,
+  } = useCreateEmailStore();
+  const { user } = useUserStore();
 
   const { mutate: sendNow, isPending } = useMutation({
-    mutationFn: sendEmail,
+    mutationFn:
+      selectedTemplate?.company.name === "Skyshare Labs"
+        ? sendEmailSkyshare
+        : sendEmail,
     mutationKey: ["send-email"],
     onSuccess: () => {
       toast.success("Email sent successfully", {
@@ -43,13 +55,13 @@ const ConfirmEmailBlast = () => {
 
   function send() {
     if (!selectedTemplate) return;
-
     sendNow({
       subject,
       selectedTemplate,
       recipients,
       body,
-      attachments: files,
+      alignment,
+      attachments,
     });
   }
 

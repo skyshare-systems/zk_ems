@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "../ui/input";
+import { useMount, useMountedState } from "react-use";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -74,10 +75,6 @@ const LoginForm = () => {
 
   useEffect(() => {
     localStorage.clear();
-
-    return () => {
-      setIsRedirecting(false);
-    };
   }, []);
 
   return (

@@ -79,11 +79,11 @@ const CreateNewEmail = () => {
                   ))}
                 </>
               )}
-              {templates?.data.templates.map((template) => (
+              {templates?.data.map((template) => (
                 <TemplateSelection template={template} key={template.id} />
               ))}
 
-              {templates?.data.templates.length === 0 && (
+              {templates?.data.length === 0 && (
                 <p className="ty-descriptions text-white/50">
                   No templates found. Please contact the administrators first.
                 </p>
@@ -91,13 +91,13 @@ const CreateNewEmail = () => {
             </div>
             <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
           </ScrollArea>
-          {templates && templates?.data.templates.length > 0 && (
+          {templates && templates?.data.length > 0 && (
             <>
               <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full px-8">
                 <div className="flex items-center gap-2">
                   <p className="ty-descriptions text-white/50">
                     <span className="ty-subtitle text-white font-semibold">
-                      1-{templates?.data.templates.length}
+                      1-{templates?.data.length}
                     </span>{" "}
                     of{" "}
                     <span className="ty-subtitle text-white font-semibold">

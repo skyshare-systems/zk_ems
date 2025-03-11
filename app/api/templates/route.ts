@@ -25,7 +25,7 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
     }
 
     //* is the user a member of the company
-    const company = await prisma.company.findFirst({
+  /*   const company = await prisma.company.findFirst({
       where: {
         id: companyId,
         users: {
@@ -46,7 +46,27 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
             : undefined,
         },
       },
-    });
+    }); */
+
+    const templates = await prisma.template.findMany({
+      where: {
+        companyId,
+        name: {
+          contains: title ?? "",
+          mode: "insensitive",
+        },
+        company: {
+          users: {
+            some: {
+              userId: userId,
+            },
+          },
+        }
+      },
+      include: {
+        company: true
+      }
+    })
 
     const totalTemplates = await prisma.template.count({
       where: {
@@ -67,14 +87,14 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
           : totalTemplates - parseInt(page ?? "1") * parseInt(limit ?? "10"),
     };
 
-    if (!company) {
-      return NextResponse.json(createApiResponse("Company not found", null), {
+    if (!templates) {
+      return NextResponse.json(createApiResponse("Templates not found", null), {
         status: 404,
       });
     }
 
     return NextResponse.json(
-      createApiResponse("Templates found", company, meta),
+      createApiResponse("Templates found", templates, meta),
       {
         status: 200,
       }

@@ -58,7 +58,7 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
                   "prose-td:align-middle",
                   "prose-code:bg-none",
                   // Reset images within tables
-                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block"
+                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block",
                 )}
                 dangerouslySetInnerHTML={{ __html: previewHTML }}
               />

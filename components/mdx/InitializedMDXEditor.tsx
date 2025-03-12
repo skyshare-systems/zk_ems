@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
@@ -29,7 +28,7 @@ import {
   quotePlugin,
   tablePlugin,
   thematicBreakPlugin,
-  toolbarPlugin
+  toolbarPlugin,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
@@ -59,12 +58,12 @@ export const Mdx = ({ ref }: Props) => {
       markdown={body}
       onChange={setBody}
       contentEditableClassName={cn(
-        "prose flex flex-col grow max-w-[640px] m-0 p-0 h-full mx-auto",
+        "prose flex flex-col grow max-w-[640px] m-0 p-0 h-full mx-auto ",
         {
           "text-left": alignment === "left",
           "text-center": alignment === "center",
           "text-right": alignment === "right",
-        }
+        },
       )}
       className="h-full flex flex-col grow w-full mx-auto"
       plugins={[
@@ -113,9 +112,7 @@ export const Mdx = ({ ref }: Props) => {
             </div>
           ),
         }),
-        listsPlugin({
-          
-        }),
+        listsPlugin({}),
         quotePlugin(),
         codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
         codeMirrorPlugin({

@@ -14,6 +14,12 @@ pnpm dev
 bun dev
 ```
 
+We specialize in:
+✅ Applications – Delivery & Shipments, Order Management, Rewards & HMO
+✅ Web2 & Web3 Expertise – Custom Development, Blockchain Development
+✅ Creative & Tech Solutions – UI/UX, 3D Animation, Motion Graphics, Social Media Management
+✅ IT Services – IT Staff Augmentation & Outsourcing
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

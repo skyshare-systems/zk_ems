@@ -5,7 +5,8 @@ import nodemailer from "nodemailer";
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import { generateTemplate } from "@/lib/generateTemplate";
 import { Attachment } from "nodemailer/lib/mailer";
-
+import { render } from '@react-email/render';
+import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl";
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
     const formData = await request.formData();
@@ -44,7 +45,9 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       return NextResponse.json(createApiResponse("Template not found or unauthorized", null), { status: 404 });
     }
 
-    const html = generateTemplate(template, body, alignment);
+    const html = await render(SkyshareLabsJPLTemplate({
+      body
+    }));
     const transporter = createEmailTransporter();
 
     const arrayFileName = attachments.map(file => file.name);

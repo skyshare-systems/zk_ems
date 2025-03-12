@@ -20,52 +20,211 @@ const EmailEditor = ({ isPreview }: { isPreview: boolean }) => {
 
   console.log({ html: marked.parse(body) });
 
-  const previewHTML = `
-  <div style="width: 100%; font-family: Arial, sans-serif;">
-    <div style="margin-bottom: 20px">${selectedTemplate.header}</div>
-    <div style="text-align: ${alignment}; padding: 20px;">
-      ${marked.parse(body)}
-    </div>
-    <div style="margin-top: 20px">${selectedTemplate.footer}</div>
-  </div>
+  const previewHTML = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+  <head>
+    <link rel="preload" as="image" href="/static/email_header.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/phone.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/tel.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <!--$-->
+    <style>
+      @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        mso-font-alt: 'Verdana';
+        src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
+      }
+
+      * {
+        font-family: 'Roboto', Verdana;
+      }
+    </style>
+  </head>
+  <body
+    style='background-color:rgb(0,0,0,0.2);margin-top:auto;margin-bottom:auto;margin-left:auto;margin-right:auto;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";padding-left:0.5rem;padding-right:0.5rem'>
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="border-width:1px;background-color:rgb(255,255,255);border-style:solid;border-color:rgb(234,234,234);border-radius:0.25rem;margin-left:auto;margin-right:auto;padding:20px;max-width:640px">
+      <tbody>
+        <tr style="width:100%">
+          <td>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              class="">
+              <tbody>
+                <tr>
+                  <td>
+                    <img
+                      alt="Skyshare Labs"
+                      height="150"
+                      src="/static/email_header.png"
+                      style="margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;max-width:640px;width:100%;object-fit:cover;display:block;outline:none;border:none;text-decoration:none"
+                      width="640" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <div data-id="react-email-markdown">
+                      <h1
+                        style="font-weight:500;padding-top:20px;font-size:2.5rem;color:black">
+                        Test
+                      </h1>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color:rgb(239,68,68);position:relative;background-image:url(&#x27;https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png&#x27;);background-size:cover;background-position:center;background-repeat:no-repeat;padding:12px">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation">
+                      <tbody style="width:100%">
+                        <tr style="width:100%">
+                          <td
+                            align="left"
+                            data-id="__react-email-column"
+                            style="width:50%;margin-bottom:auto">
+                            <p
+                              style="font-size:20px;font-weight:600;color:rgb(255,255,255);line-height:1;margin:16px 0">
+                              James Patrick Lucas
+                            </p>
+                            <p
+                              style="font-size:14px;color:rgb(255,255,255);opacity:0.5;line-height:24px;margin:16px 0">
+                              Business Development Manager
+                            </p>
+                            <p
+                              style="display:flex;align-items:center;color:rgb(255,255,255);letter-spacing:0em;line-height:1.5;font-size:14px;margin:16px 0">
+                              <img
+                                height="16"
+                                src="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/phone.png"
+                                style="display:inline-block;align-self:center;margin-right:0.5rem;outline:none;border:none;text-decoration:none"
+                                width="16" /><span style="margin:0px"
+                                >+917 678 4455</span
+                              >
+                            </p>
+                            <p
+                              style="display:flex;align-items:center;color:rgb(255,255,255);letter-spacing:0em;line-height:1.5;font-size:14px;margin:16px 0">
+                              <img
+                                height="16"
+                                src="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
+                                style="display:inline-block;align-self:center;margin-right:0.5rem;outline:none;border:none;text-decoration:none"
+                                width="16" /><span style="margin:0px"
+                                >jameslucas@skysharelabs.com</span
+                              >
+                            </p>
+                          </td>
+                          <td
+                            align="left"
+                            data-id="__react-email-column"
+                            style="width:50%">
+                            <p
+                              style="color:rgb(255,255,255);font-size:20px;font-weight:600;line-height:24px;margin:16px 0">
+                              Skyshare Labs
+                            </p>
+                            <p
+                              style="display:flex;align-items:center;color:rgb(255,255,255);letter-spacing:0em;line-height:1.5;font-size:14px;margin:16px 0">
+                              <img
+                                height="16"
+                                src="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/tel.png"
+                                style="display:inline-block;align-self:center;margin-right:0.5rem;outline:none;border:none;text-decoration:none"
+                                width="16" /><span style="margin:0px"
+                                >+63 956 487 5538</span
+                              >
+                            </p>
+                            <p
+                              style="display:flex;align-items:center;color:rgb(255,255,255);letter-spacing:0em;line-height:1.5;font-size:14px;margin:16px 0">
+                              <img
+                                height="16"
+                                src="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
+                                style="display:inline-block;align-self:center;margin-right:0.5rem;outline:none;border:none;text-decoration:none"
+                                width="16" /><span style="margin:0px"
+                                >management@skysharelabs.com</span
+                              >
+                            </p>
+                            <p
+                              style="display:flex;align-items:center;color:rgb(255,255,255);letter-spacing:0em;line-height:1.5;font-size:14px;margin:16px 0">
+                              <img
+                                height="16"
+                                src="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png"
+                                style="display:inline-block;align-self:center;margin-right:0.5rem;outline:none;border:none;text-decoration:none"
+                                width="16" /><span style="margin:0px"
+                                >Block 6, Lot 6A Dulalia Homes 1, T. Santiago
+                                St., Viente Reales, Valenzuela City</span
+                              >
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--/$-->
+  </body>
+</html>
+
 `;
 
   return (
     <div className="flex p-4 flex-col gap-6 self-stretch rounded-2xl bg-white h-full grow">
       {isPreview ? (
-        <div className="flex justify-center items-center min-h-screen w-full p-4">
-          <div className="border border-dashed border-gold w-full max-w-[640px] p-4 rounded-lg bg-white shadow-lg">
-            <div className="w-full flex justify-center ">
-              <div
-                className={cn(
-                  "prose max-w-[640px] w-full mx-auto ",
-                  // Complete table reset
-                  "[&_table]:w-full [&_table]:border-0 [&_table]:m-0 [&_table]:p-0 [&_table]:border-collapse",
-                  // Reset spacing and layout for all table elements
-                  "[&_*]:border-0 ",
-                  // Specific table element resets
-                  "[&_td]:w-fit [&_td]:text-left",
-                  "[&_tr]:w-full",
-                  "[&_th]:font-normal [&_th]:text-left",
-                  // Remove any inherited styles
-                  "[&_table]:shadow-none",
-                  "[&_thead]:bg-transparent",
-                  "[&_tbody]:bg-transparent",
-                  "[&_tfoot]:bg-transparent",
-                  // Reset any prose-specific styles
-                  "prose-table:shadow-none",
-                  "prose-tr:border-0",
-                  "prose-td:align-middle",
-                  "prose-code:bg-none",
-                  // Reset images within tables
-                  "[&_img]:m-0 [&_img]:p-0 [&_img]:inline-block",
-                )}
-                dangerouslySetInnerHTML={{ __html: previewHTML }}
-              />
-              {/* <EditorPreview /> */}
-            </div>
-          </div>
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: previewHTML }}></div>
       ) : (
         <>
           <EmailSection content={selectedTemplate.header} />

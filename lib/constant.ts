@@ -1,4 +1,4 @@
-import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl";
+import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 
 export const SITE_URL =
   process.env.NODE_ENV === "production"
@@ -19,6 +19,6 @@ export interface EmailTemplate {
 export const emailTemplates: EmailTemplate[] = [
   {
     template: SkyshareLabsJPLTemplate,
-    templateId: "cm82qj5u0000q2le4a4hrds62",
+    templateId: "cm85kbyp50001yf6j8hh50f16",
   },
 ];

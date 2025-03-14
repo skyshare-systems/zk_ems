@@ -55,7 +55,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
             <Section className="">
               <Img
-                src={`${baseUrl}/static/email_header.png`}
+                src={`${baseUrl}/static/skyshare/email_header.png`}
                 width="640"
                 height="150"
                 alt="Skyshare Labs"

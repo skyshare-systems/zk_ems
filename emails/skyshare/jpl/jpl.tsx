@@ -55,7 +55,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
             <Section className="">
               <Img
-                src={`${baseUrl}/static/skyshare/email_header.png`}
+                src={`https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png`}
                 width="640"
                 height="150"
                 alt="Skyshare Labs"
@@ -154,7 +154,7 @@ const ContactItem = ({
       style={{
         verticalAlign: "middle",
       }}
-      className="self-stretch mr-1"
+      className="size-[16px] mr-1"
       src={icon}
       width={16}
       height={16}

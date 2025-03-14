@@ -1,7 +1,7 @@
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import { NextResponse } from "next/server";
 import { render } from "@react-email/render";
-import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl";
+import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 import { createApiResponse, createErrorMessage } from "@/lib/utils";
 import React from "react";
 import { emailTemplates } from "@/lib/constant";
@@ -11,7 +11,6 @@ export interface GenerateTemplateRequest {
   body: string;
   templateId: string;
 }
-
 
 // Get template by ID and render with props
 const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
@@ -29,10 +28,13 @@ const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
 // POST handler
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
-    const { body, templateId } =
+    const { body, templateId, ...props } =
       (await request.json()) as GenerateTemplateRequest;
 
-    const htmlTemplate = await getTemplateLookup(templateId, { body });
+    const htmlTemplate = await getTemplateLookup(templateId, {
+      body,
+      ...props,
+    });
 
     return NextResponse.json(
       createApiResponse("Template generated successfully", {

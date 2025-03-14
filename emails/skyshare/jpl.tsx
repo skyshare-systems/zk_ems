@@ -43,11 +43,22 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
     <Html>
       <Head>
         <Font
-          fontFamily="Roboto"
-          fallbackFontFamily="Verdana"
+          fontFamily="Sora"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           webFont={{
-            url: "https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2",
-            format: "woff2",
+            url: "../static/fonts/sora/Sora-Regular.ttf",
+            format: "truetype",
+          }}
+          fontWeight={400}
+          fontStyle="normal"
+        />
+
+        <Font
+          fontFamily="MuseoModerno"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          webFont={{
+            url: "../static/fonts/museomoderno/MuseoModerno-Regular.ttf",
+            format: "truetype",
           }}
           fontWeight={400}
           fontStyle="normal"
@@ -55,7 +66,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="bg-black/20 my-auto mx-auto font-sans px-2">
+        <Body className="bg-black/20 my-auto mx-auto  px-2">
           <Container className="border bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
             <Section className="">
               <Img
@@ -67,18 +78,31 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
               />
             </Section>
 
-            <Section>
+            <Section style={{
+              fontFamily: ""
+            }}>
               <Markdown>{body ?? "# Test"}</Markdown>
             </Section>
 
             <Section className="bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">
-              <Row className="">
+              <Row>
                 {/* Personal Info */}
-                <Column align="left" className="w-[50%] mb-auto">
+                <Column
+                  align="left"
+                  className="w-[50%] mb-auto"
+                  style={{
+                    verticalAlign: "top",
+                  }}
+                >
                   <Text className="text-[20px] font-semibold text-white leading-none">
                     James Patrick Lucas
                   </Text>
-                  <Text className="text-[14px] text-white opacity-50">
+                  <Text
+                    style={{
+                      fontFamily: "MuseoModerno",
+                    }}
+                    className="text-[14px] text-white opacity-50"
+                  >
                     Business Development Manager
                   </Text>
                   <ContactItem
@@ -132,13 +156,57 @@ SkyshareLabsJPLTemplate.PreviewProps = {
 export default SkyshareLabsJPLTemplate;
 
 const ContactItem = ({ icon, text }: { icon: string; text: string }) => (
-  <Text className="flex items-center text-white tracking-normal leading-normal">
+  // <Row>
+  //   <Column
+  //     align="center"
+  //     style={{
+  //       display: "table-cell",
+  //     }}
+  //   >
+  //     <Link
+  //       href="https://wallet.apple.com/apple-card/setup/feature/ccs?referrer=cid%3Dapy-120-100003"
+  //       style={{
+  //         textDecoration: "none",
+  //       }}
+  //     >
+  //       <Img
+  //         src={`${baseUrl}/static/apple-wallet.png`}
+  //         width="28"
+  //         height="28"
+  //         alt="Apple Wallet"
+  //         style={{
+  //           display: "inherit",
+  //           paddingRight: "8px",
+  //           verticalAlign: "middle",
+  //         }}
+  //       />
+  //       <Img
+  //         className="inline-block self-stretch mr-2"
+  //         src={icon}
+  //         width={16}
+  //         height={16}
+  //       />
+  //       <span
+  //         style={{
+  //           textDecoration: "none",
+  //         }}
+  //       >
+  //         {text}
+  //       </span>
+  //     </Link>
+  //   </Column>
+  // </Row>
+
+  <Text className="flex text-white leading-none gap-2 items-start">
     <Img
-      className="inline-block self-center mr-2"
+      style={{
+        verticalAlign: "middle",
+      }}
+      className="self-stretch mr-1"
       src={icon}
       width={16}
       height={16}
     />
-    <span className="m-0">{text}</span>
+    <span className="m-0 leading-[1rem] tracking-normal">{text}</span>
   </Text>
 );

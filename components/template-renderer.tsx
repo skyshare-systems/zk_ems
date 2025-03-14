@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import EmailEditor from "./email-editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
 
 interface ValidationError {
   message: string;
@@ -40,6 +42,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setSubject,
     attachments,
     setAttachments,
+    body,
+    preview,
+    setPreview,
   } = useCreateEmailStore();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
@@ -345,6 +350,27 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setAttachments([]);
   }, [setAttachments]);
 
+  const { mutate, isPending: isGeneratingPreview } = useMutation({
+    mutationKey: ["generate-template"],
+    mutationFn: () => {
+      return generateTemplate({
+        body,
+        templateId: selectedTemplate!.id,
+      });
+    },
+    onSuccess: ({ data: { html } }) => {
+      setPreview(html);
+    },
+  });
+
+  function generatePreview() {
+    setIsPreview(!isPreview);
+
+    if (!isPreview) {
+      mutate();
+    }
+  }
+
   if (!selectedTemplate) return null;
 
   return (
@@ -485,17 +511,22 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
-          <EmailEditor isPreview={isPreview} />
+          <EmailEditor
+            isPreview={isPreview}
+            isGeneratingPreview={isGeneratingPreview}
+          />
         </div>
       </div>
 
       <div className="flex flex-wrap lg:flex-nowrap  justify-end items-center gap-2 self-stretch">
         <Button
-          onClick={() => setIsPreview(!isPreview)}
+          onClick={() => {
+            generatePreview();
+          }}
           variant={"ghost"}
           className="bg-gold/[.04] w-full lg:w-fit"
         >
-          <p className="text-gold">{isPreview ? "Hide" : "Show"} Preview</p>
+          <p className="text-gold">{isPreview ? "Hide" : "Generate"} Preview</p>
         </Button>
         <Button
           disabled={recipients.length === 0 || subject.trim() === ""}

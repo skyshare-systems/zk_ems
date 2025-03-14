@@ -1,34 +1,21 @@
+import { cn } from "@/lib/utils";
 import {
   Body,
-  Button,
   Column,
   Container,
+  Font,
   Head,
-  Heading,
-  Hr,
   Html,
   Img,
-  Link,
-  Preview,
+  Markdown,
   Row,
   Section,
   Tailwind,
   Text,
-  Font,
-  Markdown,
 } from "@react-email/components";
-import * as React from "react";
+import { CSSProperties } from "react";
 
 interface SkyshareJPLTemplateProps {
-  // username?: string;
-  userImage?: string;
-  // invitedByUsername?: string;
-  // invitedByEmail?: string;
-  // teamName?: string;
-  teamImage?: string;
-  // inviteLink?: string;
-  // inviteFromIp?: string;
-  // inviteFromLocation?: string;
   body: string;
 }
 
@@ -37,8 +24,6 @@ const baseUrl = process.env.VERCEL_URL
   : "";
 
 export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
-  // const previewText = `Join ${invitedByUsername} on Vercel`;
-
   return (
     <Html>
       <Head>
@@ -53,7 +38,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           fontStyle="normal"
         />
 
-        <Font
+        {/*   <Font
           fontFamily="MuseoModerno"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           webFont={{
@@ -62,12 +47,12 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           }}
           fontWeight={400}
           fontStyle="normal"
-        />
+        /> */}
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="bg-black/20 my-auto mx-auto  px-2">
-          <Container className="border bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
+        <Body className="bg-black/20 my-auto mx-auto  px-2 py-[20px]">
+          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
             <Section className="">
               <Img
                 src={`${baseUrl}/static/email_header.png`}
@@ -78,10 +63,14 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
               />
             </Section>
 
-            <Section style={{
-              fontFamily: ""
-            }}>
-              <Markdown>{body ?? "# Test"}</Markdown>
+            <Section
+              className="text-black"
+              style={{
+                fontFamily:
+                  "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+              }}
+            >
+              <Markdown>{body ?? ""}</Markdown>
             </Section>
 
             <Section className="bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">
@@ -97,12 +86,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   <Text className="text-[20px] font-semibold text-white leading-none">
                     James Patrick Lucas
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: "MuseoModerno",
-                    }}
-                    className="text-[14px] text-white opacity-50"
-                  >
+                  <Text className="text-[14px] text-white opacity-50">
                     Business Development Manager
                   </Text>
                   <ContactItem
@@ -112,6 +96,10 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   <ContactItem
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="jameslucas@skysharelabs.com"
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}
                   />
                 </Column>
                 {/* Company Info */}
@@ -126,6 +114,10 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   <ContactItem
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="management@skysharelabs.com"
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}
                   />
                   <ContactItem
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png"
@@ -141,63 +133,23 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
   );
 };
 
-SkyshareLabsJPLTemplate.PreviewProps = {
-  // username: "alanturing",
-  userImage: `${baseUrl}/static/vercel-user.png`,
-  // invitedByUsername: "Alan",
-  // invitedByEmail: "alan.turing@example.com",
-  // teamName: "Enigma",
-  teamImage: `${baseUrl}/static/vercel-team.png`,
-  // inviteLink: "https://vercel.com/teams/invite/foo",
-  // inviteFromIp: "204.13.186.218",
-  // inviteFromLocation: "São Paulo, Brazil",
-} as SkyshareJPLTemplateProps;
-
 export default SkyshareLabsJPLTemplate;
 
-const ContactItem = ({ icon, text }: { icon: string; text: string }) => (
-  // <Row>
-  //   <Column
-  //     align="center"
-  //     style={{
-  //       display: "table-cell",
-  //     }}
-  //   >
-  //     <Link
-  //       href="https://wallet.apple.com/apple-card/setup/feature/ccs?referrer=cid%3Dapy-120-100003"
-  //       style={{
-  //         textDecoration: "none",
-  //       }}
-  //     >
-  //       <Img
-  //         src={`${baseUrl}/static/apple-wallet.png`}
-  //         width="28"
-  //         height="28"
-  //         alt="Apple Wallet"
-  //         style={{
-  //           display: "inherit",
-  //           paddingRight: "8px",
-  //           verticalAlign: "middle",
-  //         }}
-  //       />
-  //       <Img
-  //         className="inline-block self-stretch mr-2"
-  //         src={icon}
-  //         width={16}
-  //         height={16}
-  //       />
-  //       <span
-  //         style={{
-  //           textDecoration: "none",
-  //         }}
-  //       >
-  //         {text}
-  //       </span>
-  //     </Link>
-  //   </Column>
-  // </Row>
-
-  <Text className="flex text-white leading-none gap-2 items-start">
+const ContactItem = ({
+  icon,
+  text,
+  style,
+}: {
+  icon: string;
+  text: string;
+  style?: CSSProperties | undefined;
+}) => (
+  <Text
+    className={cn("flex text-white leading-none gap-2 items-start")}
+    style={{
+      ...style,
+    }}
+  >
     <Img
       style={{
         verticalAlign: "middle",
@@ -207,6 +159,6 @@ const ContactItem = ({ icon, text }: { icon: string; text: string }) => (
       width={16}
       height={16}
     />
-    <span className="m-0 leading-[1rem] tracking-normal">{text}</span>
+    <span className="m-0 leading-[1rem] tracking-normal ">{text}</span>
   </Text>
 );

@@ -1,11 +1,12 @@
 import api from "@/lib/axios";
+import { GenerateTemplateResponse } from "@/lib/mutation/template/generateTemplate";
 import { Company, Prisma, Template } from "@prisma/client";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export type TemplateWithCompany = Prisma.TemplateGetPayload<{
   include: { company: true };
-}>
+}>;
 
 interface CreateEmailState {
   editorData: { blocks: any[] };
@@ -16,6 +17,7 @@ interface CreateEmailState {
   userTemplates: Template[];
   alignment: "left" | "center" | "right";
   attachments: File[];
+  preview: GenerateTemplateResponse;
 }
 
 interface CreateEmailActions {
@@ -27,6 +29,7 @@ interface CreateEmailActions {
   getUserTemplates: () => Promise<void>;
   setAlignment: (alignment: "left" | "center" | "right") => void;
   setAttachments: (file: File[]) => void;
+  setPreview: (preview: string) => void;
   reset: () => void;
 }
 
@@ -39,6 +42,9 @@ const initialState: CreateEmailState = {
   userTemplates: [],
   alignment: "left",
   attachments: [],
+  preview: {
+    html: ""
+  },
 };
 
 export const useCreateEmailStore = create<
@@ -47,6 +53,7 @@ export const useCreateEmailStore = create<
   persist(
     (set) => ({
       ...initialState,
+      setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
       setEditorData: (data) => set({ editorData: data }),
       setBody: (body) => set({ body }),

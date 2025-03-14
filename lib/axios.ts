@@ -29,6 +29,7 @@ api.interceptors.response.use(
       const { status } = error.response;
       if (status === httpCodes.UNAUTHORIZED) {
         localStorage.clear();
+        window.location.href = "/auth/login";
       }
     }
     return Promise.reject(error);

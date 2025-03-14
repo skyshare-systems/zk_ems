@@ -1,14 +1,11 @@
 "use client";
 
-import { Template } from "@prisma/client";
-import React from "react";
-import { format } from "date-fns";
-import { useCreateEmailStore } from "@/store/create-email";
 import { cn, localizedTime } from "@/lib/utils";
+import { TemplateWithCompany, useCreateEmailStore } from "@/store/create-email";
 import { fromZonedTime } from "date-fns-tz";
 import { Skeleton } from "./ui/skeleton";
 interface Props {
-  template: Template;
+  template: TemplateWithCompany;
 }
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
@@ -31,7 +28,7 @@ const TemplateSelection = ({ template }: Props) => {
       className={cn(
         "flex cursor-pointer hover:bg-white/[.16] p-3 flex-col justify-center items-start gap-2 self-stretch rounded-xl relative mr-2",
         selectedTemplate?.id === template.id &&
-          "border border-gold bg-gold/[.04]"
+          "border border-gold bg-gold/[.04]",
       )}
     >
       {selectedTemplate?.id === template.id && (

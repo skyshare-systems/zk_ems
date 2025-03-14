@@ -8,7 +8,7 @@ export interface AuthenticatedRequest extends NextRequest {
 }
 
 export const authorize = (
-  handler: (req: AuthenticatedRequest) => Promise<NextResponse>
+  handler: (req: AuthenticatedRequest) => Promise<NextResponse>,
 ) => {
   return async (req: NextRequest): Promise<NextResponse> => {
     try {
@@ -17,15 +17,28 @@ export const authorize = (
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return NextResponse.json(
           { success: false, message: "Unauthorized" },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
       const token = authHeader.split(" ")[1];
 
+      const tokenData = await prisma.token.findFirst({
+        where: {
+          token,
+        },
+      });
+
+      if (!tokenData) {
+        return NextResponse.json(
+          { success: false, message: "Unauthorized" },
+          { status: 401 },
+        );
+      }
+
       const { payload } = await jwtVerify(
         token,
-        new TextEncoder().encode("zk_ems")
+        new TextEncoder().encode("zk_ems"),
       );
 
       const user = await prisma.user.findUnique({
@@ -35,7 +48,7 @@ export const authorize = (
       if (!user) {
         return NextResponse.json(
           { success: false, message: "Unauthorized" },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -45,7 +58,7 @@ export const authorize = (
     } catch (error) {
       return NextResponse.json(
         { success: false, message: error, error: (error as Error).message },
-        { status: 401 }
+        { status: 401 },
       );
     }
   };

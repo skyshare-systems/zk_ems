@@ -8,7 +8,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { authLogin } from "@/lib/mutation/auth/login/login";
+import { authLogin } from "@/lib/mutation/auth/login";
 import { loginSchema } from "@/schema/login";
 import { useUserStore } from "@/store/user";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Input } from "../ui/input";
+import { useMount, useMountedState } from "react-use";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -74,10 +75,6 @@ const LoginForm = () => {
 
   useEffect(() => {
     localStorage.clear();
-
-    return () => {
-      setIsRedirecting(false);
-    };
   }, []);
 
   return (

@@ -15,7 +15,7 @@ async function main() {
     prisma.userCompany.deleteMany(),
     prisma.company.deleteMany(),
     prisma.user.deleteMany(),
-  ]);/* 
+  ]); 
   // Create 10 users
   const users = await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
@@ -81,7 +81,6 @@ async function main() {
           data: {
             name: `Template ${index + 1} - ${company.name}`,
             description: `Description for template ${index + 1}`,
-            subject: `Subject ${index + 1}`,
             header: `Header ${index + 1}`,
             footer: `Footer ${index + 1}`,
             tags: [`tag${index + 1}`, "email", company.name.toLowerCase()],
@@ -103,6 +102,7 @@ async function main() {
             footer: `Email footer based on template: ${template.name}`,
             templateId: template.id,
             companyId: template.companyId,
+            subject: `Email subject based on template: ${template.name}`,
           },
         })
       )
@@ -138,7 +138,7 @@ async function main() {
         })
       )
     )
-  ); */
+  ); 
 }
 
 main()

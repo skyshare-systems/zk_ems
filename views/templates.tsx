@@ -78,11 +78,11 @@ const Templates = () => {
                 </>
               )}
 
-              {templates?.data.templates.map((template) => (
+              {templates?.data.map((template) => (
                 <TemplateSelection template={template} key={template.id} />
               ))}
 
-              {templates?.data.templates.length === 0 && (
+              {templates?.data.length === 0 && (
                 <p className="ty-descriptions text-white/50">
                   No templates found. Please contact the administrators first.
                 </p>
@@ -90,13 +90,13 @@ const Templates = () => {
             </div>
             <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
           </ScrollArea>
-          {templates && templates?.data.templates.length > 0 && (
+          {templates && templates?.data.length > 0 && (
             <>
               <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full px-8">
                 <div className="flex items-center gap-2">
                   <p className="ty-descriptions text-white/50">
                     <span className="ty-subtitle text-white font-semibold">
-                      1-{templates?.data.templates.length}
+                      1-{templates?.data.length}
                     </span>{" "}
                     of{" "}
                     <span className="ty-subtitle text-white font-semibold">
@@ -139,7 +139,7 @@ const Templates = () => {
 
           {selectedTemplate && <TemplatePreview />}
 
-          {/*   {!selectedTemplate && templates?.data.templates.length === 0 && (
+          {/*   {!selectedTemplate && templates?.data.length === 0 && (
             <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
               <div className="flex flex-col items-center gap-2">
                 <BadgeAlert size={48} />
@@ -154,7 +154,7 @@ const Templates = () => {
         </ContainerMain>
       </LayoutContainer>
 
-      {templates?.data.templates.length === 0 && (
+      {templates?.data.length === 0 && (
         <div className="absolute h-full grow flex-1 inset-0 flex items-center justify-center -z-10">
           <div className="flex flex-col justify-center items-center gap-2">
             <svg

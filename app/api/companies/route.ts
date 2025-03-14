@@ -5,13 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = authorize(async (req: AuthenticatedRequest) => {
   try {
-
-    if(!req.user) {
-      return NextResponse.json(createApiResponse("Forbidden", null), {
-        status: 403,
-      });
-    }
-    
     const searchParams = req.nextUrl.searchParams;
     const page = parseInt(searchParams.get("page") ?? "1");
     const limit = parseInt(searchParams.get("limit") ?? "10");

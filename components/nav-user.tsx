@@ -1,25 +1,13 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronRight,
-  ChevronsUpDown,
-  CreditCard,
-  Database,
-  LogOut,
-  ServerCog,
-  Sparkles,
-} from "lucide-react";
+import { ChevronRight, Database, LogOut, ServerCog } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -28,12 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useUserStore } from "@/store/user";
-import { Separator } from "./ui/separator";
 import { useCompanyStore } from "@/store/company";
 import { useSmtpModalStore } from "@/store/smtp";
-import { useState } from "react";
 import { useStorageModalStore } from "@/store/storage";
+import { useUserStore } from "@/store/user";
+import { useState } from "react";
+import { Separator } from "./ui/separator";
+import { useMutation } from "@tanstack/react-query";
+import { logOut } from "@/lib/mutation/auth/logout";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -43,10 +33,25 @@ export function NavUser() {
   const { onOpen: onOpenStorageModal } = useStorageModalStore();
   const [isOpen, setIsOpen] = useState(false);
 
+  const { mutate: logOutCall } = useMutation({
+    mutationFn: logOut,
+    mutationKey: ["logout"],
+    onSuccess: () => {
+      setUser(null);
+      localStorage.removeItem("token");
+    },
+  });
+
   if (!user) return null;
 
   function handleLogout() {
-    setUser(null);
+    const token = localStorage.getItem("token");
+    if (!user || !token) return;
+
+    logOutCall({
+      token,
+      userId: user.id,
+    });
   }
 
   return (

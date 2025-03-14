@@ -47,7 +47,7 @@ const CreateNewEmail = () => {
       setDebouncedTitle(title);
     },
     1500,
-    [title]
+    [title],
   );
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,7 +59,7 @@ const CreateNewEmail = () => {
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
         <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="" />
+            <SidebarTrigger className=" sm:static" />
 
             <p className="ty-subheading">Create new email</p>
           </div>
@@ -79,11 +79,11 @@ const CreateNewEmail = () => {
                   ))}
                 </>
               )}
-              {templates?.data.templates.map((template) => (
+              {templates?.data.map((template) => (
                 <TemplateSelection template={template} key={template.id} />
               ))}
 
-              {templates?.data.templates.length === 0 && (
+              {templates?.data.length === 0 && (
                 <p className="ty-descriptions text-white/50">
                   No templates found. Please contact the administrators first.
                 </p>
@@ -91,13 +91,13 @@ const CreateNewEmail = () => {
             </div>
             <div className="h-16 w-full linear absolute bottom-0 left-0"></div>
           </ScrollArea>
-          {templates && templates?.data.templates.length > 0 && (
+          {templates && templates?.data.length > 0 && (
             <>
               <div className="absolute bottom-0 left-0  flex justify-between items-center self-stretch w-full px-8">
                 <div className="flex items-center gap-2">
                   <p className="ty-descriptions text-white/50">
                     <span className="ty-subtitle text-white font-semibold">
-                      1-{templates?.data.templates.length}
+                      1-{templates?.data.length}
                     </span>{" "}
                     of{" "}
                     <span className="ty-subtitle text-white font-semibold">

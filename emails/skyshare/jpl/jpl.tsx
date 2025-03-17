@@ -27,7 +27,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           fontFamily="Sora"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           webFont={{
-            url: "../static/fonts/sora/Sora-Regular.ttf",
+            url: "/static/fonts/sora/Sora-Regular.ttf",
             format: "truetype",
           }}
           fontWeight={400}

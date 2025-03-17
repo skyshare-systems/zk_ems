@@ -1,14 +1,9 @@
-import prisma from "@/lib/prisma";
-import { createApiResponse, updateFontHtml } from "@/lib/utils";
-import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
-import { generateTemplate } from "@/lib/generateTemplate";
+import prisma from "@/lib/prisma";
+import { createApiResponse, getTemplateLookup, updateFontHtml } from "@/lib/utils";
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 import { Attachment } from "nodemailer/lib/mailer";
-import { render } from "@react-email/render";
-import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
-import { emailTemplates } from "@/lib/constant";
-import { getTemplateLookup } from "../../templates/generateTemplate/route";
 
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {

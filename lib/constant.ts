@@ -1,3 +1,4 @@
+import IBS01Template from "@/emails/ibs/ibs-01/ibs01";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 
 export const SITE_URL =
@@ -11,6 +12,7 @@ export const SITE_DESCRIPTION =
   "Send your emails with ease. No more hassle, just send and forget.";
 
 export interface EmailTemplate {
+  company: string;
   template: (props: any) => React.JSX.Element;
   templateId: string;
 }
@@ -18,7 +20,13 @@ export interface EmailTemplate {
 // REMINDER: Add your email templates here with the template ID from the database.
 export const emailTemplates: EmailTemplate[] = [
   {
+    company: "Skyshare Labs",
     template: SkyshareLabsJPLTemplate,
     templateId: "cm85kbyp50001yf6j8hh50f16",
+  },
+  {
+    company: "IBS",
+    template: IBS01Template,
+    templateId: "cm7d95epl0000b42bu0qvm3vg",
   },
 ];

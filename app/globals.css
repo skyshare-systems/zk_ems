@@ -186,3 +186,13 @@ body {
     isolation: isolate;
   }
 }
+
+/* .reset-font {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+ */
+
+.wrapper {
+  all: unset !important;
+}

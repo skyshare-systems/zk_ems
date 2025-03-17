@@ -1,9 +1,14 @@
 import prisma from "@/lib/prisma";
-import { createApiResponse, createErrorMessage } from "@/lib/utils";
+import {
+  createApiResponse,
+  createErrorMessage,
+  updateFontHtml,
+} from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import juice from "juice";
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
+import { getTemplateLookup } from "../templates/generateTemplate/route";
 
 // Type definitions for better type safety
 interface EmailRequest {
@@ -12,6 +17,7 @@ interface EmailRequest {
   body: string;
   recipients: string[];
   alignment: "left" | "center" | "right";
+  props: Record<string, any>;
 }
 
 const getTransporter = (smtp: {
@@ -32,7 +38,7 @@ const getTransporter = (smtp: {
 
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
-    const { subject, templateId, body, recipients, alignment } =
+    const { subject, templateId, body, recipients, alignment, props } =
       (await request.json()) as EmailRequest;
 
     // Input validation
@@ -45,7 +51,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     ) {
       return NextResponse.json(
         createApiResponse("Invalid request data", null),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -66,71 +72,12 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       });
     }
 
-    const modifiedBody = body.replace(
-      /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
-      '<img width="100%" style="border-radius:12px" $1>'
-    );
+    const htmlTemplate = await getTemplateLookup(templateId, {
+      body,
+      ...props,
+    });
 
-
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-    <div 
-        class="email-container" 
-        style="
-            box-sizing: border-box;
-            background-color: #f0f0f0;
-            padding: 16px;
-        "
-    >
-        <!-- Centered White Container -->
-        <div 
-            class="email-content" 
-            style="
-                box-sizing: border-box;
-                background-color: #ffffff;
-                width: 100%;
-                max-width: 640px;
-                padding: 20px;
-                margin: 0 auto;
-                border-radius: 8px;
-                text-alignment: ${alignment};
-            "
-        >
-            <!-- Header -->
-            <div class="email-header" style="margin-bottom: 20px;">
-                ${template.header}
-            </div>
-
-            <!-- Email Body -->
-            <div 
-                class="email-body" 
-                style="
-                    box-sizing: border-box;
-                    padding: 20px;
-                    min-height: 100px;
-                    width: 100%;
-                "
-            >
-                <div style="max-width: 100%;
-                            width: 100%;">
-                    ${modifiedBody}
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="email-footer" style="margin-top: 20px;">
-                ${template.footer}
-            </div>
-        </div>
-    </div>
-    </body>
-      </html>
-    `;
+    const updatedHtml = updateFontHtml(htmlTemplate);
 
     // Fetch SMTP credentials
     const smtp = await prisma.smtpCredential.findFirst({
@@ -143,8 +90,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       });
     }
 
-    const inlinedHtml = juice(fullHtml);
-
     // Send email inside a database transaction
     const transporter = getTransporter(smtp);
 
@@ -153,7 +98,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       data: {
         subject,
         header: template.header,
-        body: modifiedBody,
+        body: updatedHtml,
         footer: template.footer,
         templateId,
         companyId: template.companyId,
@@ -167,9 +112,9 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     const emailResult = await transporter.sendMail({
       from: smtp.from, // Use SMTP username as sender
-      to: ['ijohnpaul2000@gmail.com', ...recipients],
+      to: ["ijohnpaul2000@gmail.com", ...recipients],
       subject,
-      html: inlinedHtml,
+      html: updatedHtml,
     });
 
     if (emailResult.rejected.length > 0) {
@@ -177,7 +122,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     }
 
     return NextResponse.json(
-      createApiResponse("Email sent successfully", null)
+      createApiResponse("Email sent successfully", null),
     );
   } catch (error) {
     return NextResponse.json({

@@ -1,12 +1,15 @@
 import prisma from "@/lib/prisma";
-import { createApiResponse } from "@/lib/utils";
+import { createApiResponse, updateFontHtml } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import { generateTemplate } from "@/lib/generateTemplate";
 import { Attachment } from "nodemailer/lib/mailer";
-import { render } from '@react-email/render';
+import { render } from "@react-email/render";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
+import { emailTemplates } from "@/lib/constant";
+import { getTemplateLookup } from "../../templates/generateTemplate/route";
+
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
     const formData = await request.formData();
@@ -17,9 +20,13 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const alignment = formData.get("alignment") as string;
     const recipients = formData.getAll("recipients") as string[];
     const attachments = formData.getAll("attachments") as File[];
+    const props = formData.getAll("props") as string[];
 
     if (!subject || !templateId || !body || recipients.length === 0) {
-      return NextResponse.json(createApiResponse("Invalid request data", null), { status: 400 });
+      return NextResponse.json(
+        createApiResponse("Invalid request data", null),
+        { status: 400 },
+      );
     }
 
     const userData = await prisma.user.findUnique({
@@ -28,49 +35,75 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     });
 
     if (!userData) {
-      return NextResponse.json(createApiResponse("User not found", null), { status: 404 });
+      return NextResponse.json(createApiResponse("User not found", null), {
+        status: 404,
+      });
     }
 
-    const isAuthorized = userData.companies.some(company => company.company.name === "Skyshare Labs");
+    const isAuthorized = userData.companies.some(
+      (company) => company.company.name === "Skyshare Labs",
+    );
     if (!isAuthorized) {
-      return NextResponse.json(createApiResponse("Unauthorized access", null), { status: 401 });
+      return NextResponse.json(createApiResponse("Unauthorized access", null), {
+        status: 401,
+      });
     }
 
     const template = await prisma.template.findUnique({
       where: { id: templateId },
-      select: { header: true, footer: true, companyId: true, company: { select: { name: true } } },
+      select: {
+        header: true,
+        footer: true,
+        companyId: true,
+        company: { select: { name: true } },
+      },
     });
 
     if (!template || template.company.name !== "Skyshare Labs") {
-      return NextResponse.json(createApiResponse("Template not found or unauthorized", null), { status: 404 });
+      return NextResponse.json(
+        createApiResponse("Template not found or unauthorized", null),
+        { status: 404 },
+      );
     }
 
-    const html = await render(SkyshareLabsJPLTemplate({
-      body
-    }));
+    const htmlTemplate = await getTemplateLookup(templateId, {
+      body,
+      ...props,
+    });
+    const updatedHtml = updateFontHtml(htmlTemplate);
+
     const transporter = createEmailTransporter();
 
-    const arrayFileName = attachments.map(file => file.name);
+    const arrayFileName = attachments.map((file) => file.name);
 
     await prisma.sentEmail.create({
       data: {
         subject,
         header: template.header,
-        body: html,
+        body: updatedHtml,
         footer: template.footer,
         templateId,
         companyId: template.companyId,
         attachments: arrayFileName,
-        recipients: { createMany: { data: recipients.map(email => ({ emailAddress: email })) } },
+        recipients: {
+          createMany: {
+            data: recipients.map((email) => ({ emailAddress: email })),
+          },
+        },
       },
     });
 
-    await sendEmail(transporter, subject, html, recipients, attachments);
+    await sendEmail(transporter, subject, updatedHtml, recipients, attachments);
 
-    return NextResponse.json(createApiResponse("Email sent successfully", null), { status: 200 });
+    return NextResponse.json(
+      createApiResponse("Email sent successfully", null),
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error sending email:", error);
-    return NextResponse.json(createApiResponse("Internal Server Error", null), { status: 500 });
+    return NextResponse.json(createApiResponse("Internal Server Error", null), {
+      status: 500,
+    });
   }
 });
 

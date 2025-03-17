@@ -30,14 +30,14 @@ export const createErrorMessage = (error: unknown) => {
   if (error instanceof Prisma.PrismaClientInitializationError) {
     return NextResponse.json(
       createApiResponse("Database is unreachable", null),
-      { status: 500 }
+      { status: 500 },
     );
   }
 
   if (error instanceof z.ZodError) {
     return NextResponse.json(
       createApiResponse("Invalid input", { errors: error.errors }),
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -95,4 +95,14 @@ export const createApiResponse = <T>(message: string, data: T, meta?: Meta) => {
 
 export const createErrorResponse = (message: string) => {
   return { message };
+};
+
+export const updateFontHtml = (htmlTemplate: string) => {
+  const updatedHtml = htmlTemplate.replace(
+    /(@font-face\s*{[^}]*font-family:\s*'([^']+)'\s*;[^}]*})\s*\*\s*{([^}]*)font-family:\s*'([^']+)'([^}]*)}/g,
+    (_, fontFaceRule, fontFamily, beforeFont, matchedFont, afterFont) =>
+      `${fontFaceRule}\n.font-${matchedFont.toLowerCase().replace(/\s+/g, "-")}{${beforeFont} font-family: '${matchedFont}'${afterFont}}`,
+  );
+
+  return updatedHtml;
 };

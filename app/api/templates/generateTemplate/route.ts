@@ -13,7 +13,7 @@ export interface GenerateTemplateRequest {
 }
 
 // Get template by ID and render with props
-const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
+export const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
   const selectedTemplate = emailTemplates.find(
     (template) => template.templateId === templateId,
   );

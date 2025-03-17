@@ -1,8 +1,9 @@
 import { useCreateEmailStore } from "@/store/create-email";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Loader } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mdx } from "./mdx/InitializedMDXEditor";
+import { updateFontHtml } from "@/lib/utils";
 // import EditorPreview from "./mdx/preview";
 // import Editor from "./mdx/editor";
 const EmailEditor = ({
@@ -15,6 +16,19 @@ const EmailEditor = ({
   const { selectedTemplate, body, alignment, editorData, preview } =
     useCreateEmailStore();
   const ref = useRef<MDXEditorMethods>(null);
+
+  const [iframeUrl, setIframeUrl] = useState<string>("");
+
+  useEffect(() => {
+    const updatedHtml = updateFontHtml(preview.html);
+
+    const blob = new Blob([updatedHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+
+    setIframeUrl(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [preview.html]);
 
   useEffect(() => {
     ref.current?.focus();
@@ -34,7 +48,13 @@ const EmailEditor = ({
               </p>
             </div>
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: preview.html }}></div>
+            <div className="flex flex-col grow h-full min-h-[400px] items-center justify-center">
+              <iframe
+                src={iframeUrl}
+                className="rounded-2xl w-full h-full flex-grow min-h-0 bg-none"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            </div>
           )}
         </>
       ) : (

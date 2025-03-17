@@ -19,10 +19,6 @@ interface SkyshareJPLTemplateProps {
   body: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
-
 export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
   return (
     <Html>
@@ -38,7 +34,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
           fontStyle="normal"
         />
 
-        {/*   <Font
+        {/* <Font
           fontFamily="MuseoModerno"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           webFont={{
@@ -52,28 +48,30 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
+          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto max-w-[640px]">
             <Section className="">
               <Img
                 src={`https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png`}
                 width="640"
-                height="150"
+                height="130"
                 alt="Skyshare Labs"
                 className="my-0 mx-auto max-w-[640px] w-full object-cover"
               />
             </Section>
 
             <Section
-              className="text-black"
+              className="my-10 text-black"
               style={{
                 fontFamily:
-                  "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                  "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
               }}
             >
-              <Markdown>{body ?? ""}</Markdown>
+              <div className="wrapper px-4">
+                <Markdown>{body ?? "# Test"}</Markdown>
+              </div>
             </Section>
 
-            <Section className="bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">
+            <Section className="font-sora bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">
               <Row>
                 {/* Personal Info */}
                 <Column
@@ -89,11 +87,11 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   <Text className="text-[14px] text-white opacity-50">
                     Business Development Manager
                   </Text>
-                  <ContactItem
+                  <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/phone.png"
                     text="+917 678 4455"
                   />
-                  <ContactItem
+                  <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="jameslucas@skysharelabs.com"
                     style={{
@@ -107,11 +105,11 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   <Text className="text-white text-[20px] font-semibold">
                     Skyshare Labs
                   </Text>
-                  <ContactItem
+                  <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/tel.png"
                     text="+63 956 487 5538"
                   />
-                  <ContactItem
+                  <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="management@skysharelabs.com"
                     style={{
@@ -119,7 +117,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                       textDecoration: "none",
                     }}
                   />
-                  <ContactItem
+                  <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png"
                     text="Block 6, Lot 6A Dulalia Homes 1, T. Santiago St., Viente Reales, Valenzuela City"
                   />
@@ -135,7 +133,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
 
 export default SkyshareLabsJPLTemplate;
 
-const ContactItem = ({
+export const IconText = ({
   icon,
   text,
   style,

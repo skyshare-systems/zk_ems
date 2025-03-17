@@ -1,300 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <style>
-    /* 1. Use a more-intuitive box-sizing model */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
-
-    /* 2. Remove default margin */
-    * {
-      margin: 0;
-    }
-
-    body {
-      /* 3. Add accessible line-height */
-      line-height: 1.5;
-      /* 4. Improve text rendering */
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* 5. Improve media defaults */
-    img,
-    picture,
-    video,
-    canvas,
-    svg {
-      display: block;
-      max-width: 100%;
-    }
-
-    /* 6. Inherit fonts for form controls */
-    input,
-    button,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    /* 7. Avoid text overflows */
-    p,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      overflow-wrap: break-word;
-    }
-
-    /* 8. Improve line wrapping */
-    p {
-      text-wrap: pretty;
-    }
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      text-wrap: balance;
-    }
-
-    /*
-  9. Create a root stacking context
-*/
-    #root,
-    #__next {
-      isolation: isolate;
-    }
-  </style>
-  <body>
-    <!-- <div
-      style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 32px;
-        flex: 1 0 0;
-      "
-    >
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 16px;
-          align-self: stretch;
-        "
-      >
-        <img
-          src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/IBA-Official-Logo-Inverted.png"
-          width="56px"
-          height="64px"
-        />
-
-        <div
-          class="footer-content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            align-self: stretch;
-          "
-        >
-          <p
-            style="
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 700;
-              text-align: center;
-            "
-          >
-            Grow Beyond Your Limits
-          </p>
-          <p  
-            style="
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 400;
-              text-align: center;
-            "
-          >
-            The pioneering agency in delivering tailored business solutions that
-            empower SMEs to scale, streamline, and succeed.
-          </p>
-
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 8px;
-            "
-          >
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 4px;
-                opacity: 0.5;
-              "
-            >
-            
-
-              <p style="font-size: 10.24px">
-                Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas Center,
-                Pasig
-              </p>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 4px;
-                opacity: 0.5;
-              "
-            >
-              
-
-              <p style="font-size: 10.24px">innovatedsolutionsph@gmail.com</p>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 4px;
-                opacity: 0.5;
-              "
-            >
-              
-
-              <p style="font-size: 10.24px">0927 547 8713</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 16px;
-        "
-      >
-        <div
-          style="
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            align-self: stretch;
-          "
-        >
-          <div
-            style="
-              display: flex;
-              padding: 8px;
-              align-items: flex-start;
-              gap: 8px;
-              border-radius: 8px;
-              background: rgba(0, 2, 5, 0.04);
-            "
-          >
-            
-          </div>
-          <div
-            style="
-              display: flex;
-              padding: 8px;
-              align-items: flex-start;
-              gap: 8px;
-              border-radius: 8px;
-              background: rgba(0, 2, 5, 0.04);
-            "
-          >
-            
-          </div>
-          <div
-            style="
-              display: flex;
-              padding: 8px;
-              align-items: flex-start;
-              gap: 8px;
-              border-radius: 8px;
-              background: rgba(0, 2, 5, 0.04);
-            "
-          >
-            
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <table style="width: 100%; border-collapse: collapse">
-      <tr>
-        <td style="text-align: center;">
-        
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html dir=\"ltr\" lang=\"en\">
+   <head>
+      <link rel=\"preload\" as=\"image\" href=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png\"/>
+      <link rel=\"preload\" as=\"image\" href=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/phone.png\"/>
+      <link rel=\"preload\" as=\"image\" href=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png\"/>
+      <link rel=\"preload\" as=\"image\" href=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/tel.png\"/>
+      <link rel=\"preload\" as=\"image\" href=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png\"/>
+      <meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\"/>
+      <meta name=\"x-apple-disable-message-reformatting\"/>
+      <!--$-->
+      <style>\n   
+       @font-face {\n      font-family: 'Sora';\n      font-style: normal;\n      font-weight: 400;\n      mso-font-alt: 'Helvetica';\n      src: url(../static/fonts/sora/Sora-Regular.ttf) format('truetype');\n    }\n\n    * {\n      font-family: 'Sora', Helvetica, Arial, sans-serif;\n    }\n  </style>
+   </head>
+   <body style=\"background-color:rgb(0,0,0,0.2);margin-top:auto;margin-bottom:auto;margin-left:auto;margin-right:auto;padding-left:0.5rem;padding-right:0.5rem;padding-top:20px;padding-bottom:20px\">
+      <table align=\"center\" width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" role=\"presentation\" style=\"border-width:1px;color:rgb(255,255,255);background-color:rgb(255,255,255);border-style:solid;border-color:rgb(234,234,234);border-radius:0.25rem;margin-left:auto;margin-right:auto;max-width:640px\">
+         <tbody>
+            <tr style=\"width:100%\">
+               <td>
+                  <table align=\"center\" width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" role=\"presentation\" class=\"\">
+                     <tbody>
+                        <tr>
+                           <td><img alt=\"Skyshare Labs\" height=\"150\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png\" style=\"margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;max-width:640px;width:100%;object-fit:cover;display:block;outline:none;border:none;text-decoration:none\" width=\"640\"/></td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <table align=\"center\" width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" role=\"presentation\" style=\"font-family:inherit !important;margin-top:2.5rem;margin-bottom:2.5rem;color:rgb(0,0,0)\">
+         <tbody>
             <tr>
-              <td class="" style="line-height: 1;" >
-                <img
-                  src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/IBA-Official-Logo-Inverted.png"
-                  width="56px"
-                  height="64px"
-                  style="align-self: stretch; margin-inline: auto"  
-                />
-              </td>
+               <td>
+                  <div class=\"wrapper\">
+                     <div data-id=\"react-email-markdown\">
+                        <p>qweqweq</p>
+                        \n
+                     </div>
+                  </div>
+               </td>
             </tr>
+         </tbody>
+      </table>
+      <table align=\"center\" width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" role=\"presentation\" style=\"background-color:rgb(239,68,68);position:relative;background-image:url(&#x27;https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png&#x27;);background-size:cover;background-position:center;background-repeat:no-repeat;padding:0.75rem\">
+         <tbody>
             <tr>
-              <td class="" >
-                <p
-                  style="font-size: 14px; font-weight: 700; text-align: center; line-height:1;padding:0px;margin:0px;"
-                >
-                  Grow Beyond Your Limits
-                </p>
-                <p
-                  style="font-size: 14px; font-weight: 400; text-align: center; line-height:1;padding:0px;margin:0px;"
-                >
-                  The pioneering agency in delivering tailored business
-                  solutions that empower SMEs to scale, streamline, and succeed.
-                </p>
-              </td>
+               <td>
+                  <table align=\"center\" width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" role=\"presentation\">
+                     <tbody style=\"width:100%\">
+                        <tr style=\"width:100%\">
+                           <td align=\"left\" data-id=\"__react-email-column\" style=\"width:50%;margin-bottom:auto;vertical-align:top\"><p style=\"font-size:20px;font-weight:600;color:rgb(255,255,255);line-height:1;margin:16px 0\">James Patrick Lucas</p><p style=\"font-size:14px;color:rgb(255,255,255);opacity:0.5;line-height:24px;margin:16px 0\">Business Development Manager</p><p style=\"display:flex;color:rgb(255,255,255);line-height:1;gap:0.5rem;align-items:flex-start;font-size:14px;margin:16px 0\"><img height=\"16\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/phone.png\" style=\"width:16px;height:16px;margin-right:0.25rem;display:block;outline:none;border:none;text-decoration:none;vertical-align:middle\" width=\"16\"/><span style=\"margin:0px;line-height:1rem;letter-spacing:0em\">+917 678 4455</span></p><p style=\"display:flex;color:white;line-height:1;gap:0.5rem;align-items:flex-start;font-size:14px;margin:16px 0;text-decoration:none\"><img height=\"16\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png\" style=\"width:16px;height:16px;margin-right:0.25rem;display:block;outline:none;border:none;text-decoration:none;vertical-align:middle\" width=\"16\"/><span style=\"margin:0px;line-height:1rem;letter-spacing:0em\">jameslucas@skysharelabs.com</span></p></td>
+                           <td align=\"left\" data-id=\"__react-email-column\" style=\"width:50%\"><p style=\"color:rgb(255,255,255);font-size:20px;font-weight:600;line-height:24px;margin:16px 0\">Skyshare Labs</p><p style=\"display:flex;color:rgb(255,255,255);line-height:1;gap:0.5rem;align-items:flex-start;font-size:14px;margin:16px 0\"><img height=\"16\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/tel.png\" style=\"width:16px;height:16px;margin-right:0.25rem;display:block;outline:none;border:none;text-decoration:none;vertical-align:middle\" width=\"16\"/><span style=\"margin:0px;line-height:1rem;letter-spacing:0em\">+63 956 487 5538</span></p><p style=\"display:flex;color:white;line-height:1;gap:0.5rem;align-items:flex-start;font-size:14px;margin:16px 0;text-decoration:none\"><img height=\"16\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png\" style=\"width:16px;height:16px;margin-right:0.25rem;display:block;outline:none;border:none;text-decoration:none;vertical-align:middle\" width=\"16\"/><span style=\"margin:0px;line-height:1rem;letter-spacing:0em\">management@skysharelabs.com</span></p><p style=\"display:flex;color:rgb(255,255,255);line-height:1;gap:0.5rem;align-items:flex-start;font-size:14px;margin:16px 0\"><img height=\"16\" src=\"https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png\" style=\"width:16px;height:16px;margin-right:0.25rem;display:block;outline:none;border:none;text-decoration:none;vertical-align:middle\" width=\"16\"/><span style=\"margin:0px;line-height:1rem;letter-spacing:0em\">Block 6, Lot 6A Dulalia Homes 1, T. Santiago St., Viente Reales, Valenzuela City</span></p></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </td>
             </tr>
-            <tr>
-              <td style="padding: 8px 0">
-                <table style="width: 100%; text-align: center; opacity: 0.5">
-                  <tr>
-                    <td style="font-size: 10.24px; text-align: center;">
-                      Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas
-                      Center, Pasig
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="font-size: 10.24px; text-align: center;">
-                      innovatedsolutionsph@gmail.com
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="font-size: 10.24px; text-align: center;">0927 547 8713</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-        </td>
-      </tr>
-    </table>
-  </body>
+         </tbody>
+      </table>
+      </td></tr></tbody></table><!--/$-->
+   </body>
 </html>

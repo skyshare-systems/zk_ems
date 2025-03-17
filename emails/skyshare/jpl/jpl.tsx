@@ -81,10 +81,20 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                     verticalAlign: "top",
                   }}
                 >
-                  <Text className="text-[20px] font-semibold text-white leading-none">
+                  <Text
+                    style={{
+                      margin: "4px !important",
+                    }}
+                    className="text-[20px] font-semibold text-white leading-none"
+                  >
                     James Patrick Lucas
                   </Text>
-                  <Text className="text-[14px] text-white opacity-50">
+                  <Text
+                    style={{
+                      margin: "4px !important",
+                    }}
+                    className="text-[14px] text-white opacity-50"
+                  >
                     Business Development Manager
                   </Text>
                   <IconText
@@ -102,7 +112,12 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                 </Column>
                 {/* Company Info */}
                 <Column align="left" className="w-[50%]">
-                  <Text className="text-white text-[20px] font-semibold">
+                  <Text
+                    style={{
+                      margin: "0 !important",
+                    }}
+                    className="text-white text-[20px] font-semibold"
+                  >
                     Skyshare Labs
                   </Text>
                   <IconText
@@ -146,6 +161,7 @@ export const IconText = ({
     className={cn("flex text-white leading-none gap-2 items-start")}
     style={{
       ...style,
+      margin: "4px !important",
     }}
   >
     <Img

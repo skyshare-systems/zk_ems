@@ -2,7 +2,7 @@ import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import { NextResponse } from "next/server";
 import { render } from "@react-email/render";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
-import { createApiResponse, createErrorMessage } from "@/lib/utils";
+import { createApiResponse, createErrorMessage, getTemplateLookup } from "@/lib/utils";
 import React from "react";
 import { emailTemplates } from "@/lib/constant";
 
@@ -12,18 +12,6 @@ export interface GenerateTemplateRequest {
   templateId: string;
 }
 
-// Get template by ID and render with props
-export const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
-  const selectedTemplate = emailTemplates.find(
-    (template) => template.templateId === templateId,
-  );
-
-  if (!selectedTemplate) {
-    throw new Error(`Template with ID "${templateId}" not found.`);
-  }
-
-  return render(selectedTemplate.template(props));
-};
 
 // POST handler
 export const POST = authorize(async (request: AuthenticatedRequest) => {

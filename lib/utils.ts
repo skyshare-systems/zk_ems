@@ -7,6 +7,8 @@ import { AuthenticationError } from "./exceptions";
 import { z } from "zod";
 import { fromZonedTime } from "date-fns-tz";
 import { format } from "date-fns";
+import { emailTemplates } from "./constant";
+import { render } from "@react-email/render";
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
 
@@ -105,4 +107,18 @@ export const updateFontHtml = (htmlTemplate: string) => {
   );
 
   return updatedHtml;
+};
+
+
+// Get template by ID and render with props
+export const getTemplateLookup = (templateId: string, props: any): Promise<string> => {
+  const selectedTemplate = emailTemplates.find(
+    (template) => template.templateId === templateId,
+  );
+
+  if (!selectedTemplate) {
+    throw new Error(`Template with ID "${templateId}" not found.`);
+  }
+
+  return render(selectedTemplate.template(props));
 };

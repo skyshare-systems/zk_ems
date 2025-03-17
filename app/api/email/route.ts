@@ -2,13 +2,13 @@ import prisma from "@/lib/prisma";
 import {
   createApiResponse,
   createErrorMessage,
+  getTemplateLookup,
   updateFontHtml,
 } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import juice from "juice";
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
-import { getTemplateLookup } from "../templates/generateTemplate/route";
 
 // Type definitions for better type safety
 interface EmailRequest {

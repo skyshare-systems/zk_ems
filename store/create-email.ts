@@ -8,6 +8,12 @@ export type TemplateWithCompany = Prisma.TemplateGetPayload<{
   include: { company: true };
 }>;
 
+export interface Articles {
+  heading: string;
+  content: string;
+  articleLink: string;
+}
+
 interface CreateEmailState {
   editorData: { blocks: any[] };
   body: string;
@@ -18,6 +24,7 @@ interface CreateEmailState {
   alignment: "left" | "center" | "right";
   attachments: File[];
   preview: GenerateTemplateResponse;
+  articles: Articles[];
 }
 
 interface CreateEmailActions {
@@ -30,6 +37,7 @@ interface CreateEmailActions {
   setAlignment: (alignment: "left" | "center" | "right") => void;
   setAttachments: (file: File[]) => void;
   setPreview: (preview: string) => void;
+  setArticles: (articles: Articles[]) => void;
   reset: () => void;
 }
 
@@ -43,16 +51,34 @@ const initialState: CreateEmailState = {
   alignment: "left",
   attachments: [],
   preview: {
-    html: ""
+    html: "",
   },
+  articles: [],
 };
 
 export const useCreateEmailStore = create<
   CreateEmailState & CreateEmailActions
 >()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
+    /*   setProps: () => {
+        const selectedTemplate = get().selectedTemplate;
+        console.log({ selectedTemplate })
+
+        if (!selectedTemplate) return;
+
+        switch (selectedTemplate.company.name) {
+          case "KPC IS": {
+            return {
+              props: {
+                articles: get().articles,
+              }
+            };
+          }
+        }
+      }, */
+      setArticles: (articles) => set({ articles }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
       setEditorData: (data) => set({ editorData: data }),

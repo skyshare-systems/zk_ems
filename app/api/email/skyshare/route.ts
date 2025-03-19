@@ -1,6 +1,10 @@
 import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
-import { createApiResponse, getTemplateLookup, updateFontHtml } from "@/lib/utils";
+import {
+  createApiResponse,
+  getTemplateLookup,
+  updateFontHtml,
+} from "@/lib/utils";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { Attachment } from "nodemailer/lib/mailer";
@@ -15,7 +19,13 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const alignment = formData.get("alignment") as string;
     const recipients = formData.getAll("recipients") as string[];
     const attachments = formData.getAll("attachments") as File[];
-    const props = formData.getAll("props") as string[];
+    const allFormData: Record<string, any> = {};
+
+    // Iterate through all keys in the FormData
+    for (const key of formData.keys()) {
+        allFormData[key] = formData.get(key);
+    }
+
 
     if (!subject || !templateId || !body || recipients.length === 0) {
       return NextResponse.json(
@@ -63,7 +73,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     const htmlTemplate = await getTemplateLookup(templateId, {
       body,
-      ...props,
+      ...allFormData,
     });
     const updatedHtml = updateFontHtml(htmlTemplate);
 

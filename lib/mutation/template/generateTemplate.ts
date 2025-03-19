@@ -10,13 +10,16 @@ export interface GenerateTemplateResponse {
 export const generateTemplate = async ({
   body,
   templateId,
+  ...props
 }: GenerateTemplateRequest) => {
   try {
     const response = await api.post<ApiResponse<GenerateTemplateResponse>>("/templates/generateTemplate", {
       body,
       templateId,
+      ...props
     });
 
+    console.log({...props})
     return response.data;
   } catch (error) {
     throw getErrorMessage(error);

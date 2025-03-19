@@ -1,11 +1,14 @@
 "use client";
 
+import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useModalStore } from "@/store/modal";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowUpRight, Upload } from "lucide-react";
 import React, {
   ChangeEvent,
   KeyboardEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -14,8 +17,7 @@ import { toast } from "sonner";
 import EmailEditor from "./email-editor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
+import useProps from "@/hooks/useProps";
 
 interface ValidationError {
   message: string;
@@ -45,7 +47,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     body,
     preview,
     setPreview,
+    articles,
   } = useCreateEmailStore();
+  const { propsBuilder } = useProps();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
   const [isPreview, setIsPreview] = useState<boolean>(false);
@@ -356,6 +360,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
       return generateTemplate({
         body,
         templateId: selectedTemplate!.id,
+        ...propsBuilder(),
       });
     },
     onSuccess: ({ data: { html } }) => {
@@ -464,7 +469,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             </div>
           </div>
         </div>
-
         {selectedTemplate.company.name === "Skyshare Labs" && (
           <div className="flex gap-4 items-center self-stretch">
             <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
@@ -507,9 +511,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             )}
           </div>
         )}
-
         <p className="ty-descriptions text-white/[.32]">Email Content</p>
-
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
           <EmailEditor
             isPreview={isPreview}

@@ -66,13 +66,13 @@ export function TeamSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               {company.image ? (
-                <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-12 items-center justify-center rounded-lg text-sidebar-primary-foreground bg-gold/[.32]">
                   <Image
                     src={company.image}
                     width={64}
                     height={64}
                     alt={company.name}
-                    className="rounded-lg size-12"
+                    className="rounded-lg size-12 object-contain p-1"
                   />
                 </div>
               ) : (
@@ -105,12 +105,12 @@ export function TeamSwitcher() {
                   onClick={() => handleChangeCompany(c)}
                   className={cn(
                     "gap-2 p-2 rounded-lg",
-                    c.id === company.id && "text-gold bg-gold/[.08]"
+                    c.id === company.id && "text-gold bg-gold/[.08]",
                   )}
                 >
                   <div
                     className={cn(
-                      "flex items-center gap-2 self-start opacity-[.72]"
+                      "flex items-center gap-2 self-start opacity-[.72]",
                     )}
                   >
                     {c.image ? (

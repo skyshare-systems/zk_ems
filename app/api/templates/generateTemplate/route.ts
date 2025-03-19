@@ -19,6 +19,8 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const { body, templateId, ...props } =
       (await request.json()) as GenerateTemplateRequest;
 
+      console.log({propsTest2: props})
+
     const htmlTemplate = await getTemplateLookup(templateId, {
       body,
       ...props,

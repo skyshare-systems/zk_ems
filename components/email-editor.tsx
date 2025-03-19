@@ -4,6 +4,7 @@ import { Loader } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Mdx } from "./mdx/InitializedMDXEditor";
 import { updateFontHtml } from "@/lib/utils";
+import ArticleEditor from "./article-editor";
 // import EditorPreview from "./mdx/preview";
 // import Editor from "./mdx/editor";
 const EmailEditor = ({
@@ -13,8 +14,14 @@ const EmailEditor = ({
   isPreview: boolean;
   isGeneratingPreview: boolean;
 }) => {
-  const { selectedTemplate, body, alignment, editorData, preview } =
-    useCreateEmailStore();
+  const {
+    selectedTemplate,
+    body,
+    alignment,
+    editorData,
+    preview,
+    setArticles,
+  } = useCreateEmailStore();
   const ref = useRef<MDXEditorMethods>(null);
 
   const [iframeUrl, setIframeUrl] = useState<string>("");
@@ -60,7 +67,7 @@ const EmailEditor = ({
       ) : (
         <>
           {/* Body */}
-          <div className="flex flex-col items-center gap-2 w-full my-4 grow">
+          <div className="flex flex-col items-center gap-4 w-full my-4 grow">
             <p className="ty-subtext text-black">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
               Note: Alignment Plugin will make all content to follow the
@@ -71,6 +78,8 @@ const EmailEditor = ({
               <Mdx ref={ref} />
               {/* <Editor /> */}
             </div>
+
+            <ArticleEditor />
           </div>
         </>
       )}

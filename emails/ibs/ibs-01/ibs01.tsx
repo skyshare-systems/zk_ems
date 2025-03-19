@@ -218,8 +218,7 @@ export const IBS01Template = ({ body }: IBS01TemplateProps) => {
                   </Text>
                   <Text
                     style={{
-                      marginBlock: "12px !important",
-                      marginInline: "auto",
+                      margin: "0 auto !important",
                     }}
                     className="text-center text-black text-[14px] font-normal max-w-[404px]"
                   >

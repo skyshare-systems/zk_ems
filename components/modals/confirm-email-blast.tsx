@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { sendEmail, sendEmailSkyshare } from "@/lib/mutation/email/send-email";
 import { useUserStore } from "@/store/user";
+import useProps from "@/hooks/useProps";
 
 const ConfirmEmailBlast = () => {
   const { isOpen, onClose } = useModalStore();
@@ -23,6 +24,8 @@ const ConfirmEmailBlast = () => {
     attachments,
     alignment,
   } = useCreateEmailStore();
+  const { propsBuilder } = useProps();
+
   const { user } = useUserStore();
 
   const { mutate: sendNow, isPending } = useMutation({
@@ -62,6 +65,7 @@ const ConfirmEmailBlast = () => {
       body,
       alignment,
       attachments,
+      ...propsBuilder(),
     });
   }
 

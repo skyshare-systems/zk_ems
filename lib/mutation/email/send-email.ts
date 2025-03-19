@@ -10,6 +10,7 @@ interface SendEmailProps {
   body: string;
   attachments?: File[];
   alignment?: "left" | "center" | "right";
+  props?: Record<string, unknown>;
 }
 
 export const sendEmail = async ({
@@ -19,15 +20,17 @@ export const sendEmail = async ({
   subject,
   attachments = [],
   alignment = "left",
+  ...props
 }: SendEmailProps) => {
   try {
     const response = await api.post("/email", {
-      subject: subject,
-      templateId: selectedTemplate?.id,
-      recipients: recipients,
+      subject,
+      templateId: selectedTemplate.id,
+      recipients,
       body: marked(body),
-      attachments: attachments,
-      alignment: alignment,
+      attachments,
+      alignment,
+      ...props,
     });
 
     return response.data;
@@ -36,6 +39,7 @@ export const sendEmail = async ({
   }
 };
 
+
 export const sendEmailSkyshare = async ({
   body,
   recipients,
@@ -43,6 +47,7 @@ export const sendEmailSkyshare = async ({
   subject,
   attachments = [],
   alignment = "left",
+  ...props
 }: SendEmailProps) => {
   try {
     const formData = new FormData();
@@ -51,17 +56,16 @@ export const sendEmailSkyshare = async ({
     formData.append("templateId", selectedTemplate.id);
     formData.append("body", body);
     formData.append("alignment", alignment);
+    
     recipients.forEach((recipient) => formData.append("recipients", recipient));
 
-    if (attachments) {
-      Array.from(attachments).forEach((attachment) => {
-        formData.append("attachments", attachment);
-      });
-    }
-
     attachments.forEach((attachment) =>
-      formData.append("attachments", attachment),
+      formData.append("attachments", attachment)
     );
+
+  /*   for (const key in props) {
+      formData.append(key, props[key]);
+    } */
 
     const response = await api.post("/email/skyshare", formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -72,3 +76,4 @@ export const sendEmailSkyshare = async ({
     throw getErrorMessage(error);
   }
 };
+

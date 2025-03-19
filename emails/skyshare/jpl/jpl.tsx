@@ -17,9 +17,13 @@ import { CSSProperties } from "react";
 
 interface SkyshareJPLTemplateProps {
   body: string;
+  isTemplate: boolean;
 }
 
-export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
+export const SkyshareLabsJPLTemplate = ({
+  body,
+  isTemplate,
+}: SkyshareJPLTemplateProps) => {
   return (
     <Html>
       <Head>
@@ -66,7 +70,15 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                   "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
               }}
             >
-              <div className="wrapper px-4">
+              {isTemplate ? (
+                <Row>
+                  <Column align="center">
+                    <Text className="text-[16px] font-semibold text-black/50">
+                      Some great email content exists here.
+                    </Text>
+                  </Column>
+                </Row>
+              ) : (
                 <Markdown
                   markdownCustomStyles={{
                     h1: {
@@ -203,7 +215,7 @@ export const SkyshareLabsJPLTemplate = ({ body }: SkyshareJPLTemplateProps) => {
                 >
                   {body ?? "# Test"}
                 </Markdown>
-              </div>
+              )}
             </Section>
 
             <Section className="font-sora bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">

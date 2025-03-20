@@ -1,8 +1,12 @@
 import { rules } from "@/lib/constant";
-import { Articles, useCreateEmailStore } from "@/store/create-email";
-import React, { useEffect } from "react";
-import { Button } from "./ui/button";
+import { ArticleSchema } from "@/schema/articles";
+import { useCreateEmailStore } from "@/store/create-email";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, X } from "lucide-react";
+import { useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
@@ -11,16 +15,11 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { z } from "zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { useDebounce } from "react-use";
-import { ArticleSchema } from "@/schema/articles";
 
 const ArticleEditor = () => {
-  const { selectedTemplate, setArticles } = useCreateEmailStore();
+  const { selectedTemplate, setArticles, articles } = useCreateEmailStore();
 
   const isArticlesAllowed = rules.some(
     (rule) =>
@@ -32,15 +31,8 @@ const ArticleEditor = () => {
 
   const form = useForm<z.infer<typeof ArticleSchema>>({
     resolver: zodResolver(ArticleSchema),
-    defaultValues: {
-      articles: [
-        {
-          heading: "",
-          content: "",
-          articleLink: "",
-        },
-      ],
-    },
+    mode: "onChange", // Enables real-time validation
+    defaultValues: { articles: [...articles] },
   });
 
   const { append, remove, fields } = useFieldArray({
@@ -48,25 +40,26 @@ const ArticleEditor = () => {
     control: form.control,
   });
 
+  const watchArticles = form.watch("articles");
+
   useEffect(() => {
-    setArticles(form.watch("articles"));
-  }, [setArticles, form]);
+    setArticles([...watchArticles]);
+    form.trigger(); // Triggers validation on every change
+  }, [watchArticles, setArticles, form]);
 
   const onSubmit = (values: z.infer<typeof ArticleSchema>) => {
     console.log(values);
   };
 
   if (!selectedTemplate || !isArticlesAllowed) return null;
+
   return (
     <div className="flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04]">
       <div className="flex items-center gap-2 self-stretch mb-4">
         <p className="ty-title flex-1 text-black/50">ARTICLE</p>
-
         <Button
           disabled={!form.formState.isValid}
-          onClick={() => {
-            append({ heading: "", content: "", articleLink: "" });
-          }}
+          onClick={() => append({ heading: "", content: "", articleLink: "" })}
           type="button"
           className="bg-black flex px-3 py-2 gap-2 hover:bg-black/80"
         >
@@ -96,17 +89,19 @@ const ArticleEditor = () => {
                   name={`articles.${index}.heading`}
                   render={({ field }) => (
                     <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px]  w-full shrink-0">
+                      <FormLabel className="max-w-[96px] w-full shrink-0">
                         Heading
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                          placeholder="The Long Haul: How KPC built a shipping empire, one box at a tim|"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
+                      <div className="flex flex-col gap-2 w-full">
+                        <FormControl>
+                          <Input
+                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                            placeholder="The Long Haul: How KPC built a shipping empire..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -116,7 +111,7 @@ const ArticleEditor = () => {
                   name={`articles.${index}.content`}
                   render={({ field }) => (
                     <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px]  w-full shrink-0">
+                      <FormLabel className="max-w-[96px] w-full shrink-0">
                         <div className="flex flex-col">
                           <p className="ty-descriptions">Content</p>
                           <p className="ty-subtext text-black/50">
@@ -124,15 +119,17 @@ const ArticleEditor = () => {
                           </p>
                         </div>
                       </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={4}
-                          className="w-full border-black/[.08]  placeholder:text-black/[.80] focus:border-gold"
-                          placeholder="TManila is busy with the constant motion of commerce. Trucks rumble down choked streets, carrying goods that fuel the city’s appetite. At the heart of this flow is KPC Importation Services, a company that moves mountains – or at least, a staggering number of packages – every single month. They’ve become a fixture in the lives of countless Filipinos, a name whispered with a certain assurance when it comes to getting things from point A to point B."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
+                      <div className="flex flex-col gap-2 w-full">
+                        <FormControl>
+                          <Textarea
+                            rows={4}
+                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                            placeholder="Manila is busy with the constant motion of commerce..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -142,17 +139,19 @@ const ArticleEditor = () => {
                   name={`articles.${index}.articleLink`}
                   render={({ field }) => (
                     <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px]  w-full shrink-0">
+                      <FormLabel className="max-w-[96px] w-full shrink-0">
                         Article Link
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                          placeholder="https://randomrepublika.com/the-long-haul-how-kpc-built-a-shipping-empire-one-box-at-a-time/?fbclid=IwY2xjawI-IJVleHRuA2FlbQIxMAABHY9N9kkuzagH0vPewlgf0aDqDBMElhMC5X7Oxy-tQErAwhS6GP8IC7lHoA_aem_XxLlAlhJJb5ynX84Cv6krg"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
+                      <div className="flex flex-col gap-2 w-full">
+                        <FormControl>
+                          <Input
+                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                            placeholder="https://randomrepublika.com/the-long-haul..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />

@@ -62,22 +62,6 @@ export const useCreateEmailStore = create<
   persist(
     (set, get) => ({
       ...initialState,
-    /*   setProps: () => {
-        const selectedTemplate = get().selectedTemplate;
-        console.log({ selectedTemplate })
-
-        if (!selectedTemplate) return;
-
-        switch (selectedTemplate.company.name) {
-          case "KPC IS": {
-            return {
-              props: {
-                articles: get().articles,
-              }
-            };
-          }
-        }
-      }, */
       setArticles: (articles) => set({ articles }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),

@@ -27,18 +27,12 @@ interface KPC01TemplateProps {
 
 export const KPC01Template = ({
   body,
-  articles = [
-    {
-      articleLink: "https://www.skysharelabs.com",
-      content:
-        "Manila is busy with the constant motion of commerce. Trucks rumble down choked streets, carrying goods that fuel the city’s appetite. At the heart of this flow is KPC Importation Services, a company that moves mountains – or at least, a staggering number of packages – every single month. They’ve become a fixture in the lives of countless Filipinos, a name whispered with a certain assurance when it comes to getting things from point A to point B.",
-      heading:
-        "The Long Haul: How KPC built a shipping empire, one box at a time",
-    },
-  ],
+  articles,
   isTemplate,
 }: KPC01TemplateProps) => {
-  console.log({ isTemplate });
+  console.log({
+    articles,
+  });
   return (
     <Html>
       <Head>
@@ -248,7 +242,7 @@ export const KPC01Template = ({
                       </Text>
                       <Link
                         href={article.articleLink}
-                        className="text-blue-600 underline block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
+                        className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
                       >
                         Read Article
                       </Link>

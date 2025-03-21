@@ -30,9 +30,6 @@ export const KPC01Template = ({
   articles,
   isTemplate,
 }: KPC01TemplateProps) => {
-  console.log({
-    articles,
-  });
   return (
     <Html>
       <Head>
@@ -50,7 +47,7 @@ export const KPC01Template = ({
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-poppins bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto max-w-[640px]">
+          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px]">
             <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
               <Img
                 src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/template_header.png`}
@@ -212,7 +209,7 @@ export const KPC01Template = ({
                     },
                   }}
                 >
-                  {body ?? "# Test"}
+                  {body ?? "# KPC IS"}
                 </Markdown>
               )}
             </Section>
@@ -399,9 +396,9 @@ export const KPC01Template = ({
                                   />
                                 </td>
                                 <td valign="middle">
-                                  <Text className="m-0 text-white/[.72] leading-[1rem] tracking-normal">
+                                  <Link className="m-0 no-underline text-white/[.72] leading-[1rem] tracking-normal">
                                     https://merchant.kpc-express.com
-                                  </Text>
+                                  </Link>
                                 </td>
                               </tr>
                             </table>

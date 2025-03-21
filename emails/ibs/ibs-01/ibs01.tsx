@@ -41,7 +41,7 @@ export const IBS01Template = ({ body }: IBS01TemplateProps) => {
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-geist bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto p-[20px] max-w-[640px]">
+          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea] mx-auto p-[20px] max-w-[640px]">
             <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
               <Img
                 src={`https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/logo.jpg`}
@@ -53,7 +53,7 @@ export const IBS01Template = ({ body }: IBS01TemplateProps) => {
             </Section>
 
             <Section
-              className="text-black"
+              className="text-black p-8"
               style={{
                 fontFamily:
                   "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
@@ -193,7 +193,7 @@ export const IBS01Template = ({ body }: IBS01TemplateProps) => {
                   },
                 }}
               >
-                {body ?? ""}
+                {body ?? "# IBS"}
               </Markdown>
             </Section>
 

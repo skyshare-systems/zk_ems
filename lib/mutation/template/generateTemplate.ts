@@ -19,7 +19,6 @@ export const generateTemplate = async ({
       ...props
     });
 
-    console.log({...props})
     return response.data;
   } catch (error) {
     throw getErrorMessage(error);

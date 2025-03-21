@@ -31,7 +31,6 @@ export const Preview = () => {
         isTemplate: true,
       });
 
-      console.log({ template });
 
       setTemplate(template);
     };

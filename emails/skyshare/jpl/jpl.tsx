@@ -51,8 +51,8 @@ export const SkyshareLabsJPLTemplate = ({
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border text-white bg-white border-solid border-[#eaeaea] rounded mx-auto max-w-[640px]">
+        <Body className="bg-black/[.08] my-auto mx-auto px-2 py-[20px]">
+          <Container className="border rounded-lg text-white bg-white border-solid border-[#eaeaea] mx-auto max-w-[640px] overflow-hidden">
             <Section className="">
               <Img
                 src={`https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png`}
@@ -64,7 +64,7 @@ export const SkyshareLabsJPLTemplate = ({
             </Section>
 
             <Section
-              className="my-10 text-black"
+              className="text-black p-8"
               style={{
                 fontFamily:
                   "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -278,6 +278,10 @@ export const SkyshareLabsJPLTemplate = ({
                       color: "white",
                       textDecoration: "none",
                     }}
+                    spanStyle={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}
                   />
                   <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png"
@@ -299,10 +303,12 @@ export const IconText = ({
   icon,
   text,
   style,
+  spanStyle,
 }: {
   icon: string;
   text: string;
   style?: CSSProperties | undefined;
+  spanStyle?: CSSProperties | undefined;
 }) => (
   <Text
     className={cn("flex text-white leading-none gap-2 items-start")}
@@ -320,6 +326,13 @@ export const IconText = ({
       width={16}
       height={16}
     />
-    <span className="m-0 leading-[1rem] tracking-normal ">{text}</span>
+    <span
+      className="m-0 leading-[1rem] tracking-normal "
+      style={{
+        ...spanStyle,
+      }}
+    >
+      {text}
+    </span>
   </Text>
 );

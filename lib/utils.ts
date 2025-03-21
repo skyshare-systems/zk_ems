@@ -113,7 +113,6 @@ export const updateFontHtml = (htmlTemplate: string) => {
 // Get template by ID and render with props
 export const getTemplateLookup = async (templateId: string, props: any): Promise<string> => {
 
-  console.log({propsHere: props})
   const selectedTemplate = emailTemplates.find(
     (template) => template.templateId === templateId,
   );

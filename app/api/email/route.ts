@@ -41,7 +41,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const { subject, templateId, body, recipients, alignment, ...props } =
       (await request.json()) as EmailRequest;
 
-      console.log({props})
 
     // Input validation
     if (
@@ -123,13 +122,11 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       console.error("Failed to send emails to:", emailResult.rejected);
     }
 
-    console.log({emailResult})
 
     return NextResponse.json(
       createApiResponse("Email sent successfully", null),
     );
   } catch (error) {
-    console.log({error})
     return NextResponse.json({
       error,
     });

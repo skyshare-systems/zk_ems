@@ -19,7 +19,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const { body, templateId, ...props } =
       (await request.json()) as GenerateTemplateRequest;
 
-      console.log({propsTest2: props})
+      
 
     const htmlTemplate = await getTemplateLookup(templateId, {
       body,
@@ -35,7 +35,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     );
   } catch (error) {
-    console.log({ error });
     return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

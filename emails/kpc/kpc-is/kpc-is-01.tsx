@@ -19,17 +19,17 @@ import {
   Link,
 } from "@react-email/components";
 
-interface KPC01TemplateProps {
+interface KPCIS01TemplateProps {
   body: string;
   articles: Articles[];
   isTemplate: boolean;
 }
 
-export const KPC01Template = ({
+export const KPCIS01Template = ({
   body,
   articles,
   isTemplate,
-}: KPC01TemplateProps) => {
+}: KPCIS01TemplateProps) => {
   return (
     <Html>
       <Head>
@@ -43,6 +43,22 @@ export const KPC01Template = ({
           fontWeight={400}
           fontStyle="normal"
         />
+
+        <style>
+          {`
+          @media (max-width: 640px) {
+            .footer-row {
+              display: block !important;
+              text-align: center !important;
+            }
+            .footer-column {
+              width: 100% !important;
+              display: block !important;
+              margin-bottom: 8px !important;
+            }
+          }
+        `}
+        </style>
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
@@ -50,7 +66,7 @@ export const KPC01Template = ({
           <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px]">
             <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
               <Img
-                src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/template_header.png`}
+                src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/template-header.png`}
                 width="100%"
                 height="100%"
                 alt="Skyshare Labs"
@@ -448,33 +464,30 @@ export const KPC01Template = ({
 
               <Hr />
 
-              <Row>
-                <Column>
+              <Row className="footer-row">
+                {/* Copyright Section */}
+                <Column className="footer-column">
                   <Img
-                    src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/copyright.png`}
+                    src="https://kpc-is.sgp1.cdn.digitaloceanspaces.com/copyright.png"
                     width="16"
                     height="16"
                     alt="Skyshare Labs"
-                    style={{
-                      verticalAlign: "middle",
-                    }}
+                    style={{ verticalAlign: "middle" }}
                     className="inline-flex w-4 object-cover mx-auto mr-2"
                   />
-
                   <Text
-                    className="inline-flex  text-white/50"
-                    style={{
-                      marginRight: "20px",
-                    }}
+                    className="inline-flex text-white/50"
+                    style={{ marginRight: "20px" }}
                   >
-                    KPC Importation Services 2025
+                    KPC Importation Services {new Date().getFullYear()}
                   </Text>
-                  <Text className="inline-flex  text-white/50">
+                  <Text className="inline-flex text-white/50">
                     All rights reserved.
                   </Text>
                 </Column>
 
-                <Column>
+                {/* Unsubscribe Section - Moves below on small screens */}
+                <Column className="footer-column">
                   <Text className="text-white/50">Unsubscribe</Text>
                 </Column>
               </Row>
@@ -486,4 +499,4 @@ export const KPC01Template = ({
   );
 };
 
-export default KPC01Template;
+export default KPCIS01Template;

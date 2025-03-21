@@ -38,6 +38,18 @@ export const SkyshareLabsJPLTemplate = ({
           fontStyle="normal"
         />
 
+        <style>
+          {`
+            @media (max-width: 640px) {
+              .responsive-column {
+                width: 100% !important;
+                display: block !important;
+                text-align: left !important;
+              }
+            }
+          `}
+        </style>
+
         {/* <Font
           fontFamily="MuseoModerno"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
@@ -56,10 +68,10 @@ export const SkyshareLabsJPLTemplate = ({
             <Section className="">
               <Img
                 src={`https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/email_header.png`}
-                width="640"
-                height="130"
+                width="100%"
+                height="100%"
                 alt="Skyshare Labs"
-                className="my-0 mx-auto max-w-[640px] w-full object-cover"
+                className="my-0 mx-auto max-w-[640px] w-full object-contain"
               />
             </Section>
 
@@ -218,30 +230,26 @@ export const SkyshareLabsJPLTemplate = ({
               )}
             </Section>
 
-            <Section className="font-sora bg-red-500 relative bg-[url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')] bg-cover bg-center bg-no-repeat p-3">
+            <Section
+              className="font-sora bg-red-500 relative p-3"
+              style={{
+                backgroundImage:
+                  "url('https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/bg-1.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
               <Row>
                 {/* Personal Info */}
                 <Column
-                  align="left"
-                  className="w-[50%] mb-auto"
-                  style={{
-                    verticalAlign: "top",
-                  }}
+                  className="responsive-column"
+                  style={{ width: "50%", verticalAlign: "top" }}
                 >
-                  <Text
-                    style={{
-                      margin: "4px !important",
-                    }}
-                    className="text-[20px] font-semibold text-white leading-none"
-                  >
+                  <Text className="text-[20px] font-semibold text-white leading-none">
                     James Patrick Lucas
                   </Text>
-                  <Text
-                    style={{
-                      margin: "4px !important",
-                    }}
-                    className="text-[14px] text-white opacity-50"
-                  >
+                  <Text className="text-[14px] text-white opacity-50">
                     Business Development Manager
                   </Text>
                   <IconText
@@ -251,20 +259,13 @@ export const SkyshareLabsJPLTemplate = ({
                   <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="jameslucas@skysharelabs.com"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                    }}
+                    style={{ color: "white", textDecoration: "none" }}
                   />
                 </Column>
-                {/* Company Info */}
-                <Column align="left" className="w-[50%]">
-                  <Text
-                    style={{
-                      margin: "0 !important",
-                    }}
-                    className="text-white text-[20px] font-semibold"
-                  >
+
+                {/* Company Info - Moves below on small screens */}
+                <Column className="responsive-column" style={{ width: "50%" }}>
+                  <Text className="text-white text-[20px] font-semibold">
                     Skyshare Labs
                   </Text>
                   <IconText
@@ -274,14 +275,8 @@ export const SkyshareLabsJPLTemplate = ({
                   <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/mail.png"
                     text="management@skysharelabs.com"
-                    style={{
-                      color: "white",
-                      textDecoration: "none",
-                    }}
-                    spanStyle={{
-                      color: "white",
-                      textDecoration: "none",
-                    }}
+                    style={{ color: "white", textDecoration: "none" }}
+                    spanStyle={{ color: "white", textDecoration: "none" }}
                   />
                   <IconText
                     icon="https://skyshare-labs.sgp1.cdn.digitaloceanspaces.com/pin.png"

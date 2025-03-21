@@ -1,5 +1,5 @@
 import IBS01Template from "@/emails/ibs/ibs-01/ibs01";
-import KPC01Template from "@/emails/kpc/kps-01/kpc01";
+import KPC01Template from "@/emails/kpc/kpc-is/kpc-is-01";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 
 export const SITE_URL =

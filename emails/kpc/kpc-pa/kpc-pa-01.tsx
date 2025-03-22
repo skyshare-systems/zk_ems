@@ -265,7 +265,7 @@ export const KPCPA01Template = ({
               </Section>
             )}
 
-            <Section className="relative bg-[url('https://kpc-is.sgp1.cdn.digitaloceanspaces.com/footer_bg.png')] bg-cover bg-center bg-no-repeat p-8">
+            <Section className="relative bg-[url('https://kpc-pa.sgp1.cdn.digitaloceanspaces.com/footer_bg.png')] bg-cover bg-center bg-no-repeat p-8">
               <Row align="center">
                 <Column className="text-center">
                   <Img

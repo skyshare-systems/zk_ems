@@ -124,6 +124,13 @@ export const Mdx = ({ ref }: Props) => {
         linkPlugin(),
         linkDialogPlugin(),
         imagePlugin({
+          /* ImageDialog: () => {
+            return <p>test</p>;
+          }, */
+
+          ImageDialog: () => {
+
+          },
           imageUploadHandler: async (fileData) => {
             try {
               if (!company) {

@@ -30,6 +30,11 @@ export const KPCPA01Template = ({
   articles,
   isTemplate,
 }: KPCPA01TemplateProps) => {
+  const modifiedBody = body.replace(
+    /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
+    '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
+  );
+
   return (
     <Html>
       <Head>
@@ -56,6 +61,9 @@ export const KPCPA01Template = ({
               display: block !important;
               margin-bottom: 8px !important;
             }
+            .responsive-padding {
+              padding: 0 32px !important;
+            }
           }
         `}
         </style>
@@ -63,20 +71,13 @@ export const KPCPA01Template = ({
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-poppins bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px]">
-            <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
-              <Img
-                src={`https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/template-header.png`}
-                width="100%"
-                height="100%"
-                alt="Skyshare Labs"
-                className="w-full object-contain mx-auto"
-              />
-            </Section>
+          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
+            {/* HEADER */}
+            <Section className="my-0 mx-auto w-full h-[86px] max-h-[86px] object-cover bg-[url('https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/template-header.png')] bg-cover bg-center bg-no-repeat"></Section>
 
             {/* BODY */}
             <Section
-              className="text-black p-8"
+              className="text-black responsive-padding p-4 [&>img]:max-w-[640px] w-full"
               style={{
                 fontFamily:
                   "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
@@ -91,142 +92,20 @@ export const KPCPA01Template = ({
                   </Column>
                 </Row>
               ) : (
-                <Markdown
-                  markdownCustomStyles={{
-                    h1: {
-                      fontSize: "2rem",
-                      fontWeight: "700",
-                      marginBlock: "1rem",
-                    },
-                    h2: {
-                      fontSize: "1.8rem",
-                      fontWeight: "700",
-                      marginBlock: "1rem",
-                    },
-                    h3: {
-                      fontSize: "1.5rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h4: {
-                      fontSize: "1.25rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h5: {
-                      fontSize: "1.1rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h6: {
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    blockQuote: {
-                      borderLeft: "4px solid #e2e8f0",
-                      paddingLeft: "1rem",
-                      marginLeft: "0",
-                      marginRight: "0",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      fontStyle: "italic",
-                      color: "#4a5568",
-                    },
-                    bold: {
-                      fontWeight: "700",
-                    },
-                    italic: {
-                      fontStyle: "italic",
-                    },
-                    link: {
-                      color: "#3182ce",
-                      textDecoration: "none",
-                      borderBottom: "1px solid transparent",
-                      transition: "border-color 0.2s ease",
-                    },
-                    codeBlock: {
-                      backgroundColor: "#f7fafc",
-                      padding: "1rem",
-                      borderRadius: "0.375rem",
-                      overflowX: "auto",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      fontFamily: "monospace",
-                    },
-                    codeInline: {
-                      fontFamily: "monospace",
-                      backgroundColor: "#f7fafc",
-                      padding: "0.2rem 0.4rem",
-                      borderRadius: "0.25rem",
-                      fontSize: "0.9em",
-                    },
-                    p: {
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                      lineHeight: "1.6",
-                    },
-                    li: {
-                      marginBottom: "0.5rem",
-                    },
-                    ul: {
-                      paddingLeft: "1.5rem",
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                    },
-                    ol: {
-                      paddingLeft: "1.5rem",
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                    },
-                    image: {
-                      maxWidth: "100%",
-                      height: "auto",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      borderRadius: "0.375rem",
-                    },
-                    br: {
-                      marginTop: "0.5rem",
-                    },
-                    hr: {
-                      height: "1px",
-                      backgroundColor: "#e2e8f0",
-                      border: "0",
-                      marginTop: "2rem",
-                      marginBottom: "2rem",
-                    },
-                    table: {
+                <div className="w-full">
+                  <Markdown
+                    markdownContainerStyles={{
+                      imageRendering: "crisp-edges",
+                      container: "prose max-w-none",
+                      containerType: "unset",
+                      aspectRatio: "none",
+                      maxWidth: "640px",
                       width: "100%",
-                      borderCollapse: "collapse",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                    },
-                    thead: {
-                      backgroundColor: "#f7fafc",
-                    },
-                    tbody: {},
-                    tr: {
-                      borderBottom: "1px solid #e2e8f0",
-                    },
-                    th: {
-                      padding: "0.75rem",
-                      textAlign: "left",
-                      fontWeight: "600",
-                      borderBottom: "2px solid #e2e8f0",
-                    },
-                    td: {
-                      padding: "0.75rem",
-                      textAlign: "left",
-                    },
-                    strikethrough: {
-                      textDecoration: "line-through",
-                      color: "#718096",
-                    },
-                  }}
-                >
-                  {body ?? "# KPC TAX"}
-                </Markdown>
+                    }}
+                  >
+                    {modifiedBody ?? "# KPC TAX"}
+                  </Markdown>
+                </div>
               )}
             </Section>
 
@@ -485,11 +364,6 @@ export const KPCPA01Template = ({
                   <Text className="inline-flex text-white/50">
                     All rights reserved.
                   </Text>
-                </Column>
-
-                {/* Unsubscribe Section - Moves below on small screens */}
-                <Column className="footer-column">
-                  <Text className="text-white/50">Unsubscribe</Text>
                 </Column>
               </Row>
             </Section>

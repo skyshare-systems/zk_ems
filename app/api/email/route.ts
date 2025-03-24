@@ -116,6 +116,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       to: ["ijohnpaul2000@gmail.com", ...recipients],
       subject,
       html: updatedHtml,
+      
     });
 
     if (emailResult.rejected.length > 0) {

@@ -39,6 +39,9 @@ const ConfirmEmailBlast = () => {
         onAutoClose: () => {
           onClose();
         },
+        onDismiss: (toast) => {
+          onClose();
+        },
       });
     },
     onError: (error: string) => {

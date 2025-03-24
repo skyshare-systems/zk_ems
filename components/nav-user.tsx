@@ -64,7 +64,11 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:text-black"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user?.image} alt={user?.username} />
+                <AvatarImage
+                  src={user?.image}
+                  alt={user?.username}
+                  className="object-contain"
+                />
                 <AvatarFallback className="rounded-lg">
                   {user.username.slice(0, 2)}
                 </AvatarFallback>

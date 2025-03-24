@@ -47,7 +47,7 @@ export const emailTemplates: EmailTemplate[] = [
   {
     company: "KPC TAX",
     template: KPCTAX01Template,
-    templateId: "cm8fnh3xa0004220m4qnuu29e",
+    templateId: "cm8mt5cwp0002ykq0k956i4bs",
   },
 ];
 

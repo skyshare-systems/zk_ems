@@ -34,6 +34,7 @@ import "@mdxeditor/editor/style.css";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
+import ImageUploader from "../modals/image-uploader";
 
 interface Props {
   ref: React.RefObject<MDXEditorMethods | null>;
@@ -77,7 +78,7 @@ export const Mdx = ({ ref }: Props) => {
                 <Separator />
                 <ListsToggle />
                 <Separator />
-                <InsertImage />
+                <ImageUploader />
                 <CreateLink />
                 <Separator />
                 <AlignLeft
@@ -128,9 +129,7 @@ export const Mdx = ({ ref }: Props) => {
             return <p>test</p>;
           }, */
 
-          ImageDialog: () => {
-
-          },
+          ImageDialog: () => {},
           imageUploadHandler: async (fileData) => {
             try {
               if (!company) {

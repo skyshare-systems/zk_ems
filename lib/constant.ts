@@ -1,5 +1,7 @@
 import IBS01Template from "@/emails/ibs/ibs-01/ibs01";
-import KPC01Template from "@/emails/kpc/kpc-is/kpc-is-01";
+import KPC01Template, { KPCIS01Template } from "@/emails/kpc/kpc-is/kpc-is-01";
+import KPCPA01Template from "@/emails/kpc/kpc-pa/kpc-pa-01";
+import KPCTAX01Template from "@/emails/kpc/kpc-tax/kpc-tax-01";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 
 export const SITE_URL =
@@ -18,7 +20,7 @@ export interface EmailTemplate {
   templateId: string;
 }
 
-type companies = "Skyshare Labs" | "IBS" | "KPC IS";
+type companies = "Skyshare Labs" | "IBS" | "KPC IS" | "KPC PA" | "KPC TAX";
 
 // REMINDER: Add your email templates here with the template ID from the database.
 export const emailTemplates: EmailTemplate[] = [
@@ -34,7 +36,17 @@ export const emailTemplates: EmailTemplate[] = [
   },
   {
     company: "KPC IS",
-    template: KPC01Template,
+    template: KPCIS01Template,
+    templateId: "cm8fnh3xa0004220m4qnuu29e",
+  },
+  {
+    company: "KPC PA",
+    template: KPCPA01Template,
+    templateId: "cm8iiapml00022udm6ri6bj7s",
+  },
+  {
+    company: "KPC TAX",
+    template: KPCTAX01Template,
     templateId: "cm8fnh3xa0004220m4qnuu29e",
   },
 ];

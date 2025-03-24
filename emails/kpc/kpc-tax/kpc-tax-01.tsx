@@ -19,17 +19,17 @@ import {
   Link,
 } from "@react-email/components";
 
-interface KPCPA01TemplateProps {
+interface KPCTAX01TemplateProps {
   body: string;
   articles: Articles[];
   isTemplate: boolean;
 }
 
-export const KPCPA01Template = ({
+export const KPCTAX01Template = ({
   body,
   articles,
   isTemplate,
-}: KPCPA01TemplateProps) => {
+}: KPCTAX01TemplateProps) => {
   const modifiedBody = body.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
@@ -374,4 +374,4 @@ export const KPCPA01Template = ({
   );
 };
 
-export default KPCPA01Template;
+export default KPCTAX01Template;

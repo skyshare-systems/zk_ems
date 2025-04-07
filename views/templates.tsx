@@ -45,12 +45,14 @@ const Templates = () => {
       setDebouncedTitle(title);
     },
     1500,
-    [title]
+    [title],
   );
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
+
+  console.log({ selectedTemplate });
 
   return (
     <div className="flex flex-col lg:flex-row">

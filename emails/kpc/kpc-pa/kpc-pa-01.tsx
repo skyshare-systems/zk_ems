@@ -30,7 +30,7 @@ export const KPCPA01Template = ({
   articles,
   isTemplate,
 }: KPCPA01TemplateProps) => {
-  const modifiedBody = body.replace(
+  const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
   );

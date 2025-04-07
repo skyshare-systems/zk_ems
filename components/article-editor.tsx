@@ -1,9 +1,9 @@
-import { rules } from "@/lib/constant";
+import { verifyPermission } from "@/lib/utils";
 import { ArticleSchema } from "@/schema/articles";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, X } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
@@ -21,17 +21,9 @@ import { Textarea } from "./ui/textarea";
 const ArticleEditor = () => {
   const { selectedTemplate, setArticles, articles } = useCreateEmailStore();
 
-  const isArticlesAllowed = rules.some(
-    (rule) =>
-      rule.rules.includes("articles") &&
-      rule.companies.some(
-        (company) => company.id === selectedTemplate?.company.id,
-      ),
-  );
-
   const form = useForm<z.infer<typeof ArticleSchema>>({
     resolver: zodResolver(ArticleSchema),
-    mode: "onChange", // Enables real-time validation
+    mode: "onBlur",
     defaultValues: { articles: [...articles] },
   });
 
@@ -44,12 +36,20 @@ const ArticleEditor = () => {
 
   useEffect(() => {
     setArticles([...watchArticles]);
-    form.trigger(); // Triggers validation on every change
+
+    form.trigger();
   }, [watchArticles, setArticles, form]);
 
   const onSubmit = (values: z.infer<typeof ArticleSchema>) => {
     console.log(values);
   };
+
+  if (!selectedTemplate) return null;
+
+  const isArticlesAllowed = verifyPermission({
+    companyId: selectedTemplate.company.id,
+    rules: ["articles"],
+  });
 
   if (!selectedTemplate || !isArticlesAllowed) return null;
 

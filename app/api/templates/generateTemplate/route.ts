@@ -35,6 +35,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

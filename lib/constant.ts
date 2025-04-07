@@ -20,7 +20,18 @@ export interface EmailTemplate {
   templateId: string;
 }
 
+
 type companies = "Skyshare Labs" | "IBS" | "KPC IS" | "KPC PA" | "KPC TAX";
+export type rules = "articles" | "from_the_people" | "cta_button" | "upcoming_programs";
+
+interface Company {
+  id: string;
+  name: companies;
+}
+interface CompanyRule {
+  companies: Company[];
+  rules: rules[];
+}
 
 // REMINDER: Add your email templates here with the template ID from the database.
 export const emailTemplates: EmailTemplate[] = [
@@ -47,11 +58,11 @@ export const emailTemplates: EmailTemplate[] = [
   {
     company: "KPC TAX",
     template: KPCTAX01Template,
-    templateId: "cm8fnh3xa0004220m4qnuu29e",
+    templateId: "cm8mt5cwp0002ykq0k956i4bs",
   },
 ];
 
-export const rules = [
+export const companyRule: CompanyRule[] = [
   {
     companies: [
       {
@@ -59,6 +70,15 @@ export const rules = [
         name: "KPC IS",
       },
     ],
-    rules: ["articles"],
+    rules: ["articles",],
+  },
+    {
+    companies: [
+      {
+        id: "cm8mt25yg0000ykq0qt4fiuxf",
+        name: "KPC TAX",
+      },
+    ],
+    rules: ["articles", "from_the_people","cta_button", "upcoming_programs"],
   },
 ];

@@ -371,6 +371,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   function generatePreview() {
     setIsPreview(!isPreview);
 
+    window.scroll(0, 0);
     if (!isPreview) {
       mutate();
     }

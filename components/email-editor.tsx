@@ -1,10 +1,13 @@
+import { updateFontHtml } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Loader } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Mdx } from "./mdx/InitializedMDXEditor";
-import { updateFontHtml } from "@/lib/utils";
 import ArticleEditor from "./article-editor";
+import CtaEditor from "./cta-editor";
+import FromThePeopleEditor from "./from-the-people-editor";
+import { Mdx } from "./mdx/InitializedMDXEditor";
+import UpcomingProgramEditor from "./upcoming-program-editor";
 // import EditorPreview from "./mdx/preview";
 // import Editor from "./mdx/editor";
 const EmailEditor = ({
@@ -80,6 +83,9 @@ const EmailEditor = ({
             </div>
 
             <ArticleEditor />
+            <CtaEditor />
+            <FromThePeopleEditor />
+            <UpcomingProgramEditor />
           </div>
         </>
       )}

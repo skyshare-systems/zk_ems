@@ -4,7 +4,8 @@ import { useCreateEmailStore } from "@/store/create-email";
 import { useCallback } from "react";
 
 const useProps = () => {
-  const { articles, selectedTemplate } = useCreateEmailStore();
+  const { articles, selectedTemplate, fromThePeople, cta, upcomingPrograms } =
+    useCreateEmailStore();
 
   const propsBuilder = useCallback(
     function propsBuilder() {
@@ -15,9 +16,17 @@ const useProps = () => {
             articles: articles,
           };
         }
+        case "KPC TAX": {
+          return {
+            articles,
+            cta,
+            fromThePeople,
+            upcomingPrograms,
+          };
+        }
       }
     },
-    [articles, selectedTemplate],
+    [articles, selectedTemplate, cta, fromThePeople, upcomingPrograms],
   );
 
   return { propsBuilder };

@@ -1,6 +1,11 @@
 import { IconText } from "@/emails/skyshare/jpl/jpl";
-import { cn } from "@/lib/utils";
-import { Articles } from "@/store/create-email";
+import { formatDateRanges } from "@/lib/utils";
+import {
+  Articles,
+  Cta,
+  FromThePeople,
+  UpcomingPrograms,
+} from "@/store/create-email";
 import {
   Body,
   Button,
@@ -17,20 +22,28 @@ import {
   Text,
   Hr,
   Link,
+  Heading,
 } from "@react-email/components";
+import { format } from "date-fns";
 
 interface KPCTAX01TemplateProps {
   body: string;
   articles: Articles[];
+  cta: Cta;
+  fromThePeople: FromThePeople[];
   isTemplate: boolean;
+  upcomingPrograms: UpcomingPrograms[];
 }
 
 export const KPCTAX01Template = ({
   body,
   articles,
+  cta,
+  fromThePeople,
   isTemplate,
+  upcomingPrograms,
 }: KPCTAX01TemplateProps) => {
-  const modifiedBody = body.replace(
+  const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
   );
@@ -71,7 +84,7 @@ export const KPCTAX01Template = ({
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-poppins bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
+          <Container className="border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
             {/* HEADER */}
             <Section className="my-0 mx-auto w-full h-[86px] max-h-[86px] object-cover bg-[url('https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/template-header.png')] bg-cover bg-center bg-no-repeat"></Section>
 
@@ -80,7 +93,7 @@ export const KPCTAX01Template = ({
               className="text-black responsive-padding p-4 [&>img]:max-w-[640px] w-full"
               style={{
                 fontFamily:
-                  "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                  "Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
               }}
             >
               {isTemplate ? (
@@ -105,42 +118,225 @@ export const KPCTAX01Template = ({
                   >
                     {modifiedBody ?? "# KPC TAX"}
                   </Markdown>
+
+                  {cta && cta.link && cta.text && (
+                    <div className="my-[32px]">
+                      <Link
+                        href={cta.link}
+                        className="bg-[#F3BC30] rounded-[8px] px-[16px] py-[12px] text-black box-border inline-block font-bold"
+                      >
+                        {cta.text}
+                      </Link>
+                    </div>
+                  )}
+
+                  {fromThePeople && fromThePeople.length > 0 && (
+                    <Section className="text-center my-[16px] ">
+                      <Heading
+                        as="h5"
+                        className="text-[18px] font-bold m-0 mb-[16px] text-black/50 font-geist"
+                      >
+                        From the people
+                      </Heading>
+
+                      {fromThePeople
+                        .filter(
+                          (review) =>
+                            review.reviewerName.trim() !== "" &&
+                            review.review.trim() !== "" &&
+                            review.reviewerImage.trim() !== "" &&
+                            review.rating.trim() !== "",
+                        )
+                        .map((review) => (
+                          <>
+                            <Section className="my-[16px]">
+                              {Array.from({
+                                length: parseInt(review.rating),
+                              }).map((_, index) => (
+                                <Img
+                                  key={index}
+                                  src="https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/star.png"
+                                  alt="Star"
+                                  width="14"
+                                  height="14"
+                                  className="w-[14px] h-auto object-cover inline-block mx-[2px]"
+                                />
+                              ))}
+                            </Section>
+
+                            <Text className="italic text-gray-700 my-[16px] mx-0 text-[16px]">
+                              &lsquo;
+                              {review.review.length > 150
+                                ? review.review.slice(0, 150) + "..."
+                                : review.review}
+                              &rsquo;
+                            </Text>
+
+                            <Section className="text-center" align="center">
+                              <tr>
+                                <td align="center">
+                                  <table
+                                    border={0}
+                                    cellPadding="0"
+                                    cellSpacing="0"
+                                    style={{ margin: "8px 0" }}
+                                  >
+                                    <tr>
+                                      <td align="center">
+                                        <table
+                                          border={0}
+                                          cellPadding="0"
+                                          cellSpacing="0"
+                                        >
+                                          <tr>
+                                            <td
+                                              valign="middle"
+                                              style={{ paddingRight: "8px" }}
+                                            >
+                                              <Img
+                                                src={
+                                                  review.reviewerImage
+                                                    ? review.reviewerImage
+                                                    : "https://new.email/static/app/placeholder.png"
+                                                }
+                                                width="48"
+                                                height="48"
+                                                alt="Website"
+                                                style={{
+                                                  display: "block",
+                                                  borderRadius: "50%",
+                                                }}
+                                              />
+                                            </td>
+                                            <td valign="middle">
+                                              <Text className="m-0 text-black leading-[1rem] tracking-normal font-bold">
+                                                {review.reviewerName}
+                                              </Text>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </Section>
+                          </>
+                        ))}
+                    </Section>
+                  )}
                 </div>
               )}
             </Section>
 
             {articles && articles.length > 0 && (
+              <>
+                {
+                  <Section
+                    className="mx-auto my-[16px] p-4 text-black w-full "
+                    style={{
+                      maxWidth: "640px",
+                      width: "100%",
+                    }}
+                  >
+                    <div className="bg-black/[.04] rounded-lg p-4">
+                      <Text className="text-black/[.5] text-[12px] uppercase font-bold">
+                        ARTICLES
+                      </Text>
+
+                      <Row className="">
+                        {articles
+                          .filter(
+                            (article) =>
+                              article.heading.trim() !== "" &&
+                              article.content.trim() !== "" &&
+                              article.articleLink.trim() !== "",
+                          )
+                          .map((article, index) => (
+                            <Row key={article.heading}>
+                              <Text className="text-[20px] font-semibold break-words">
+                                {article.heading}
+                              </Text>
+                              <Text className="text-[14px] break-words">
+                                {article.content}
+                              </Text>
+                              <Link
+                                href={article.articleLink}
+                                className=" block mt-[8px] w-fit bg-black text-white px-4 py-3 text-[14px] font-bold"
+                              >
+                                Read Article
+                              </Link>
+
+                              {index !== articles.length - 1 && (
+                                <Hr className="bg-black h-[1px] my-4" />
+                              )}
+                            </Row>
+                          ))}
+                      </Row>
+                    </div>
+                  </Section>
+                }
+              </>
+            )}
+
+            {upcomingPrograms && upcomingPrograms.length > 0 && (
               <Section
-                className="mx-auto  p-4  text-black w-full"
                 style={{
                   maxWidth: "640px",
                   width: "100%",
                 }}
+                className="my-[16px] p-4  text-black w-full "
               >
-                {articles.map((article) => (
-                  <Row
-                    key={article.heading}
-                    className="bg-black/[.04] p-4 rounded-lg"
+                <Row className="p-4 w-full">
+                  <table
+                    className="bg-black/[.04] m-0"
+                    cellPadding="0"
+                    cellSpacing="0"
+                    border={0}
+                    width={"100%"}
+                    align="left"
                   >
-                    <Column>
-                      <Text className="text-black/[.5] text-[12px] uppercase font-bold">
-                        ARTICLE
-                      </Text>
-                      <Text className="text-[20px] font-semibold break-words">
-                        {article.heading}
-                      </Text>
-                      <Text className="text-[14px] break-words">
-                        {article.content}
-                      </Text>
-                      <Link
-                        href={article.articleLink}
-                        className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
-                      >
-                        Read Article
-                      </Link>
-                    </Column>
-                  </Row>
-                ))}
+                    <tr>
+                      <td
+                        width="32"
+                        style={{ width: "32px", backgroundColor: "#F3BC30" }}
+                      ></td>
+                      <td align="left">
+                        <Container className="w-full p-4">
+                          <Heading
+                            as="h2"
+                            className="text-[14px] font-bold mb-[12px] opacity-50 uppercase"
+                          >
+                            Upcoming Programs
+                          </Heading>
+
+                          {upcomingPrograms.map((program) => (
+                            <Section
+                              align="left"
+                              className="p-2"
+                              key={program.title}
+                            >
+                              <Link
+                                href={program.externalLink}
+                                className="underline text-black text-poppins text-[14px] font-bold m-0 mb-[8px]"
+                              >
+                                {program.title}
+                              </Link>
+
+                              <Text className="text-poppins text-[14px] text-gray-600 m-0">
+                                {formatDateRanges(
+                                  program.dates.map((date) =>
+                                    date.date.toString(),
+                                  ),
+                                )}
+                              </Text>
+                            </Section>
+                          ))}
+                        </Container>
+                      </td>
+                    </tr>
+                  </table>
+                </Row>
               </Section>
             )}
 

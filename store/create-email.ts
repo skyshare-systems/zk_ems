@@ -14,6 +14,26 @@ export interface Articles {
   articleLink: string;
 }
 
+export interface Cta {
+  link: string;
+  text: string;
+}
+
+export interface FromThePeople {
+  reviewerName: string;
+  reviewerImage: string;
+  rating: string;
+  review: string;
+}
+
+export interface UpcomingPrograms {
+  title: string;
+  externalLink: string;
+  dates: {
+    date: Date;
+  }[];
+}
+
 interface CreateEmailState {
   editorData: { blocks: any[] };
   body: string;
@@ -25,6 +45,9 @@ interface CreateEmailState {
   attachments: File[];
   preview: GenerateTemplateResponse;
   articles: Articles[];
+  cta: Cta;
+  fromThePeople: FromThePeople[];
+  upcomingPrograms: UpcomingPrograms[];
 }
 
 interface CreateEmailActions {
@@ -38,6 +61,9 @@ interface CreateEmailActions {
   setAttachments: (file: File[]) => void;
   setPreview: (preview: string) => void;
   setArticles: (articles: Articles[]) => void;
+  setCta: (cta: Cta) => void;
+  setFromThePeople: (fromThePeople: FromThePeople[]) => void;
+  setUpcomingPrograms: (upcomingPrograms: UpcomingPrograms[]) => void;
   reset: () => void;
 }
 
@@ -54,6 +80,12 @@ const initialState: CreateEmailState = {
     html: "",
   },
   articles: [],
+  cta: {
+    link: "",
+    text: "",
+  },
+  fromThePeople: [],
+  upcomingPrograms: [],
 };
 
 export const useCreateEmailStore = create<
@@ -63,6 +95,9 @@ export const useCreateEmailStore = create<
     (set, get) => ({
       ...initialState,
       setArticles: (articles) => set({ articles }),
+      setCta: (cta) => set({ cta }),
+      setFromThePeople: (fromThePeople) => set({ fromThePeople }),
+      setUpcomingPrograms: (upcomingPrograms) => set({ upcomingPrograms }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
       setEditorData: (data) => set({ editorData: data }),

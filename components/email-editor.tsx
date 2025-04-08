@@ -82,9 +82,9 @@ const EmailEditor = ({
               {/* <Editor /> */}
             </div>
 
-            <ArticleEditor />
             <CtaEditor />
             <FromThePeopleEditor />
+            <ArticleEditor />
             <UpcomingProgramEditor />
           </div>
         </>

@@ -340,7 +340,7 @@ export const KPCTAX01Template = ({
               </Section>
             )}
 
-            <Section className="relative bg-[url('https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/footer-bg.png')] bg-cover bg-center bg-no-repeat p-8">
+            <Section className="relative w-full bg-[url('https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/footer-bg.png')] bg-cover bg-center bg-no-repeat p-8">
               <Row align="center">
                 <Column className="text-center">
                   <Img

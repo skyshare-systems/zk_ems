@@ -27,7 +27,13 @@ interface KPCIS01TemplateProps {
 
 export const KPCIS01Template = ({
   body,
-  articles,
+  articles = [
+    {
+      heading: "Article 1",
+      content: "This is the content of article 1.",
+      articleLink: "#",
+    },
+  ],
   isTemplate,
 }: KPCIS01TemplateProps) => {
   const modifiedBody = body?.replace(
@@ -109,9 +115,9 @@ export const KPCIS01Template = ({
               )}
             </Section>
 
-            {articles && articles.length > 0 && (
+            {/* {articles && articles.length > 0 && (
               <Section
-                className="mx-auto  p-4  text-black w-full"
+                className="w-full p-4 mx-auto text-black"
                 style={{
                   maxWidth: "640px",
                   width: "100%",
@@ -137,6 +143,59 @@ export const KPCIS01Template = ({
                         className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
                       >
                         Read Article
+                      </Link>
+                    </Column>
+                  </Row>
+                ))}
+              </Section>
+            )} */}
+
+            {articles && articles.length > 0 && (
+              <Section
+                className="w-full p-4 mx-auto text-black"
+                style={{
+                  maxWidth: "640px",
+                  width: "100%",
+                }}
+              >
+                {articles.map((article) => (
+                  <Row
+                    key={article.heading}
+                    className="bg-black/[.04] p-4 rounded-lg"
+                  >
+                    <Column valign="top" className="pr-[16px] w-[60px]">
+                      <Text className="m-0 font-bold text-center text-gray-500">
+                        JUN
+                      </Text>
+                      <Hr className="my-[4px]" />
+                      <Text className="text-center font-bold text-[20px] m-0">
+                        23
+                      </Text>
+                    </Column>
+
+                    <Column valign="top" className="pr-[16px] w-[120px]">
+                      <Img
+                        src="https://new.email/static/app/placeholder.png"
+                        className="w-full h-auto object-cover rounded-[4px]"
+                        alt="Event image"
+                      />
+                    </Column>
+
+                    <Column valign="top">
+                      <Text className="font-bold text-[18px] m-0">
+                        Placeholder Headline
+                      </Text>
+                      <Text className="text-gray-700 my-[8px]">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing
+                        elit. A hic aperiam ducimus tempora sequi deleniti
+                        porro? Voluptatum rerum vero eos!
+                      </Text>
+                      <Hr className="my-[8px]" />
+                      <Link
+                        href="#"
+                        className="font-medium text-blue-600 no-underline"
+                      >
+                        Read More
                       </Link>
                     </Column>
                   </Row>
@@ -188,7 +247,7 @@ export const KPCIS01Template = ({
                         width="32"
                         height="32"
                         alt="Skyshare Labs"
-                        className="w-8 object-cover mx-auto"
+                        className="object-cover w-8 mx-auto"
                       />
                     </Link>
                     <Link
@@ -203,7 +262,7 @@ export const KPCIS01Template = ({
                         width="32"
                         height="32"
                         alt="Skyshare Labs"
-                        className="w-8 object-cover mx-auto"
+                        className="object-cover w-8 mx-auto"
                       />
                     </Link>
                     <Link
@@ -218,7 +277,7 @@ export const KPCIS01Template = ({
                         width="32"
                         height="32"
                         alt="Skyshare Labs"
-                        className="w-8 object-cover mx-auto"
+                        className="object-cover w-8 mx-auto"
                       />
                     </Link>
                   </Column>
@@ -348,7 +407,7 @@ export const KPCIS01Template = ({
                       height="16"
                       alt="Skyshare Labs"
                       style={{ verticalAlign: "middle" }}
-                      className="inline-flex w-4 object-cover mx-auto mr-2"
+                      className="inline-flex object-cover w-4 mx-auto mr-2"
                     />
                     <Text
                       className="inline-flex text-white/50"

@@ -54,12 +54,12 @@ export const IBS01Template = ({ body, isTemplate }: IBS01TemplateProps) => {
                 width="32"
                 height="32"
                 alt="Skyshare Labs"
-                className="w-8 object-cover mx-auto"
+                className="object-cover w-8 mx-auto"
               />
             </Section>
 
             <Section
-              className="text-black p-8"
+              className="p-8 text-black"
               style={{
                 fontFamily:
                   "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
@@ -100,7 +100,7 @@ export const IBS01Template = ({ body, isTemplate }: IBS01TemplateProps) => {
                     width="64"
                     height="64"
                     alt="Skyshare Labs"
-                    className="w-16 object-cover mx-auto"
+                    className="object-cover w-16 mx-auto"
                   />
 
                   <Text

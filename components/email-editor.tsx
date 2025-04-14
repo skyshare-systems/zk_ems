@@ -47,11 +47,11 @@ const EmailEditor = ({
   if (!selectedTemplate) return null;
 
   return (
-    <div className="flex p-4 flex-col gap-6 self-stretch rounded-2xl bg-white h-full grow">
+    <div className="flex flex-col self-stretch h-full gap-6 p-4 bg-white rounded-2xl grow">
       {isPreview ? (
         <>
           {isGeneratingPreview ? (
-            <div className="flex flex-col grow w-full items-center gap-4 justify-center">
+            <div className="flex flex-col items-center justify-center w-full gap-4 grow">
               <Loader size={24} className="animate-spin text-black/[32]" />
               <p className="text-black/[.5] text-[10.24px]">
                 Generating Preview
@@ -61,7 +61,7 @@ const EmailEditor = ({
             <div className="flex flex-col grow h-full min-h-[400px] items-center justify-center">
               <iframe
                 src={iframeUrl}
-                className="rounded-2xl w-full h-full flex-grow min-h-0 bg-none"
+                className="flex-grow w-full h-full min-h-0 rounded-2xl bg-none"
                 sandbox="allow-scripts allow-same-origin"
               />
             </div>
@@ -70,8 +70,8 @@ const EmailEditor = ({
       ) : (
         <>
           {/* Body */}
-          <div className="flex flex-col items-center gap-4 w-full my-4 grow">
-            <p className="ty-subtext text-black">Edit Email Body</p>
+          <div className="flex flex-col items-center w-full gap-4 my-4 grow">
+            <p className="text-black ty-subtext">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
               Note: Alignment Plugin will make all content to follow the
               selected alignment. Since markdown doesn&rsquo;t support alignment

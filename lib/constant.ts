@@ -3,6 +3,7 @@ import KPC01Template, { KPCIS01Template } from "@/emails/kpc/kpc-is/kpc-is-01";
 import KPCPA01Template from "@/emails/kpc/kpc-pa/kpc-pa-01";
 import KPCTAX01Template from "@/emails/kpc/kpc-tax/kpc-tax-01";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
+import YSOIA01Template from "@/emails/ysoia/ysoia-01/ysoia01";
 
 export const SITE_URL =
   process.env.NODE_ENV === "production"
@@ -20,9 +21,21 @@ export interface EmailTemplate {
   templateId: string;
 }
 
-
-type companies = "Skyshare Labs" | "IBS" | "KPC IS" | "KPC PA" | "KPC TAX";
-export type rules = "articles" | "from_the_people" | "cta_button" | "upcoming_programs";
+type companies =
+  | "Skyshare Labs"
+  | "IBS"
+  | "KPC IS"
+  | "KPC PA"
+  | "KPC TAX"
+  | "Your Skin";
+export type rules =
+  | "cta_button"
+  | "from_the_people"
+  | "articles"
+  | "upcoming_programs"
+  | "discover_our_products"
+  | "our_services"
+  | "recent_posts";
 
 interface Company {
   id: string;
@@ -60,6 +73,11 @@ export const emailTemplates: EmailTemplate[] = [
     template: KPCTAX01Template,
     templateId: "cm8mt5cwp0002ykq0k956i4bs",
   },
+  {
+    company: "Your Skin",
+    template: YSOIA01Template,
+    templateId: "cm9ifit570003ntuks5sgl1n4",
+  },
 ];
 
 export const companyRule: CompanyRule[] = [
@@ -69,16 +87,36 @@ export const companyRule: CompanyRule[] = [
         id: "cm8fnd9h80000220mva1ldp04",
         name: "KPC IS",
       },
-    ],
-    rules: ["articles",],
-  },
-    {
-    companies: [
-      {
+       {
         id: "cm8mt25yg0000ykq0qt4fiuxf",
         name: "KPC TAX",
       },
     ],
-    rules: ["articles", "from_the_people","cta_button", "upcoming_programs"],
+    rules: [
+      "cta_button",
+      "from_the_people",
+      "articles",
+      "upcoming_programs",
+      "discover_our_products",
+      "our_services",
+      "recent_posts",
+    ],
   },
+  // {
+  //   companies: [
+  //     {
+  //       id: "cm8mt25yg0000ykq0qt4fiuxf",
+  //       name: "KPC TAX",
+  //     },
+  //   ],
+  //   rules: [
+  //     "cta_button",
+  //     "from_the_people",
+  //     "articles",
+  //     "upcoming_programs",
+  //     "discover_our_products",
+  //     "our_services",
+  //     "recent_posts",
+  //   ],
+  // },
 ];

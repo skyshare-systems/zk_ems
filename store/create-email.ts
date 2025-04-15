@@ -8,12 +8,6 @@ export type TemplateWithCompany = Prisma.TemplateGetPayload<{
   include: { company: true };
 }>;
 
-export interface Articles {
-  heading: string;
-  content: string;
-  articleLink: string;
-}
-
 export interface Cta {
   link: string;
   text: string;
@@ -22,8 +16,16 @@ export interface Cta {
 export interface FromThePeople {
   reviewerName: string;
   reviewerImage: string;
-  rating: string;
+  rating: number;
   review: string;
+  [key: string]: unknown; // Program Name, Dates, Location
+}
+
+export interface Articles {
+  heading: string;
+  content: string;
+  articleLink: string;
+  [key: string]: string; // Dates, Image
 }
 
 export interface UpcomingPrograms {
@@ -32,6 +34,28 @@ export interface UpcomingPrograms {
   dates: {
     date: Date;
   }[];
+}
+export interface UpcomingProgramsWithYear extends UpcomingPrograms {
+  [year: string]: string | { date: Date }[] | undefined;
+}
+
+export interface Product {
+  image: string;
+  name: string;
+  description: string;
+  link: string;
+}
+
+export interface Service {
+  image: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
+export interface Post {
+  image: string;
+  description: string;
 }
 
 interface CreateEmailState {

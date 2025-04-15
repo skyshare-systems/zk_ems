@@ -53,7 +53,7 @@ interface IBS01TemplateProps {
   products: Product[];
 }
 
-export const IBS01Template = ({
+export const IBA01Template = ({
   body,
   isTemplate,
   products,
@@ -400,7 +400,7 @@ export const IBS01Template = ({
   );
 };
 
-export default IBS01Template;
+export default IBA01Template;
 
 const chunkArray = <T,>(array: T[], size: number) => {
   return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>

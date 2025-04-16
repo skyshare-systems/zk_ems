@@ -144,8 +144,7 @@ export const KPCTAX01Template = ({
                           (review) =>
                             review.reviewerName.trim() !== "" &&
                             review.review.trim() !== "" &&
-                            review.reviewerImage.trim() !== "" &&
-                            review.rating.trim() !== "",
+                            review.reviewerImage.trim() !== "",
                         )
                         .map((review) => (
                           <>

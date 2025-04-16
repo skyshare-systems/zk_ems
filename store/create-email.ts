@@ -16,7 +16,7 @@ export interface Cta {
 export interface FromThePeople {
   reviewerName: string;
   reviewerImage: string;
-  rating: number;
+  rating?: number;
   review: string;
   [key: string]: unknown; // Program Name, Dates, Location
 }

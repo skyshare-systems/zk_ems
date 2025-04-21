@@ -1,8 +1,8 @@
 import { chunkArray } from "@/emails/utils";
-import { Articles } from "@/store/create-email";
+import { Article } from "@/store/create-email";
 import { Row, Column, Img, Text, Link } from "@react-email/components";
 
-export const ArticleCard = ({ articles }: { articles: Articles[] }) => {
+export const ArticleCard = ({ articles }: { articles: Article[] }) => {
   const articleRows = chunkArray(articles, 2);
 
   return (

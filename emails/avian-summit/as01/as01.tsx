@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import {
-  Articles,
+  Article,
   Cta,
   FromThePeople,
   Post,
   Product,
   Service,
-  UpcomingPrograms,
+  UpcomingProgram,
 } from "@/store/create-email";
 import {
   Body,
@@ -37,10 +37,10 @@ import Footer from "./footer";
 interface AS01TemplateProps {
   body: string;
   isTemplate: boolean;
-  articles: Articles[];
+  articles: Article[];
   cta: Cta;
   fromThePeople: FromThePeople[];
-  upcomingPrograms: UpcomingPrograms[];
+  upcomingPrograms: UpcomingProgram[];
   products: Product[];
   services: Service[];
   posts: Post[];

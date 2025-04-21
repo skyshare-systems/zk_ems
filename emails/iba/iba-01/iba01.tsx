@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Articles, Cta, UpcomingPrograms } from "@/store/create-email";
+import { Article, Cta, UpcomingProgram } from "@/store/create-email";
 import {
   Body,
   Button,
@@ -46,10 +46,10 @@ interface Post {
 interface IBS01TemplateProps {
   body: string;
   isTemplate: boolean;
-  articles: Articles[];
+  articles: Article[];
   cta: Cta;
   fromThePeople: FromThePeople[];
-  upcomingPrograms: UpcomingPrograms[];
+  upcomingPrograms: UpcomingProgram[];
   products: Product[];
 }
 

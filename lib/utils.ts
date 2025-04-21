@@ -141,62 +141,61 @@ export function verifyPermission({
   return isAllowed;
 }
 
-
-export function formatDateRanges(dates: string[]): string {
+export function formatDateRanges(dates: { date: Date }[]): string {
   if (!dates || dates.length === 0) return "";
 
-  // Convert and sort the dates
   const sortedDates = dates
-    .map(date => parseISO(date))
+    .map(d => d.date)
     .sort((a, b) => a.getTime() - b.getTime());
 
-  const formattedRanges: string[] = [];
+  const ranges: Date[][] = [];
+  let tempGroup: Date[] = [sortedDates[0]];
 
-  let rangeStart = sortedDates[0];
-  let rangeEnd = sortedDates[0];
+  const oneDay = 86400000;
 
   for (let i = 1; i < sortedDates.length; i++) {
+    const prev = sortedDates[i - 1];
     const current = sortedDates[i];
-    // If the current date is the next day after the last, extend the range
-    if (current.getTime() === rangeEnd.getTime() + 86400000) { // 86400000ms = 1 day
-      rangeEnd = current;
+    const diff = current.getTime() - prev.getTime();
+
+    if (diff === oneDay || (current.getMonth() === prev.getMonth() && diff <= 7 * oneDay)) {
+      tempGroup.push(current);
     } else {
-      // If there was a gap, push the previous range and reset
-      if (rangeStart.getTime() === rangeEnd.getTime()) {
-        formattedRanges.push(format(rangeStart, "MMMM d, yyyy"));
-      } else {
-        // Check for "same month" condition to decide between `26-28` or `26&28`
-        if (rangeEnd.getTime() - rangeStart.getTime() === 2 * 86400000) {
-          formattedRanges.push(
-            `${format(rangeStart, "MMMM d")}&${format(rangeEnd, "d, yyyy")}`
-          );
-        } else {
-          formattedRanges.push(
-            `${format(rangeStart, "MMMM d")}-${format(rangeEnd, "d, yyyy")}`
-          );
-        }
-      }
-      // Reset the range to the current date
-      rangeStart = current;
-      rangeEnd = current;
+      ranges.push(tempGroup);
+      tempGroup = [current];
     }
   }
 
-  // Handle the last range
-  if (rangeStart.getTime() === rangeEnd.getTime()) {
-    formattedRanges.push(format(rangeStart, "MMMM d, yyyy"));
-  } else {
-    // Check for "same month" condition to decide between `26-28` or `26&28`
-    if (rangeEnd.getTime() - rangeStart.getTime() === 2 * 86400000) {
-      formattedRanges.push(
-        `${format(rangeStart, "MMMM d")}&${format(rangeEnd, "d, yyyy")}`
-      );
-    } else {
-      formattedRanges.push(
-        `${format(rangeStart, "MMMM d")}-${format(rangeEnd, "d, yyyy")}`
-      );
-    }
-  }
+  ranges.push(tempGroup); // Push the last group
 
+  const formattedRanges = ranges.map(group => formatGroup(group));
   return formattedRanges.join(" • ");
+}
+
+function formatGroup(dates: Date[]): string {
+  const sameMonth = dates.every(d => d.getMonth() === dates[0].getMonth());
+  const sameYear = dates.every(d => d.getFullYear() === dates[0].getFullYear());
+
+  if (dates.length === 1) {
+    return format(dates[0], "MMMM d, yyyy");
+  }
+
+  // More than 7 days apart? Use & notation
+  const isNonConsecutive = dates.some((d, i, arr) => {
+    if (i === 0) return false;
+    return d.getTime() - arr[i - 1].getTime() > 86400000;
+  });
+
+  if (isNonConsecutive) {
+    const parts = dates.map(d =>
+      format(d, sameMonth ? "d" : "MMMM d")
+    );
+    return `${format(dates[0], "MMMM")} ${parts.join(" & ")}, ${dates[0].getFullYear()}`;
+  }
+
+  // Consecutive range within a week
+  return `${format(dates[0], "MMMM d")}-${format(
+    dates[dates.length - 1],
+    sameMonth ? "d, yyyy" : "MMMM d, yyyy"
+  )}`;
 }

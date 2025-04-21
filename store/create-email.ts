@@ -8,12 +8,6 @@ export type TemplateWithCompany = Prisma.TemplateGetPayload<{
   include: { company: true };
 }>;
 
-export interface Articles {
-  heading: string;
-  content: string;
-  articleLink: string;
-}
-
 export interface Cta {
   link: string;
   text: string;
@@ -22,16 +16,46 @@ export interface Cta {
 export interface FromThePeople {
   reviewerName: string;
   reviewerImage: string;
-  rating: string;
+  rating?: number;
   review: string;
+  [key: string]: unknown; // Program Name, Dates, Location
 }
 
-export interface UpcomingPrograms {
+export interface Article {
+  heading: string;
+  content: string;
+  articleLink: string;
+  [key: string]: string; // Dates, Image
+}
+
+export interface UpcomingProgram {
   title: string;
   externalLink: string;
   dates: {
     date: Date;
   }[];
+}
+export interface UpcomingProgramsWithYear extends UpcomingProgram {
+  [year: string]: string | { date: Date }[] | undefined;
+}
+
+export interface Product {
+  image: string;
+  name: string;
+  description: string;
+  link: string;
+}
+
+export interface Service {
+  image: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
+export interface Post {
+  image: string;
+  description: string;
 }
 
 interface CreateEmailState {
@@ -44,10 +68,10 @@ interface CreateEmailState {
   alignment: "left" | "center" | "right";
   attachments: File[];
   preview: GenerateTemplateResponse;
-  articles: Articles[];
+  articles: Article[];
   cta: Cta;
   fromThePeople: FromThePeople[];
-  upcomingPrograms: UpcomingPrograms[];
+  upcomingPrograms: UpcomingProgram[];
 }
 
 interface CreateEmailActions {
@@ -60,10 +84,10 @@ interface CreateEmailActions {
   setAlignment: (alignment: "left" | "center" | "right") => void;
   setAttachments: (file: File[]) => void;
   setPreview: (preview: string) => void;
-  setArticles: (articles: Articles[]) => void;
+  setArticles: (articles: Article[]) => void;
   setCta: (cta: Cta) => void;
   setFromThePeople: (fromThePeople: FromThePeople[]) => void;
-  setUpcomingPrograms: (upcomingPrograms: UpcomingPrograms[]) => void;
+  setUpcomingPrograms: (upcomingPrograms: UpcomingProgram[]) => void;
   reset: () => void;
 }
 

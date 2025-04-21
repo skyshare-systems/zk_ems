@@ -1,14 +1,6 @@
 import { formatDateRanges } from "@/lib/utils";
 import { UpcomingProgram } from "@/store/create-email";
-import {
-  Row,
-  Column,
-  Img,
-  Text,
-  Section,
-  Link,
-  Hr,
-} from "@react-email/components";
+import { Column, Link, Row, Section, Text } from "@react-email/components";
 
 interface UpcomingProgramsSectionProps {
   upcomingPrograms: UpcomingProgram[];
@@ -18,7 +10,7 @@ export const UpcomingProgramsSection = ({
   upcomingPrograms,
 }: UpcomingProgramsSectionProps) => {
   return (
-    <Section className=" p-4 ">
+    <Section className="p-4">
       <Row className="border-l-[32px] bg-[#f5f5f5] border-solid border-[#Dfd8e9] bg-4 mb-4 inline-block border-l-[#F3BC30]">
         <Column className="p-4 ">
           <Text className="text-black/50 font-bold uppercase mb-3 p-0">

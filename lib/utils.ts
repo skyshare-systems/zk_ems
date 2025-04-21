@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { AuthenticationError } from "./exceptions";
 import { z } from "zod";
 import { fromZonedTime } from "date-fns-tz";
-import { compareAsc, format, parseISO } from "date-fns";
+import { compareAsc, format, isValid, parseISO } from "date-fns";
 import { companyRule, emailTemplates, rules } from "./constant";
 import { render } from "@react-email/render";
 
@@ -141,61 +141,66 @@ export function verifyPermission({
   return isAllowed;
 }
 
-export function formatDateRanges(dates: { date: Date }[]): string {
+type InputDate = string | Date;
+type Input = InputDate[] | { date: InputDate }[];
+
+export function formatDateRanges(dates: Input): string {
   if (!dates || dates.length === 0) return "";
 
-  const sortedDates = dates
-    .map(d => d.date)
-    .sort((a, b) => a.getTime() - b.getTime());
+  // Normalize and parse all dates
+  const dateObjects = dates.map(d => {
+    const rawDate = typeof d === "object" && "date" in d ? d.date : d;
+    const parsed = typeof rawDate === "string" ? parseISO(rawDate) : rawDate;
+    return isValid(parsed) ? parsed : null;
+  }).filter((d): d is Date => d instanceof Date);
 
-  const ranges: Date[][] = [];
-  let tempGroup: Date[] = [sortedDates[0]];
+  if (dateObjects.length === 0) return "";
 
+  // Sort by time
+  const sortedDates = dateObjects.sort((a, b) => a.getTime() - b.getTime());
+
+  const groups: Date[][] = [];
+  let currentGroup: Date[] = [sortedDates[0]];
   const oneDay = 86400000;
 
   for (let i = 1; i < sortedDates.length; i++) {
     const prev = sortedDates[i - 1];
-    const current = sortedDates[i];
-    const diff = current.getTime() - prev.getTime();
+    const curr = sortedDates[i];
+    const diff = curr.getTime() - prev.getTime();
 
-    if (diff === oneDay || (current.getMonth() === prev.getMonth() && diff <= 7 * oneDay)) {
-      tempGroup.push(current);
+    if (diff <= 7 * oneDay) {
+      currentGroup.push(curr);
     } else {
-      ranges.push(tempGroup);
-      tempGroup = [current];
+      groups.push(currentGroup);
+      currentGroup = [curr];
     }
   }
+  groups.push(currentGroup);
 
-  ranges.push(tempGroup); // Push the last group
+  const formatted = groups.map(group => {
+    if (group.length === 1) {
+      return format(group[0], "MMMM d, yyyy");
+    }
 
-  const formattedRanges = ranges.map(group => formatGroup(group));
-  return formattedRanges.join(" • ");
-}
+    const sameMonth = group.every(d => d.getMonth() === group[0].getMonth() && d.getFullYear() === group[0].getFullYear());
+    const start = group[0];
+    const end = group[group.length - 1];
 
-function formatGroup(dates: Date[]): string {
-  const sameMonth = dates.every(d => d.getMonth() === dates[0].getMonth());
-  const sameYear = dates.every(d => d.getFullYear() === dates[0].getFullYear());
+    const useAmpersand = end.getTime() - start.getTime() > 7 * oneDay;
 
-  if (dates.length === 1) {
-    return format(dates[0], "MMMM d, yyyy");
-  }
+    if (useAmpersand && sameMonth) {
+      const days = group.map(d => format(d, "d")).join(" & ");
+      return `${format(start, "MMMM")} ${days}, ${format(start, "yyyy")}`;
+    }
 
-  // More than 7 days apart? Use & notation
-  const isNonConsecutive = dates.some((d, i, arr) => {
-    if (i === 0) return false;
-    return d.getTime() - arr[i - 1].getTime() > 86400000;
+    if (!useAmpersand) {
+      const endFormat = sameMonth ? "d, yyyy" : "MMMM d, yyyy";
+      return `${format(start, "MMMM d")}-${format(end, endFormat)}`;
+    }
+
+    // Fallback for different months and more than a week apart
+    return group.map(d => format(d, "MMMM d, yyyy")).join(" • ");
   });
 
-  if (isNonConsecutive) {
-    const parts = dates.map(d =>
-      format(d, sameMonth ? "d" : "MMMM d")
-    );
-    return `${format(dates[0], "MMMM")} ${parts.join(" & ")}, ${dates[0].getFullYear()}`;
-  }
-
-  // Consecutive range within a week
-  return `${format(dates[0], "MMMM d")}-${format(
-    dates[dates.length - 1],
-    sameMonth ? "d, yyyy" : "MMMM d, yyyy"
-  )}`;
+  return formatted.join(" • ");
 }

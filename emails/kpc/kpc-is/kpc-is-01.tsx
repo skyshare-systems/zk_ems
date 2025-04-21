@@ -1,40 +1,117 @@
-import { IconText } from "@/emails/skyshare/jpl/jpl";
-import { cn } from "@/lib/utils";
-import { Articles } from "@/store/create-email";
+import { formatDateRanges } from "@/lib/utils";
+import {
+  Article,
+  Cta,
+  FromThePeople,
+  Post,
+  Product,
+  Service,
+  UpcomingProgram,
+} from "@/store/create-email";
 import {
   Body,
-  Button,
   Column,
   Container,
   Font,
   Head,
+  Heading,
+  Hr,
   Html,
   Img,
+  Link,
   Markdown,
   Row,
   Section,
   Tailwind,
   Text,
-  Hr,
-  Link,
 } from "@react-email/components";
+import Footer from "./footer";
+import FromThePeopleCard from "./from-the-people";
+import Header from "./header";
+import { OurRecentPosts } from "./posts";
+import { ProductCards } from "./products";
+import { OurServices } from "./services";
+import { UpcomingProgramsSection } from "./upcoming-section";
 
 interface KPCIS01TemplateProps {
   body: string;
-  articles: Articles[];
+  articles: Article[];
+  cta: Cta;
+  fromThePeople: FromThePeople[];
   isTemplate: boolean;
+  upcomingPrograms: UpcomingProgram[];
 }
 
 export const KPCIS01Template = ({
   body,
   articles = [
     {
-      heading: "Article 1",
-      content: "This is the content of article 1.",
       articleLink: "#",
+      heading: "Article 1",
+      image: "https://new.email/static/app/placeholder.png",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    },
+    {
+      articleLink: "#",
+      heading: "Article 1",
+      image: "https://new.email/static/app/placeholder.png",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    },
+    {
+      articleLink: "#",
+      heading: "Article 1",
+      image: "https://new.email/static/app/placeholder.png",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    },
+  ],
+  cta,
+  fromThePeople = [
+    {
+      review:
+        "This workshop transformed my understanding of finance! The insights I gained were invaluable for my leadership role. Highly recommend!",
+      reviewerImage:
+        "https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/placeholder.png",
+      reviewerName: "John Doe",
+      rating: 5,
+    },
+    {
+      review:
+        "This workshop transformed my understanding of finance! The insights I gained were invaluable for my leadership role. Highly recommend!",
+      reviewerImage:
+        "https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/placeholder.png",
+      reviewerName: "John Doe",
+      rating: 5,
     },
   ],
   isTemplate,
+  upcomingPrograms = [
+    {
+      dates: [
+        { date: new Date("2023-03-26") },
+        { date: new Date("2023-03-27") },
+        { date: new Date("2023-03-28") },
+        { date: new Date("2023-05-17") },
+        { date: new Date("2023-05-24") },
+      ],
+      externalLink: "#",
+      title: "Program 1",
+    },
+    {
+      dates: [
+        {
+          date: new Date("2023-10-01"),
+        },
+        {
+          date: new Date("2023-10-02"),
+        },
+      ],
+      externalLink: "#",
+      title: "Program 1",
+    },
+  ],
 }: KPCIS01TemplateProps) => {
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
@@ -77,16 +154,17 @@ export const KPCIS01Template = ({
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-poppins bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
+          <Container className="border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
             {/* HEADER */}
-            <Section className="my-0 mx-auto w-full h-[86px] max-h-[86px] object-cover bg-[url('https://kpc-is.sgp1.cdn.digitaloceanspaces.com/template-header.png')] bg-cover bg-center bg-no-repeat"></Section>
+
+            <Header />
 
             {/* BODY */}
             <Section
               className="text-black responsive-padding p-4 [&>img]:max-w-[640px] w-full"
               style={{
                 fontFamily:
-                  "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                  "Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
               }}
             >
               {isTemplate ? (
@@ -111,27 +189,48 @@ export const KPCIS01Template = ({
                   >
                     {modifiedBody ?? "# KPC IS"}
                   </Markdown>
+
+                  {cta && cta.link && cta.text && (
+                    <div className="my-[32px]">
+                      <Link
+                        href={cta.link}
+                        className="bg-[#F3BC30] rounded-[8px] px-[16px] py-[12px] text-black box-border inline-block font-bold"
+                      >
+                        {cta.text}
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </Section>
 
-            {/* {articles && articles.length > 0 && (
-              <Section
-                className="w-full p-4 mx-auto text-black"
-                style={{
-                  maxWidth: "640px",
-                  width: "100%",
-                }}
+            <Section className="text-center p-4">
+              <Heading
+                as="h5"
+                className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
               >
+                From the people
+              </Heading>
+
+              {fromThePeople.map((people) => (
+                <FromThePeopleCard key={people.reviewerName} people={people} />
+              ))}
+            </Section>
+
+            <Section
+              className="w-full p-4 mx-auto text-black"
+              style={{
+                maxWidth: "640px",
+                width: "100%",
+              }}
+            >
+              <div className="bg-black/[.04] p-4 rounded-lg">
+                <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
+                  ARTICLE
+                </Text>
                 {articles.map((article) => (
-                  <Row
-                    key={article.heading}
-                    className="bg-black/[.04] p-4 rounded-lg"
-                  >
+                  <Row key={article.heading} className="mt-[24px]">
                     <Column>
-                      <Text className="text-black/[.5] text-[12px] uppercase font-bold">
-                        ARTICLE
-                      </Text>
                       <Text className="text-[20px] font-semibold break-words">
                         {article.heading}
                       </Text>
@@ -147,281 +246,52 @@ export const KPCIS01Template = ({
                     </Column>
                   </Row>
                 ))}
-              </Section>
-            )} */}
-
-            {articles && articles.length > 0 && (
-              <Section
-                className="w-full p-4 mx-auto text-black"
-                style={{
-                  maxWidth: "640px",
-                  width: "100%",
-                }}
-              >
-                {articles.map((article) => (
-                  <Row
-                    key={article.heading}
-                    className="bg-black/[.04] p-4 rounded-lg"
-                  >
-                    <Column valign="top" className="pr-[16px] w-[60px]">
-                      <Text className="m-0 font-bold text-center text-gray-500">
-                        JUN
-                      </Text>
-                      <Hr className="my-[4px]" />
-                      <Text className="text-center font-bold text-[20px] m-0">
-                        23
-                      </Text>
-                    </Column>
-
-                    <Column valign="top" className="pr-[16px] w-[120px]">
-                      <Img
-                        src="https://new.email/static/app/placeholder.png"
-                        className="w-full h-auto object-cover rounded-[4px]"
-                        alt="Event image"
-                      />
-                    </Column>
-
-                    <Column valign="top">
-                      <Text className="font-bold text-[18px] m-0">
-                        Placeholder Headline
-                      </Text>
-                      <Text className="text-gray-700 my-[8px]">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. A hic aperiam ducimus tempora sequi deleniti
-                        porro? Voluptatum rerum vero eos!
-                      </Text>
-                      <Hr className="my-[8px]" />
-                      <Link
-                        href="#"
-                        className="font-medium text-blue-600 no-underline"
-                      >
-                        Read More
-                      </Link>
-                    </Column>
-                  </Row>
-                ))}
-              </Section>
-            )}
-
-            <Section className="relative bg-[url('https://kpc-is.sgp1.cdn.digitaloceanspaces.com/footer_bg.png')] bg-cover bg-center bg-no-repeat p-8">
-              <div style={{ color: "white !important" }}>
-                <Row align="center">
-                  <Column className="text-center">
-                    <Text
-                      style={{
-                        verticalAlign: "center",
-                        background:
-                          "linear-gradient(90deg, #D5BC3B 0%, #FAE696 48%, #D5BC3B 100%)",
-                        backgroundClip: "text",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        fontSize: "16px",
-                      }}
-                      className="inline-flex self-center"
-                    >
-                      Breakthrough with
-                    </Text>
-                    <Img
-                      src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/footer-logo.png`}
-                      width="100%"
-                      height="100%"
-                      alt="Skyshare Labs"
-                      className="ml-4 inline self-center w-[92px] h-[35px] object-cover mx-auto"
-                      style={{
-                        verticalAlign: "middle",
-                        marginLeft: "16px",
-                      }}
-                    />
-                  </Column>
-                </Row>
-                <Row>
-                  <Column align="center">
-                    <Link
-                      href="#"
-                      style={{
-                        display: "inline-flex",
-                      }}
-                    >
-                      <Img
-                        src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/youtube.png`}
-                        width="32"
-                        height="32"
-                        alt="Skyshare Labs"
-                        className="object-cover w-8 mx-auto"
-                      />
-                    </Link>
-                    <Link
-                      href="#"
-                      style={{
-                        display: "inline-flex",
-                        marginLeft: "20px",
-                      }}
-                    >
-                      <Img
-                        src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/facebook.png`}
-                        width="32"
-                        height="32"
-                        alt="Skyshare Labs"
-                        className="object-cover w-8 mx-auto"
-                      />
-                    </Link>
-                    <Link
-                      href="#"
-                      style={{
-                        display: "inline-flex",
-                        marginLeft: "20px",
-                      }}
-                    >
-                      <Img
-                        src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/tiktok.png`}
-                        width="32"
-                        height="32"
-                        alt="Skyshare Labs"
-                        className="object-cover w-8 mx-auto"
-                      />
-                    </Link>
-                  </Column>
-                </Row>
-                <Row align="center">
-                  <Column className="text-center" align="center">
-                    <tr>
-                      <td align="center">
-                        <table
-                          border={0}
-                          cellPadding="0"
-                          cellSpacing="0"
-                          style={{ margin: "8px 0", maxWidth: "604px" }}
-                        >
-                          <tr>
-                            <td align="center">
-                              <table border={0} cellPadding="0" cellSpacing="0">
-                                <tr>
-                                  <td
-                                    valign="middle"
-                                    style={{ paddingRight: "8px" }}
-                                  >
-                                    <Img
-                                      src="https://kpc-is.sgp1.cdn.digitaloceanspaces.com/location-03.png"
-                                      width="16"
-                                      height="16"
-                                      alt="Website"
-                                      style={{ display: "block" }}
-                                    />
-                                  </td>
-                                  <td valign="middle">
-                                    <Text className="m-0 text-white/[.72] leading-[1rem] tracking-normal">
-                                      3F ZK Summit, In Arca Strip Commercial
-                                      Bldg., McArthur Highway, Corner Action
-                                      Drive Center Balubaran Dalandanan,
-                                      Valenzuela, Philippines, 1443
-                                    </Text>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td align="center">
-                        <table
-                          border={0}
-                          cellPadding="0"
-                          cellSpacing="0"
-                          style={{ margin: "8px 0" }}
-                        >
-                          <tr>
-                            <td align="center">
-                              <table border={0} cellPadding="0" cellSpacing="0">
-                                <tr>
-                                  <td
-                                    valign="middle"
-                                    style={{ paddingRight: "8px" }}
-                                  >
-                                    <Img
-                                      src="https://kpc-is.sgp1.cdn.digitaloceanspaces.com/location-03.png"
-                                      width="16"
-                                      height="16"
-                                      alt="Website"
-                                      style={{ display: "block" }}
-                                    />
-                                  </td>
-                                  <td valign="middle">
-                                    <Link className="m-0 no-underline text-white/[.72] leading-[1rem] tracking-normal">
-                                      https://merchant.kpc-express.com
-                                    </Link>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center">
-                        <table
-                          border={0}
-                          cellPadding="0"
-                          cellSpacing="0"
-                          style={{ margin: "8px 0" }}
-                        >
-                          <tr>
-                            <td align="center">
-                              <table border={0} cellPadding="0" cellSpacing="0">
-                                <tr>
-                                  <td
-                                    valign="middle"
-                                    style={{ paddingRight: "8px" }}
-                                  >
-                                    <Img
-                                      src="https://kpc-is.sgp1.cdn.digitaloceanspaces.com/location-03.png"
-                                      width="16"
-                                      height="16"
-                                      alt="Website"
-                                      style={{ display: "block" }}
-                                    />
-                                  </td>
-                                  <td valign="middle">
-                                    <Text className="m-0 text-white/[.72] leading-[1rem] tracking-normal">
-                                      0995-775-7124
-                                    </Text>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </Column>
-                </Row>
-                <Hr />
-                <Row className="footer-row">
-                  <Column className="footer-column">
-                    <Img
-                      src="https://kpc-is.sgp1.cdn.digitaloceanspaces.com/copyright.png"
-                      width="16"
-                      height="16"
-                      alt="Skyshare Labs"
-                      style={{ verticalAlign: "middle" }}
-                      className="inline-flex object-cover w-4 mx-auto mr-2"
-                    />
-                    <Text
-                      className="inline-flex text-white/50"
-                      style={{ marginRight: "20px" }}
-                    >
-                      KPC Importation Services {new Date().getFullYear()}
-                    </Text>
-                    <Text className="inline-flex text-white/50">
-                      All rights reserved.
-                    </Text>
-                  </Column>
-                </Row>
               </div>
             </Section>
+
+            {/* UPCOMING PROGRAMS */}
+            <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+
+            {/* Discover Our Products */}
+            <Section className="p-4 mx-auto w-full">
+              <Row align="center" className="mb-[16px]">
+                <Column align="center">
+                  <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
+                    Discover Our Products
+                  </Text>
+                </Column>
+              </Row>
+
+              <ProductCards products={defaultProducts} />
+            </Section>
+
+            {/* OUR SERVICES */}
+            <Section className="p-4">
+              <Row align="center" className="mb-[16px]">
+                <Column align="center">
+                  <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                    Our Services
+                  </Text>
+                </Column>
+              </Row>
+
+              <OurServices services={defaultServices} />
+            </Section>
+
+            {/* Our Recent Posts */}
+            <Section className="p-4">
+              <Row align="center" className="mb-[20px]">
+                <Column align="center">
+                  <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                    Our Recent Posts
+                  </Text>
+                </Column>
+              </Row>
+
+              <OurRecentPosts posts={defaultPosts} />
+            </Section>
+
+            <Footer />
           </Container>
         </Body>
       </Tailwind>
@@ -430,3 +300,109 @@ export const KPCIS01Template = ({
 };
 
 export default KPCIS01Template;
+
+const defaultProducts: Product[] = [
+  {
+    name: "Wireless Headphones",
+    description:
+      "Premium noise-cancelling headphones with 30-hour battery life.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+  {
+    name: "Smart Watch",
+    description:
+      "Track your fitness and stay connected with this stylish smartwatch.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+  {
+    name: "Portable Speaker",
+    description: "Waterproof Bluetooth speaker with immersive 360° sound.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+  {
+    name: "Wireless Charger",
+    description:
+      "Fast wireless charging pad compatible with all Qi-enabled devices.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+  {
+    name: "Wireless Charger",
+    description:
+      "Fast wireless charging pad compatible with all Qi-enabled devices.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+  {
+    name: "Wireless Charger",
+    description:
+      "Fast wireless charging pad compatible with all Qi-enabled devices.",
+    image: "https://new.email/static/app/placeholder.png",
+    link: "#",
+  },
+];
+
+const defaultServices: Service[] = [
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    title: "Smart Savings Account",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+    link: "#",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    title: "Investment Growth Plan",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+    link: "#",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    title: "Retirement Wealth Builder",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+    link: "#",
+  },
+];
+
+const defaultPosts: Post[] = [
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+  {
+    image: "https://new.email/static/app/placeholder.png",
+    description:
+      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
+  },
+];

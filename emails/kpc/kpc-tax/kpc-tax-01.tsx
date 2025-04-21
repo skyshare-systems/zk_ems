@@ -32,6 +32,7 @@ import { OurRecentPosts } from "./posts";
 import { ProductCards } from "./products";
 import { OurServices } from "./services";
 import { UpcomingProgramsSection } from "./upcoming-section";
+import ArticleCard from "./article";
 
 interface KPCTAX01TemplateProps {
   body: string;
@@ -230,30 +231,12 @@ export const KPCTAX01Template = ({
                 </Text>
 
                 {articles.map((article, index) => (
-                  <Row key={article.heading}>
-                    <Img
-                      src={article.image}
-                      width={"100%"}
-                      height={128}
-                      className="h-32 w-full object-cover rounded-lg"
-                    />
-                    <Text className="text-[20px] font-semibold break-words">
-                      {article.heading}
-                    </Text>
-                    <Text className="text-[14px] break-words">
-                      {article.content}
-                    </Text>
-                    <Link
-                      href={article.articleLink}
-                      className=" block mt-[8px] w-fit bg-[#F3BC30] px-4 py-2 text-[14px] font-bold text-black rounded-lg"
-                    >
-                      Read Article
-                    </Link>
-
+                  <>
+                    <ArticleCard article={article} key={index} />
                     {index !== articles.length - 1 && (
                       <Hr className="bg-[#00000029] h-[1px] my-4" />
                     )}
-                  </Row>
+                  </>
                 ))}
               </div>
             </Section>

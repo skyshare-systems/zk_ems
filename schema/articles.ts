@@ -9,6 +9,8 @@ import { z } from "zod";
         content: z.string().min(1, {
           message: "Content is required",
         }),
+        date: z.coerce.date().optional(),
+        image: z.string().optional(),
         articleLink: z
           .string()
           .refine(

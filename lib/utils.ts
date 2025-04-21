@@ -9,6 +9,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { compareAsc, format, isValid, parseISO } from "date-fns";
 import { companyRule, emailTemplates, rules } from "./constant";
 import { render } from "@react-email/render";
+import { useCreateEmailStore } from "@/store/create-email";
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get local time zone
 
@@ -148,11 +149,13 @@ export function formatDateRanges(dates: Input): string {
   if (!dates || dates.length === 0) return "";
 
   // Normalize and parse all dates
-  const dateObjects = dates.map(d => {
-    const rawDate = typeof d === "object" && "date" in d ? d.date : d;
-    const parsed = typeof rawDate === "string" ? parseISO(rawDate) : rawDate;
-    return isValid(parsed) ? parsed : null;
-  }).filter((d): d is Date => d instanceof Date);
+  const dateObjects = dates
+    .map((d) => {
+      const rawDate = typeof d === "object" && "date" in d ? d.date : d;
+      const parsed = typeof rawDate === "string" ? parseISO(rawDate) : rawDate;
+      return isValid(parsed) ? parsed : null;
+    })
+    .filter((d): d is Date => d instanceof Date);
 
   if (dateObjects.length === 0) return "";
 
@@ -177,19 +180,23 @@ export function formatDateRanges(dates: Input): string {
   }
   groups.push(currentGroup);
 
-  const formatted = groups.map(group => {
+  const formatted = groups.map((group) => {
     if (group.length === 1) {
       return format(group[0], "MMMM d, yyyy");
     }
 
-    const sameMonth = group.every(d => d.getMonth() === group[0].getMonth() && d.getFullYear() === group[0].getFullYear());
+    const sameMonth = group.every(
+      (d) =>
+        d.getMonth() === group[0].getMonth() &&
+        d.getFullYear() === group[0].getFullYear(),
+    );
     const start = group[0];
     const end = group[group.length - 1];
 
     const useAmpersand = end.getTime() - start.getTime() > 7 * oneDay;
 
     if (useAmpersand && sameMonth) {
-      const days = group.map(d => format(d, "d")).join(" & ");
+      const days = group.map((d) => format(d, "d")).join(" & ");
       return `${format(start, "MMMM")} ${days}, ${format(start, "yyyy")}`;
     }
 
@@ -199,8 +206,29 @@ export function formatDateRanges(dates: Input): string {
     }
 
     // Fallback for different months and more than a week apart
-    return group.map(d => format(d, "MMMM d, yyyy")).join(" • ");
+    return group.map((d) => format(d, "MMMM d, yyyy")).join(" • ");
   });
 
   return formatted.join(" • ");
 }
+
+export const colorizeButton = (companyName: string) => {
+  const colorMap: Record<string, string> = {
+    "InnovatEd Business Solutions": "#FFB800",
+    KPC: "#FFB800",
+    "KPC Logistics": "#FFB800",
+    "KPC Express": "#FFB800",
+    "KPC Cargo": "#FFB800",
+    "KPC Freight": "#FFB800",
+    "KPC Supply Chain": "#FFB800",
+    "KPC Shipping": "#FFB800",
+  };
+
+  return colorMap[companyName] || "#000000"; // Default color if company name not found
+};
+
+export const shortenMonth = (date: Date) => {
+  const month = format(date, "MMMM");
+  const shortMonth = month.substring(0, 3).toUpperCase();
+  return shortMonth;
+};

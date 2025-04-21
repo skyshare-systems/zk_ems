@@ -1,3 +1,4 @@
+import IBA01Template from "@/emails/iba/iba-01/iba01";
 import IBS01Template from "@/emails/ibs/ibs-01/ibs01";
 import KPC01Template, { KPCIS01Template } from "@/emails/kpc/kpc-is/kpc-is-01";
 import KPCPA01Template from "@/emails/kpc/kpc-pa/kpc-pa-01";
@@ -21,13 +22,16 @@ export interface EmailTemplate {
   templateId: string;
 }
 
-type companies =
+export type companies =
   | "Skyshare Labs"
   | "IBS"
   | "KPC IS"
   | "KPC PA"
   | "KPC TAX"
-  | "Your Skin";
+  | "Your Skin"
+  | "InnovatEd Business Academy";
+
+
 export type rules =
   | "cta_button"
   | "from_the_people"
@@ -78,6 +82,11 @@ export const emailTemplates: EmailTemplate[] = [
     template: YSOIA01Template,
     templateId: "cm9ifit570003ntuks5sgl1n4",
   },
+  {
+    company: "InnovatEd Business Academy",
+    template: IBA01Template,
+    templateId: "cm9qshnfd00025exc7xh3jwvr",
+  },
 ];
 
 export const companyRule: CompanyRule[] = [
@@ -87,9 +96,13 @@ export const companyRule: CompanyRule[] = [
         id: "cm8fnd9h80000220mva1ldp04",
         name: "KPC IS",
       },
-       {
+      {
         id: "cm8mt25yg0000ykq0qt4fiuxf",
         name: "KPC TAX",
+      },
+      {
+        id: "cm9qsgh9y00015excd3o4dd61",
+        name: "InnovatEd Business Academy",
       },
     ],
     rules: [

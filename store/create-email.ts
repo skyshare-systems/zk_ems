@@ -25,7 +25,7 @@ export interface Article {
   heading: string;
   content: string;
   articleLink: string;
-  [key: string]: string; // Dates, Image
+  [key: string]: unknown; // Dates, Image
 }
 
 export interface UpcomingProgram {
@@ -55,6 +55,7 @@ export interface Service {
 
 export interface Post {
   image: string;
+  link:string;
   description: string;
 }
 
@@ -72,6 +73,9 @@ interface CreateEmailState {
   cta: Cta;
   fromThePeople: FromThePeople[];
   upcomingPrograms: UpcomingProgram[];
+  products: Product[];
+  services: Service[];
+  posts: Post[];
 }
 
 interface CreateEmailActions {
@@ -88,6 +92,9 @@ interface CreateEmailActions {
   setCta: (cta: Cta) => void;
   setFromThePeople: (fromThePeople: FromThePeople[]) => void;
   setUpcomingPrograms: (upcomingPrograms: UpcomingProgram[]) => void;
+  setProducts: (products: Product[]) => void;
+  setServices: (services: Service[]) => void;
+  setPosts: (posts: Post[]) => void;
   reset: () => void;
 }
 
@@ -110,6 +117,9 @@ const initialState: CreateEmailState = {
   },
   fromThePeople: [],
   upcomingPrograms: [],
+  products: [],
+  services: [],
+  posts: [],
 };
 
 export const useCreateEmailStore = create<
@@ -122,6 +132,9 @@ export const useCreateEmailStore = create<
       setCta: (cta) => set({ cta }),
       setFromThePeople: (fromThePeople) => set({ fromThePeople }),
       setUpcomingPrograms: (upcomingPrograms) => set({ upcomingPrograms }),
+      setProducts: (products) => set({ products }),
+      setServices: (services) => set({ services }),
+      setPosts: (posts) => set({ posts }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
       setEditorData: (data) => set({ editorData: data }),

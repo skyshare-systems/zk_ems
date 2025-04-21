@@ -8,6 +8,9 @@ import CtaEditor from "./cta-editor";
 import FromThePeopleEditor from "./from-the-people-editor";
 import { Mdx } from "./mdx/InitializedMDXEditor";
 import UpcomingProgramEditor from "./upcoming-program-editor";
+import ProductsEditor from "./product-editor";
+import OurServicesEditor from "./our-services-editor";
+import RecentPostsEditor from "./recent-posts-editor";
 // import EditorPreview from "./mdx/preview";
 // import Editor from "./mdx/editor";
 const EmailEditor = ({
@@ -86,6 +89,9 @@ const EmailEditor = ({
             <FromThePeopleEditor />
             <ArticleEditor />
             <UpcomingProgramEditor />
+            <ProductsEditor />
+            <OurServicesEditor />
+            <RecentPostsEditor />
           </div>
         </>
       )}

@@ -1,8 +1,8 @@
-import { verifyPermission } from "@/lib/utils";
+import { cn, verifyPermission } from "@/lib/utils";
 import { ArticleSchema } from "@/schema/articles";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, X } from "lucide-react";
+import { CalendarIcon, PlusIcon, X } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,6 +17,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
 
 const ArticleEditor = () => {
   const { selectedTemplate, setArticles, articles } = useCreateEmailStore();
@@ -36,7 +39,6 @@ const ArticleEditor = () => {
 
   useEffect(() => {
     setArticles([...watchArticles]);
-
     form.trigger();
   }, [watchArticles, setArticles, form]);
 
@@ -152,6 +154,72 @@ const ArticleEditor = () => {
                         </FormControl>
                         <FormMessage />
                       </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`articles.${index}.image`}
+                  render={({ field }) => (
+                    <FormItem className="w-full flex items-center gap-4 p-2">
+                      <FormLabel className="max-w-[96px] w-full shrink-0">
+                        Article Image
+                      </FormLabel>
+                      <div className="flex flex-col gap-2 w-full">
+                        <FormControl>
+                          <Input
+                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                            placeholder="https://picsum.photos/200/300"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`articles.${index}.date`}
+                  render={({ field }) => (
+                    <FormItem className="w-full flex items-center gap-4 p-2">
+                      <FormLabel className="max-w-[96px] w-full shrink-0">
+                        Date
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal  border-black/[.08] bg-transparent",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

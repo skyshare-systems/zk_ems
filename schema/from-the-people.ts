@@ -9,9 +9,7 @@ import { z } from "zod";
         reviewerImage: z.string().min(1, {
           message: "Reviewer image is required",
         }),
-        rating: z.string().min(1, {
-          message: "Rating is required",
-        }),
+        rating: z.coerce.number().optional(),
         review: z.string().min(1, {
           message: "Review is required",
         }),

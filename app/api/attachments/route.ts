@@ -34,7 +34,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       where: { company: { id: companyId } },
     });
 
-    console.log({bucketCredentials})
 
 
     if (!bucketCredentials) {
@@ -68,10 +67,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     const file: any = files[0];
 
-    console.log({
-      bucketName
-    })
-
+  
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: filename,
@@ -94,7 +90,6 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     return NextResponse.json({ filepath: fileUrl });
   } catch (error) {
-    console.log({error});
     return NextResponse.json(createErrorMessage(error), {
       status: 500,
     });

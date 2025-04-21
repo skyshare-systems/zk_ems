@@ -283,7 +283,7 @@ export const AS01Template = ({
             </Section>
 
             {/* FROM THE PEOPLE */}
-            {/* <Section>
+            <Section>
               <Row align="center" className="mb-[20px]">
                 <Column align="center">
                   <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
@@ -295,10 +295,10 @@ export const AS01Template = ({
               {fromThePeople.map((people, index) => (
                 <FromThePeopleCard people={people} key={index} />
               ))}
-            </Section> */}
+            </Section>
 
             {/* Articles */}
-            {/* <Section className="p-4">
+            <Section className="p-4">
               <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
                 Articles
               </Text>
@@ -306,7 +306,7 @@ export const AS01Template = ({
               {articles.map((article, index) => (
                 <ArticleCard article={article} key={index} />
               ))}
-            </Section> */}
+            </Section>
 
             {/* Upcoming Programs */}
             <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />

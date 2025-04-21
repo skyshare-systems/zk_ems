@@ -52,7 +52,6 @@ const Templates = () => {
     setTitle(e.target.value);
   }
 
-  console.log({ selectedTemplate });
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -60,7 +59,7 @@ const Templates = () => {
         <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
           <div className="flex items-center gap-4">
             <SidebarTrigger className="" />
-            <p className="ty-subheading ">Brand Email Templates</p>
+            <p className="ty-subheading ">Brand Email Templates</p>o
           </div>
           <IconInput
             startIcon={<Search size={16} />}

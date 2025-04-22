@@ -5,6 +5,7 @@ import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
 import { createApiResponse, createErrorMessage, getTemplateLookup } from "@/lib/utils";
 import React from "react";
 import { emailTemplates } from "@/lib/constant";
+import { HttpStatusCode } from "axios";
 
 // Request body interface
 export interface GenerateTemplateRequest {
@@ -35,7 +36,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(createErrorMessage(error), { status: 500 });
+    console.log({error})
+    return NextResponse.json(createErrorMessage(error), { status: HttpStatusCode.BadRequest });
   }
 });

@@ -10,7 +10,6 @@ import {
 } from "@/store/create-email";
 import {
   Body,
-  Button,
   Column,
   Container,
   Font,
@@ -25,13 +24,13 @@ import {
   Text,
 } from "@react-email/components";
 import { ArticleCard } from "./article";
-import { config } from "./config";
 import { FromThePeopleCard } from "./from-the-people";
-import { chunkArray } from "@/emails/utils";
-import { UpcomingProgramCard } from "./upcoming-section";
+import { OurRecentPosts } from "./posts";
 import { ProductCards } from "./products";
 import { OurServices } from "./services";
-import { OurRecentPosts } from "./posts";
+import { UpcomingProgramCard } from "./upcoming-section";
+import Header from "./header";
+import Footer from "./footer";
 
 interface IBS01TemplateProps {
   body: string;
@@ -58,7 +57,7 @@ export const IBA01Template = ({
 }: IBS01TemplateProps) => {
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
-    '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
+    '<img style="width:100%; border-radius:12px" $1>',
   );
 
   return (
@@ -90,15 +89,7 @@ export const IBA01Template = ({
         <Body className="font-inter bg-black/20 my-auto mx-auto px-2 py-[20px]">
           <Container className="border rounded-lg overflow-hidden text-white bg-[#f5f7f9] border-solid border-[#eaeaea]  mx-auto max-w-[680px] w-full p-4">
             {/* HEADER */}
-            <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
-              <Img
-                src={`https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/header.png`}
-                width="100%"
-                height="100%"
-                alt="Skyshare Labs"
-                className="object-cover w-full"
-              />
-            </Section>
+            <Header />
 
             {/* BODY */}
             <Section
@@ -124,9 +115,7 @@ export const IBA01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
-                      maxWidth: "640px",
                       width: "100%",
-                      fontFamily: "Inter",
                     }}
                     markdownCustomStyles={{
                       p: {
@@ -140,7 +129,7 @@ export const IBA01Template = ({
                   <Link
                     href={cta.link}
                     className={cn(
-                      "rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
+                      "bg-[#0E3773] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
                     )}
                   >
                     {cta.text}
@@ -152,7 +141,7 @@ export const IBA01Template = ({
             {/* FROM THE PEOPLE */}
             <Section>
               <Row align="center" className="mb-[20px]">
-                <Column align="center">
+                <Column align="left">
                   <Text
                     style={{
                       borderBottom: "4px solid #dda624",
@@ -204,7 +193,7 @@ export const IBA01Template = ({
             {/* Discover Our Products */}
             <Section>
               <Row align="center" className="mb-[20px]">
-                <Column align="center">
+                <Column align="left">
                   <Text
                     style={{
                       borderBottom: "4px solid #dda624",
@@ -222,7 +211,7 @@ export const IBA01Template = ({
             {/* Our Services */}
             <Section>
               <Row align="center" className="mb-[20px]">
-                <Column align="center">
+                <Column align="left">
                   <Text
                     style={{
                       borderBottom: "4px solid #dda624",
@@ -240,7 +229,7 @@ export const IBA01Template = ({
             {/* Our Recent Posts */}
             <Section>
               <Row align="center" className="mb-[20px]">
-                <Column align="center">
+                <Column align="left">
                   <Text
                     style={{
                       borderBottom: "4px solid #dda624",
@@ -255,150 +244,7 @@ export const IBA01Template = ({
               <OurRecentPosts posts={posts} />
             </Section>
 
-            <Section className="text-center bg-[#09316F] p-8">
-              <Row align="center" className="p-4">
-                <Column className="text-center" align="center">
-                  <Img
-                    src={`https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/logo.png`}
-                    width="64"
-                    height="64"
-                    alt="Skyshare Labs"
-                    className="object-cover w-16 mx-auto mb-3"
-                  />
-
-                  <Container align="center" className="mx-auto mb-3 w-fit">
-                    <Link href="#">
-                      <Img
-                        src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/linkedin.png"
-                        width={"100%"}
-                        height={"100%"}
-                        className="aspect-[1/1] size-8 inline-block mr-[20px]"
-                      />
-                    </Link>
-
-                    <Link href="#">
-                      <Img
-                        src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/instagram.png"
-                        width={"100%"}
-                        height={"100%"}
-                        className="aspect-[1/1] size-8 inline-block mr-[20px]"
-                      />
-                    </Link>
-
-                    <Link href="#">
-                      <Img
-                        src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/youtube.png"
-                        width={"100%"}
-                        height={"100%"}
-                        className="aspect-[1/1] size-8 inline-block mr-[20px]"
-                      />
-                    </Link>
-
-                    <Link href="#">
-                      <Img
-                        src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/facebook.png"
-                        width={"100%"}
-                        height={"100%"}
-                        className="aspect-[1/1] size-8 inline-block mr-[20px]"
-                      />
-                    </Link>
-
-                    <Link href="#">
-                      <Img
-                        src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/tiktok.png"
-                        width={"100%"}
-                        height={"100%"}
-                        className="aspect-[1/1] size-8 inline-block"
-                      />
-                    </Link>
-                  </Container>
-
-                  <Container align="center" className="mx-auto mb-3 w-fit">
-                    <Text
-                      className={cn("")}
-                      style={{
-                        margin: "8px !important",
-                      }}
-                    >
-                      <Img
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="size-[16px] mr-1 inline-block"
-                        src={
-                          "https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/location.png"
-                        }
-                        width={16}
-                        height={16}
-                      />
-                      <span
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="m-0 leading-[1rem] tracking-normal text-white/[.72] "
-                      >
-                        Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas
-                        Center, Pasig
-                      </span>
-                    </Text>
-
-                    <Text
-                      className={cn("")}
-                      style={{
-                        margin: "8px !important",
-                      }}
-                    >
-                      <Img
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="size-[16px] mr-1 inline-block"
-                        src={
-                          "https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/mail.png"
-                        }
-                        width={16}
-                        height={16}
-                      />
-                      <span
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="m-0 leading-[1rem] tracking-normal text-white/[.72] "
-                      >
-                        innovatedsolutionsph@gmail.com
-                      </span>
-                    </Text>
-
-                    <Text
-                      className={cn("")}
-                      style={{
-                        margin: "0 !important",
-                      }}
-                    >
-                      <Img
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="size-[16px] mr-1 inline-block"
-                        src={
-                          "https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/call.png"
-                        }
-                        width={16}
-                        height={16}
-                      />
-                      <span
-                        style={{
-                          verticalAlign: "middle",
-                        }}
-                        className="m-0 leading-[1rem] tracking-normal text-white/[.72]"
-                      >
-                        0927 547 8713
-                      </span>
-                    </Text>
-                  </Container>
-                </Column>
-              </Row>
-            </Section>
+            <Footer />
           </Container>
         </Body>
       </Tailwind>

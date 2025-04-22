@@ -4,11 +4,12 @@ import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { ImageIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, colorizeButton } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { useCompanyStore } from "@/store/company";
 import { companyConfig } from "@/config/company";
+import slugify from "slugify";
 
 type Props = {
   onUploadComplete: (url: string) => void;
@@ -47,7 +48,10 @@ const ImageUploader = ({ onUploadComplete }: Props) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("filename", file.name);
+      formData.append(
+        "filename",
+        slugify(file.name, { lower: true, replacement: "_" }),
+      );
       formData.append("companyId", company.id);
 
       const res = await fetch("/api/attachments", {
@@ -78,13 +82,14 @@ const ImageUploader = ({ onUploadComplete }: Props) => {
     setUploadedUrl(null);
   };
 
+  if (!company) return null;
+
   return (
     <>
       <Button
         className={cn(
-          companyConfig.find((c) => c.id === company?.id)?.config
-            .buttonColor as string,
-          " shadow-none  px-3 py-2 hover:bg-opacity-90",
+          colorizeButton(company.name),
+          "shadow-none  px-3 py-2 hover:bg-opacity-90",
         )}
         onClick={() => setOpenImageDialog(true)}
       >
@@ -143,7 +148,7 @@ const ImageUploader = ({ onUploadComplete }: Props) => {
 
           <Button
             disabled={!uploadedUrl}
-            className="w-full bg-gold"
+            className={cn("w-full text-white", colorizeButton(company.name))}
             onClick={handleUseImage}
           >
             Use Image

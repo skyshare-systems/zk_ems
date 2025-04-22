@@ -34,14 +34,13 @@ export const UpcomingProgramCard = ({
           </Text>
         </Column>
         <Column className="ml-[16px]" valign="middle" align="left">
-          <Container className="bg-[#0E3773] rounded-2xl p-4">
-            <Link
-              href={externalLink}
-              className="font-bold text-center text-white"
-            >
-              {title}
+          <div className="bg-[#0E3773] rounded-2xl p-4 h-fit">
+            <Link href={externalLink} className="">
+              <Text className="font-bold text-center text-white p-0 m-0">
+                {title}
+              </Text>
             </Link>
-          </Container>
+          </div>
         </Column>
       </Row>
     </Section>

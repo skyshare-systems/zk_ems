@@ -1,5 +1,8 @@
+import AS01Template from "@/emails/avian-summit/as01/as01";
 import IBA01Template from "@/emails/iba/iba-01/iba01";
 import IBS01Template from "@/emails/ibs/ibs-01/ibs01";
+import KLV01Template from "@/emails/klv/klv01/klv01";
+import KPCFAI01Template from "@/emails/kpc/kpc-fai/kpc-fai-01";
 import KPC01Template, { KPCIS01Template } from "@/emails/kpc/kpc-is/kpc-is-01";
 import KPCPA01Template from "@/emails/kpc/kpc-pa/kpc-pa-01";
 import KPCTAX01Template from "@/emails/kpc/kpc-tax/kpc-tax-01";
@@ -23,14 +26,16 @@ export interface EmailTemplate {
 }
 
 export type companies =
+  | "InnovatEd Business Academy"
+  | "YourSkin School Of Integrated Aesthetics"
+  | "Avian Summit Travel Corporation"
+  | "Kids Learning Ville"
+  | "KPC Tax & Accounting Services"
+  | "KPC Importation Services"
+  | "KPC Payment Assistance"
+  | "KPC Finance & Accounting Institute"
   | "Skyshare Labs"
-  | "IBS"
-  | "KPC IS"
-  | "KPC PA"
-  | "KPC TAX"
-  | "Your Skin"
-  | "InnovatEd Business Academy";
-
+  | "InnovatEd Business Solutions";
 
 export type rules =
   | "cta_button"
@@ -53,57 +58,82 @@ interface CompanyRule {
 // REMINDER: Add your email templates here with the template ID from the database.
 export const emailTemplates: EmailTemplate[] = [
   {
+    company: "InnovatEd Business Academy",
+    template: IBA01Template,
+    templateId: "cm9qshnfd00025exc7xh3jwvr",
+  },
+  {
+    company: "YourSkin School Of Integrated Aesthetics",
+    template: YSOIA01Template,
+    templateId: "cm9ifit570003ntuks5sgl1n4",
+  },
+  {
+    company: "Avian Summit Travel Corporation",
+    template: AS01Template,
+    templateId: "cm9ifit570003ntuks5sgl1n4",
+  },
+  {
+    company: "Kids Learning Ville",
+    template: KLV01Template,
+    templateId: "cm9ifit570003ntuks5sgl1n4",
+  },
+  {
+    company: "KPC Tax & Accounting Services",
+    template: KPCTAX01Template,
+    templateId: "cm8mt5cwp0002ykq0k956i4bs",
+  },
+  {
+    company: "KPC Importation Services",
+    template: KPCIS01Template,
+    templateId: "cm8fnh3xa0004220m4qnuu29e",
+  },
+  {
+    company: "KPC Payment Assistance",
+    template: KPCPA01Template,
+    templateId: "cm8iiapml00022udm6ri6bj7s",
+  },
+  {
+    company: "KPC Finance & Accounting Institute",
+    template: KPCFAI01Template,
+    templateId: "cm8iiapml00022udm6ri6bj7s",
+  },
+  {
     company: "Skyshare Labs",
     template: SkyshareLabsJPLTemplate,
     templateId: "cm85kbyp50001yf6j8hh50f16",
   },
   {
-    company: "IBS",
+    company: "InnovatEd Business Solutions",
     template: IBS01Template,
     templateId: "cm7d95epl0000b42bu0qvm3vg",
-  },
-  {
-    company: "KPC IS",
-    template: KPCIS01Template,
-    templateId: "cm8fnh3xa0004220m4qnuu29e",
-  },
-  {
-    company: "KPC PA",
-    template: KPCPA01Template,
-    templateId: "cm8iiapml00022udm6ri6bj7s",
-  },
-  {
-    company: "KPC TAX",
-    template: KPCTAX01Template,
-    templateId: "cm8mt5cwp0002ykq0k956i4bs",
-  },
-  {
-    company: "Your Skin",
-    template: YSOIA01Template,
-    templateId: "cm9ifit570003ntuks5sgl1n4",
-  },
-  {
-    company: "InnovatEd Business Academy",
-    template: IBA01Template,
-    templateId: "cm9qshnfd00025exc7xh3jwvr",
   },
 ];
 
 export const companyRule: CompanyRule[] = [
   {
     companies: [
+      { id: "cm9qsgh9y00015excd3o4dd61", name: "InnovatEd Business Academy" },
       {
-        id: "cm8fnd9h80000220mva1ldp04",
-        name: "KPC IS",
+        id: "cm9ifggvi0001ntukh0b5lucj",
+        name: "YourSkin School Of Integrated Aesthetics",
       },
+      {
+        id: "cm9s5oq900004lxhvmy9qw89m",
+        name: "Avian Summit Travel Corporation",
+      },
+      { id: "cm9s5oq900005lxhv1xtk0mlj", name: "Kids Learning Ville" },
       {
         id: "cm8mt25yg0000ykq0qt4fiuxf",
-        name: "KPC TAX",
+        name: "KPC Tax & Accounting Services",
       },
+      { id: "cm8fnd9h80000220mva1ldp04", name: "KPC Importation Services" },
+      { id: "cm8ii8g4e00002udmidlx0yq8", name: "KPC Payment Assistance" },
       {
-        id: "cm9qsgh9y00015excd3o4dd61",
-        name: "InnovatEd Business Academy",
+        id: "cm9s5oq900006lxhva5qmswnx",
+        name: "KPC Finance & Accounting Institute",
       },
+      { id: "cm85ka8rf0000yf6jrxa15pia", name: "Skyshare Labs" },
+      { id: "cm7d8o4dr0003ogx5jc9e2rm1", name: "InnovatEd Business Solutions" },
     ],
     rules: [
       "cta_button",
@@ -115,21 +145,4 @@ export const companyRule: CompanyRule[] = [
       "recent_posts",
     ],
   },
-  // {
-  //   companies: [
-  //     {
-  //       id: "cm8mt25yg0000ykq0qt4fiuxf",
-  //       name: "KPC TAX",
-  //     },
-  //   ],
-  //   rules: [
-  //     "cta_button",
-  //     "from_the_people",
-  //     "articles",
-  //     "upcoming_programs",
-  //     "discover_our_products",
-  //     "our_services",
-  //     "recent_posts",
-  //   ],
-  // },
 ];

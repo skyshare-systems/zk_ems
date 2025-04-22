@@ -1,8 +1,9 @@
-import { UpcomingPrograms } from "@/store/create-email";
+import { formatDateRanges } from "@/lib/utils";
+import { UpcomingProgram } from "@/store/create-email";
 import { Row, Column, Img, Text, Section } from "@react-email/components";
 
 interface UpcomingProgramsSectionProps {
-  upcomingPrograms: UpcomingPrograms[];
+  upcomingPrograms: UpcomingProgram[];
 }
 
 export const UpcomingProgramsSection = ({
@@ -23,25 +24,19 @@ export const UpcomingProgramsSection = ({
           </Row>
 
           {/* Programs with borders */}
-          <div className="mt-[16px] ">
-            <div className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">
-              <Text className="font-bold text-[14px] m-0 underline">
-                3-Day Corporate Finance Management Program
-              </Text>
-              <Text className="text-[14px] text-gray-700 m-0 mt-[4px] underline">
-                March 26-28, 2025 • April 23-25, 2025
-              </Text>
-            </div>
+          {upcomingPrograms.map((program) => (
+            <div className="mt-[16px]" key={program.title}>
+              <div className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">
+                <Text className="font-bold text-[14px] m-0 underline">
+                  {program.title}
+                </Text>
 
-            <div className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">
-              <Text className="font-bold text-[14px] m-0 underline">
-                3-Day Corporate Finance Management Program
-              </Text>
-              <Text className="text-[14px] text-gray-700 m-0 mt-[4px]">
-                March 26-28, 2025 • April 23-25, 2025
-              </Text>
+                <Text className="text-[14px] text-gray-700 m-0 mt-[4px] underline">
+                  {formatDateRanges(program.dates)}
+                </Text>
+              </div>
             </div>
-          </div>
+          ))}
         </Column>
 
         {/* Right side - Full image */}

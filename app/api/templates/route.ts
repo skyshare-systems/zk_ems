@@ -25,7 +25,7 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
     }
 
     //* is the user a member of the company
-  /*   const company = await prisma.company.findFirst({
+    /*   const company = await prisma.company.findFirst({
       where: {
         id: companyId,
         users: {
@@ -61,12 +61,12 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
               userId: userId,
             },
           },
-        }
+        },
       },
       include: {
-        company: true
-      }
-    })
+        company: true,
+      },
+    });
 
     const totalTemplates = await prisma.template.count({
       where: {
@@ -97,9 +97,9 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
       createApiResponse("Templates found", templates, meta),
       {
         status: 200,
-      }
+      },
     );
   } catch (error) {
-    return createErrorMessage(error);
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

@@ -1,7 +1,7 @@
 import { chunkArray } from "@/emails/utils";
 import { cn } from "@/lib/utils";
 import { Service } from "@/store/create-email";
-import { Row, Link,Column, Img, Text } from "@react-email/components";
+import { Row, Link, Column, Img, Text } from "@react-email/components";
 
 export const OurServices = ({ services }: { services: Service[] }) => {
   const servicesRows = chunkArray(services, 3);
@@ -39,7 +39,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
                     {service.description.length > 80 && "..."}
                   </Text>
                   <Link
-                    href={`https://example.com/articles/${service.title}`}
+                    href={service.link}
                     className="text-black/40 font-bold mx-auto rounded-lg text-[14px] box-border bg-[#3467A9] w-fit px-3 py-2 text-white mt-3"
                     style={{ display: "block" }}
                   >

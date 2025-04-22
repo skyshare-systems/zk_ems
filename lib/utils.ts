@@ -7,7 +7,7 @@ import { AuthenticationError } from "./exceptions";
 import { z } from "zod";
 import { fromZonedTime } from "date-fns-tz";
 import { compareAsc, format, isValid, parseISO } from "date-fns";
-import { companyRule, emailTemplates, rules } from "./constant";
+import { companies, companyRule, emailTemplates, rules } from "./constant";
 import { render } from "@react-email/render";
 import { useCreateEmailStore } from "@/store/create-email";
 
@@ -24,6 +24,13 @@ export function localizedTime(date: Date, formatString: string) {
 }
 
 export const createErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    };
+  }
+
   if (error instanceof Prisma.PrismaClientValidationError) {
     return NextResponse.json(createApiResponse("Invalid input", null), {
       status: 400,
@@ -214,21 +221,40 @@ export function formatDateRanges(dates: Input): string {
 
 export const colorizeButton = (companyName: string) => {
   const colorMap: Record<string, string> = {
-    "InnovatEd Business Solutions": "#FFB800",
-    KPC: "#FFB800",
-    "KPC Logistics": "#FFB800",
-    "KPC Express": "#FFB800",
-    "KPC Cargo": "#FFB800",
-    "KPC Freight": "#FFB800",
-    "KPC Supply Chain": "#FFB800",
-    "KPC Shipping": "#FFB800",
+    "InnovatEd Business Academy": "bg-[#09316F] hover:bg-opacity/90",
+    "YourSkin School Of Integrated Aesthetics": "bg-[#3467A9] hover:bg-opacity/90",
+    "Avian Summit Travel Corporation": "bg-[#18365A] hover:bg-opacity/90",
+    "Kids Learning Ville": "bg-[#00A19B] hover:bg-opacity/90",
+    "KPC Tax & Accounting Services": "bg-[#000205] hover:bg-opacity/90",
+    "KPC Importation Services": "bg-[#000205] hover:bg-opacity/90",
+    "KPC Payment Assistance": "bg-[#000205] hover:bg-opacity/90",
+    "KPC Finance & Accounting Institute": "bg-[#000205] hover:bg-opacity/90",
+    "Skyshare Labs": "bg-[#000205] hover:bg-opacity/90",
+    "InnovatEd Business Solutions": "bg-[#000205] hover:bg-opacity/90",
   };
 
-  return colorMap[companyName] || "#000000"; // Default color if company name not found
+  return colorMap[companyName] || "bg-black"; // Default color if company name not found
 };
 
 export const shortenMonth = (date: Date) => {
   const month = format(date, "MMMM");
   const shortMonth = month.substring(0, 3).toUpperCase();
   return shortMonth;
+};
+
+export const isRatingFieldVisible = (companyName: companies): boolean => {
+  const allowedCompanies: companies[] = ["YourSkin School Of Integrated Aesthetics",];
+
+  return allowedCompanies.includes(companyName);
+
+
+};
+
+
+export const isCourseTakenFieldVisible = (companyName: companies): boolean => {
+  const allowedCompanies: companies[] = ["YourSkin School Of Integrated Aesthetics",];
+
+  return allowedCompanies.includes(companyName);
+
+
 };

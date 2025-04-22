@@ -31,7 +31,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
             </Text>
 
             {/* Description */}
-            <Text className="text-black/50 m-0 mb-[16px] line-clamp-4 text-left">
+            <Text className="text-black/50 m-0 mb-[16px] line-clamp-4 text-center">
               {service.description.substring(0, 150)}
 
               {service.description.length >= 150 && (

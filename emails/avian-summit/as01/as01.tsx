@@ -49,166 +49,13 @@ interface AS01TemplateProps {
 export const AS01Template = ({
   body,
   isTemplate,
-  cta = {
-    link: "#",
-    text: "Learn More",
-  },
-  fromThePeople = [
-    {
-      reviewerImage: "https://new.email/static/app/placeholder.png",
-      review:
-        "Thank you Avian sa stress-free Japan tour! As someone na occupied na talaga most of the time, hindi na namin keri mag organize pa, ang convenient ng mga tours niyo. ‘Til our next tour!",
-      reviewerName: "Paula Christianne Del Rio & Edward darren Sarroca",
-      location: "Tokyo - Osaka, Japan",
-      date: "January 25 - January 31, 2024",
-    },
-    {
-      reviewerImage: "https://new.email/static/app/placeholder.png",
-      review:
-        "Thank you Avian sa stress-free Japan tour! As someone na occupied na talaga most of the time, hindi na namin keri mag organize pa, ang convenient ng mga tours niyo. ‘Til our next tour!",
-      reviewerName: "Paula Christianne Del Rio & Edward darren Sarroca",
-      location: "Tokyo - Osaka, Japan",
-      date: "January 25 - January 31, 2024",
-    },
-  ],
-  articles = [
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      articleLink: "#",
-      heading: "Sample Article Heading 1",
-      content:
-        "This is a sample article content. It can be a brief description or summary of the article.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      articleLink: "#",
-      heading: "Sample Article Heading 2",
-      content:
-        "This is a sample article content. It can be a brief description or summary of the article.",
-    },
-  ],
-  upcomingPrograms = [
-    {
-      title: "3-Day Corporate Finance Management Program",
-      externalLink: "#",
-      dates: [
-        {
-          date: new Date("2025-03-26"),
-        },
-        {
-          date: new Date("2025-04-23"),
-        },
-      ],
-    },
-    {
-      title: "3-Day Corporate Finance Management Program",
-      externalLink: "#",
-      dates: [
-        {
-          date: new Date("2025-03-26"),
-        },
-        {
-          date: new Date("2025-04-23"),
-        },
-      ],
-    },
-  ],
-  products = [
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-    {
-      name: "Wireless Headphones",
-      link: "#",
-      description:
-        "Premium noise-cancelling headphones with 30-hour battery life.",
-      image: "https://new.email/static/app/placeholder.png",
-    },
-  ],
-  services = [
-    {
-      title: "Smart Savings Account",
-      image: "https://new.email/static/app/placeholder.png",
-      description: "qweqw",
-      link: "#",
-    },
-    {
-      title: "Smart Savings Account",
-      image: "https://new.email/static/app/placeholder.png",
-      description: "qweqw",
-      link: "#",
-    },
-    {
-      title: "Smart Savings Account",
-      image: "https://new.email/static/app/placeholder.png",
-      description: "qweqw",
-      link: "#",
-    },
-  ],
-  posts = [
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-    {
-      image: "https://new.email/static/app/placeholder.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum libero modi perferendis voluptatum, at tempore, velit quia aut tenetur laudantium exercitationem impedit? Consequuntur sint quaerat nulla fuga, unde voluptas blanditiis.",
-    },
-  ],
+  cta,
+  fromThePeople,
+  articles,
+  upcomingPrograms,
+  products,
+  services,
+  posts,
 }: AS01TemplateProps) => {
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
@@ -270,14 +117,21 @@ export const AS01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
-                      maxWidth: "640px",
+
                       width: "100%",
-                      textAlign: "center",
-                      fontFamily: "Inter",
                     }}
                   >
                     {modifiedBody ?? "# Avian Summit"}
                   </Markdown>
+
+                  <Link
+                    href={cta.link}
+                    className={cn(
+                      "bg-[#18365A] rounded-[8px] px-5 py-3 text-white box-border inline-block font-bold",
+                    )}
+                  >
+                    {cta.text}
+                  </Link>
                 </div>
               )}{" "}
             </Section>
@@ -319,7 +173,7 @@ export const AS01Template = ({
                 </Column>
               </Row>
 
-              <ProductCards products={defaultProducts} />
+              <ProductCards products={products} />
             </Section>
 
             {/* Our Services */}
@@ -332,7 +186,7 @@ export const AS01Template = ({
                 </Column>
               </Row>
 
-              <OurServices services={defaultServices} />
+              <OurServices services={services} />
             </Section>
 
             {/* Our Recent Posts */}
@@ -345,7 +199,7 @@ export const AS01Template = ({
                 </Column>
               </Row>
 
-              <OurRecentPosts posts={defaultPosts} />
+              <OurRecentPosts posts={posts} />
             </Section>
 
             <Footer />
@@ -357,171 +211,3 @@ export const AS01Template = ({
 };
 
 export default AS01Template;
-
-// const ArticleCard = () => {
-//   return (
-//     <Section className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4">
-//       <Row align="center" className="p-[16px] text-center">
-//         <Column
-//           align="left"
-//           valign="top"
-//           className="mr-6 w-fit"
-//           style={{ paddingRight: "24px" }}
-//         >
-//           <Text className="text-black">JUN</Text>
-//           <Img
-//             src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/line.png"
-//             width={"100%"}
-//             height={"100%"}
-//           />
-//           <Text className="text-black">23</Text>
-//         </Column>
-//         <Column
-//           valign="top"
-//           align="center"
-//           className="ml-[24px]"
-//           style={{ paddingRight: "24px" }}
-//         >
-//           <Img
-//             src={"https://new.email/static/app/placeholder.png"}
-//             width={250}
-//             alt="Placeholder"
-//             className="w-[250px] aspect-square object-cover rounded-[4px] mx-auto"
-//           />
-//         </Column>
-//         <Column className="p-[8px] ml-[24px]" valign="top" align="left">
-//           <Text className="text-black mx-auto font-semibold text-[20px]">
-//             Placeholder Headling
-//           </Text>
-
-//           <Text className="mx-auto text-black line-clamp-6 text-ellipsis">
-//             This is just placeholder text. Don’t be alarmed, this is just here
-//             to fill up space since your finalized copy isn’t ready yet. Once we
-//             have your content finalized, we’ll replace this placeholder text
-//             with your real content. Sometimes it’s nice to put in text just to
-//             get an idea of how text will fill in a space on your website.
-//           </Text>
-
-//           <Hr />
-
-//           <Link href="#">
-//             <Text className="inline-block text-black">Read more</Text>
-
-//             <Img
-//               src="https://innovated-business-academy.sgp1.cdn.digitaloceanspaces.com/arrow-right.png"
-//               width={10}
-//               height={10}
-//               className="inline-block ml-2"
-//             />
-//           </Link>
-//         </Column>
-//       </Row>
-//     </Section>
-//   );
-// };
-
-const defaultProducts: Product[] = [
-  {
-    name: "Wireless Headphones",
-    description:
-      "Premium noise-cancelling headphones with 30-hour battery life.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Smart Watch",
-    description:
-      "Track your fitness and stay connected with this stylish smartwatch.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Portable Speaker",
-    description: "Waterproof Bluetooth speaker with immersive 360° sound.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-];
-
-const defaultServices: Service[] = [
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Smart Savings Account",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Investment Growth Plan",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Retirement Wealth Builder",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-];
-
-const defaultPosts: Post[] = [
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-];

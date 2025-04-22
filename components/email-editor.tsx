@@ -16,9 +16,13 @@ import RecentPostsEditor from "./recent-posts-editor";
 const EmailEditor = ({
   isPreview,
   isGeneratingPreview,
+  error,
+  isErrorGeneratingPreview,
 }: {
   isPreview: boolean;
   isGeneratingPreview: boolean;
+  isErrorGeneratingPreview: boolean;
+  error: any;
 }) => {
   const {
     selectedTemplate,
@@ -60,8 +64,15 @@ const EmailEditor = ({
                 Generating Preview
               </p>
             </div>
+          ) : isErrorGeneratingPreview ? (
+            <div className="flex flex-col items-center justify-center w-full gap-4 grow">
+              <p className="text-red-800 text-[14px]">
+                Error Generating Preview
+              </p>
+              <p className="text-red-800 text-[14px]">{error as string}</p>
+            </div>
           ) : (
-            <div className="flex flex-col grow h-full min-h-[400px] items-center justify-center">
+            <div className="flex flex-col grow h-full min-h-[1000px] items-center justify-center">
               <iframe
                 src={iframeUrl}
                 className="flex-grow w-full h-full min-h-0 rounded-2xl bg-none"

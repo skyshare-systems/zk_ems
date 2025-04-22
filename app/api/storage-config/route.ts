@@ -33,7 +33,10 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
       !secretAccessKey ||
       !companyId
     ) {
-      return createErrorMessage("Invalid request data");
+      return NextResponse.json(
+        createErrorMessage({ error: "Invalid Request Data" }),
+        { status: 500 },
+      );
     }
 
     const storageConfig = await prisma.storageConfig.findFirst({
@@ -45,7 +48,10 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
     });
 
     if (!storageConfig) {
-      return createErrorMessage("Storage config not found");
+      return NextResponse.json(
+        createErrorMessage({ error: "Storage Config is not found." }),
+        { status: 500 },
+      );
     }
 
     const updateStorageConfig = await prisma.storageConfig.update({
@@ -62,9 +68,9 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
     });
 
     return NextResponse.json(
-      createApiResponse("SMTP credentials updated", updateStorageConfig)
+      createApiResponse("SMTP credentials updated", updateStorageConfig),
     );
   } catch (error) {
-    return createErrorMessage(error);
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

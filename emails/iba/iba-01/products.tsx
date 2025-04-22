@@ -17,7 +17,7 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
             >
               <div className="border-[1px] p-2 border-solid border-gray-200 rounded-[8px] overflow-hidden">
                 <Img
-                  src={product.link}
+                  src={product.image}
                   alt={product.name}
                   width="100%"
                   height="auto"

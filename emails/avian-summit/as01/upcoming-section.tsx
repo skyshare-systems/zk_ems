@@ -1,10 +1,9 @@
 import { formatDateRanges } from "@/lib/utils";
-import { UpcomingPrograms } from "@/store/create-email";
-import { Row, Column, Img, Text, Section, Link } from "@react-email/components";
-import { date } from "zod";
+import { UpcomingProgram } from "@/store/create-email";
+import { Link, Section, Text } from "@react-email/components";
 
 interface UpcomingProgramsSectionProps {
-  upcomingPrograms: UpcomingPrograms[];
+  upcomingPrograms: UpcomingProgram[];
 }
 
 export const UpcomingProgramsSection = ({
@@ -37,7 +36,7 @@ export const UpcomingProgramsSection = ({
               {program.title}
             </Link>
             <Text className="text-[14px] text-white m-0">
-              March 26-28, 2025 • April 23-25, 2025
+              {formatDateRanges(program.dates)}
             </Text>
           </div>
         ))}

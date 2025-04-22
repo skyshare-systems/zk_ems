@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { createErrorMessage } from "@/lib/utils";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
+import slugify from "slugify";
 
 interface FileUpload extends File {
   arrayBuffer: () => Promise<ArrayBuffer>;
@@ -14,6 +15,12 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const files = formData.getAll("file") as FileUpload[];
     const filename = formData.get("filename") as string;
     const companyId = formData.get("companyId") as string;
+
+
+    const slugifiedFileName = slugify(filename, {
+      lower: true,
+      replacement:"_",
+    })
 
     if (!companyId) {
       return NextResponse.json(
@@ -70,7 +77,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
   
     const command = new PutObjectCommand({
       Bucket: bucketName,
-      Key: filename,
+      Key: slugifiedFileName,
       Body: await file.arrayBuffer(),
       ACL: "public-read",
       ContentType: file.type || "application/octet-stream",
@@ -82,14 +89,16 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     if (endpoint.includes("amazonaws.com")) {
       // AWS S3 URL format: https://{bucket}.s3.{region}.amazonaws.com/{filename}
-      fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${filename}`;
+      fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${slugifiedFileName}`;
     } else {
       // DigitalOcean Spaces URL format: https://{bucket}.{region}.digitaloceanspaces.com/{filename}
-      fileUrl = `https://${bucketName}.${region}.digitaloceanspaces.com/${filename}`;
+      fileUrl = `https://${bucketName}.${region}.digitaloceanspaces.com/${slugifiedFileName}`;
     }
 
     return NextResponse.json({ filepath: fileUrl });
   } catch (error) {
+
+    console.log({error})
     return NextResponse.json(createErrorMessage(error), {
       status: 500,
     });

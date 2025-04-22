@@ -1,4 +1,6 @@
-import { cn } from "@/lib/utils";
+"use client";
+
+import { cn, colorizeButton } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, PlusIcon, XIcon } from "lucide-react";
 import { Control, useFieldArray } from "react-hook-form";
@@ -6,21 +8,26 @@ import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useCompanyStore } from "@/store/company";
 
 type Props = {
   index: number;
   control: Control<any>;
+  label: string
 };
 
-export const NestedDates = ({ index, control }: Props) => {
+export const NestedDates = ({ index, control, label }: Props) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `upcomingPrograms.${index}.dates`,
   });
 
+  const { company } = useCompanyStore();
+  if (!company) return null;
+
   return (
     <div className="w-full flex items-center gap-4 p-2">
-      <p className="max-w-[96px] w-full shrink-0 text-[14px]">Dates</p>
+      <p className="max-w-[96px] w-full shrink-0 text-[14px]">{label}</p>
 
       <div className="flex flex-col gap-3 w-full">
         {fields.map((field, k) => (
@@ -37,7 +44,7 @@ export const NestedDates = ({ index, control }: Props) => {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "relative w-full border-black/[.08] bg-transparent hover:bg-black/80 pl-3 text-left font-normal",
+                            "relative w-full border-black/[.08] bg-transparent pl-3 text-left font-normal",
                           )}
                         >
                           {field.value ? (
@@ -78,7 +85,10 @@ export const NestedDates = ({ index, control }: Props) => {
         <Button
           onClick={() => append({ date: "" })}
           type="button"
-          className="bg-black w-fit flex px-3 py-2 gap-2 hover:bg-black/80"
+          className={cn(
+            "bg-black w-fit flex px-3 py-2 gap-2 hover:bg-black/80",
+            colorizeButton(company.name),
+          )}
         >
           <PlusIcon color="white" />
           <span className="text-white ty-subtitle">Add a date</span>

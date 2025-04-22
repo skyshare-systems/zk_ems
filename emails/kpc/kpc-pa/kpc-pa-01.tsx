@@ -36,83 +36,26 @@ import ArticleCard from "./article";
 
 interface KPCPA01TemplateProps {
   body: string;
+  isTemplate: boolean;
   articles: Article[];
   cta: Cta;
   fromThePeople: FromThePeople[];
-  isTemplate: boolean;
   upcomingPrograms: UpcomingProgram[];
+  products: Product[];
+  services: Service[];
+  posts: Post[];
 }
 
 export const KPCPA01Template = ({
   body,
-  articles = [
-    {
-      articleLink: "#",
-      heading: "Article 1",
-      image: "https://new.email/static/app/placeholder.png",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-    {
-      articleLink: "#",
-      heading: "Article 1",
-      image: "https://new.email/static/app/placeholder.png",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-    {
-      articleLink: "#",
-      heading: "Article 1",
-      image: "https://new.email/static/app/placeholder.png",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    },
-  ],
-  cta,
-  fromThePeople = [
-    {
-      review:
-        "This workshop transformed my understanding of finance! The insights I gained were invaluable for my leadership role. Highly recommend!",
-      reviewerImage:
-        "https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/placeholder.png",
-      reviewerName: "John Doe",
-      rating: 5,
-    },
-    {
-      review:
-        "This workshop transformed my understanding of finance! The insights I gained were invaluable for my leadership role. Highly recommend!",
-      reviewerImage:
-        "https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/placeholder.png",
-      reviewerName: "John Doe",
-      rating: 5,
-    },
-  ],
   isTemplate,
-  upcomingPrograms = [
-    {
-      dates: [
-        { date: new Date("2023-03-26") },
-        { date: new Date("2023-03-27") },
-        { date: new Date("2023-03-28") },
-        { date: new Date("2023-05-17") },
-        { date: new Date("2023-05-24") },
-      ],
-      externalLink: "#",
-      title: "Program 1",
-    },
-    {
-      dates: [
-        {
-          date: new Date("2023-10-01"),
-        },
-        {
-          date: new Date("2023-10-02"),
-        },
-      ],
-      externalLink: "#",
-      title: "Program 1",
-    },
-  ],
+  cta,
+  fromThePeople,
+  articles,
+  upcomingPrograms,
+  products,
+  services,
+  posts,
 }: KPCPA01TemplateProps) => {
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
@@ -256,7 +199,7 @@ export const KPCPA01Template = ({
                 </Column>
               </Row>
 
-              <ProductCards products={defaultProducts} />
+              <ProductCards products={products} />
             </Section>
 
             {/* OUR SERVICES */}
@@ -269,7 +212,7 @@ export const KPCPA01Template = ({
                 </Column>
               </Row>
 
-              <OurServices services={defaultServices} />
+              <OurServices services={services} />
             </Section>
 
             {/* Our Recent Posts */}
@@ -282,7 +225,7 @@ export const KPCPA01Template = ({
                 </Column>
               </Row>
 
-              <OurRecentPosts posts={defaultPosts} />
+              <OurRecentPosts posts={posts} />
             </Section>
 
             <Footer />
@@ -294,109 +237,3 @@ export const KPCPA01Template = ({
 };
 
 export default KPCPA01Template;
-
-const defaultProducts: Product[] = [
-  {
-    name: "Wireless Headphones",
-    description:
-      "Premium noise-cancelling headphones with 30-hour battery life.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Smart Watch",
-    description:
-      "Track your fitness and stay connected with this stylish smartwatch.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Portable Speaker",
-    description: "Waterproof Bluetooth speaker with immersive 360° sound.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-  {
-    name: "Wireless Charger",
-    description:
-      "Fast wireless charging pad compatible with all Qi-enabled devices.",
-    image: "https://new.email/static/app/placeholder.png",
-    link: "#",
-  },
-];
-
-const defaultServices: Service[] = [
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Smart Savings Account",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Investment Growth Plan",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    title: "Retirement Wealth Builder",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-    link: "#",
-  },
-];
-
-const defaultPosts: Post[] = [
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-  {
-    image: "https://new.email/static/app/placeholder.png",
-    description:
-      "Introducing the Smart Savings Account: a secure and flexible way to grow your savings. With competitive interest rates and no monthly fees, you can easily manage your funds while enjoying the benefits of automated savings tools. Whether you're saving for a vacation, a new car, or just building an emergency fund, our Smart Savings Account helps you reach your financial goals effortlessly.",
-  },
-];

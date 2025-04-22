@@ -1,8 +1,8 @@
 import { chunkArray } from "@/emails/utils";
-import { Articles } from "@/store/create-email";
+import { Article } from "@/store/create-email";
 import { Row, Column, Img, Text, Link } from "@react-email/components";
 
-export const ArticleCard = ({ articles }: { articles: Articles[] }) => {
+export const ArticleCard = ({ articles }: { articles: Article[] }) => {
   const articleRows = chunkArray(articles, 2);
 
   return (
@@ -17,8 +17,8 @@ export const ArticleCard = ({ articles }: { articles: Articles[] }) => {
             >
               <div className="border-[1px] p-4 border-solid border-gray-200 rounded-[8px] overflow-hidden">
                 <Img
-                  src={article.image}
-                  alt={article.name}
+                  src={article.image as string}
+                  alt={article.heading}
                   width="100%"
                   height="auto"
                   className="object-cover w-full h-[128px] rounded-lg"
@@ -31,7 +31,7 @@ export const ArticleCard = ({ articles }: { articles: Articles[] }) => {
                     {article.content}
                   </Text>
                   <Link
-                    href={`https://example.com/articles/${article.id}`}
+                    href={article.articleLink}
                     className="text-black/40 font-bold rounded-lg text-[14px] box-border bg-[#3467A9] w-fit px-6 py-3 text-white"
                     style={{ display: "block" }}
                   >

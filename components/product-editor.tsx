@@ -1,6 +1,6 @@
 "use client";
 
-import { verifyPermission } from "@/lib/utils";
+import { cn, colorizeButton, verifyPermission } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, X } from "lucide-react";
@@ -71,7 +71,10 @@ const ProductsEditor = () => {
             })
           }
           type="button"
-          className="bg-black flex px-3 py-2 gap-2 hover:bg-black/80"
+          className={cn(
+            "flex px-3 py-2 gap-2",
+            colorizeButton(selectedTemplate.company.name),
+          )}
         >
           <PlusIcon color="white" />
           <span className="text-white ty-subtitle">Add a product</span>

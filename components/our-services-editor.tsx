@@ -1,6 +1,6 @@
 "use client";
 
-import { verifyPermission } from "@/lib/utils";
+import { cn, colorizeButton, verifyPermission } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, X } from "lucide-react";
@@ -59,19 +59,22 @@ const OurServicesEditor = () => {
   return (
     <div className="flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04]">
       <div className="flex items-center gap-2 self-stretch mb-4">
-        <p className="ty-title flex-1 text-black/50">Our Services</p>
+        <p className="ty-title flex-1 text-black/50">Discover Our Services</p>
         <Button
           disabled={!form.formState.isValid}
           onClick={() =>
             append({
+              title: "",
+              link: "",
               description: "",
               image: "",
-              link: "",
-              title: "",
             })
           }
           type="button"
-          className="bg-black flex px-3 py-2 gap-2 hover:bg-black/80"
+          className={cn(
+            "flex px-3 py-2 gap-2",
+            colorizeButton(selectedTemplate.company.name),
+          )}
         >
           <PlusIcon color="white" />
           <span className="text-white ty-subtitle">Add a product</span>
@@ -95,20 +98,20 @@ const OurServicesEditor = () => {
                   </div>
                 )}
 
-                {/* Product Name */}
+                {/* Service Title */}
                 <FormField
                   control={form.control}
                   name={`services.${index}.title`}
                   render={({ field }) => (
                     <FormItem className="w-full flex items-center gap-4 p-2">
                       <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Services Title
+                        Service Title
                       </FormLabel>
                       <div className="flex flex-col gap-2 w-full">
                         <FormControl>
                           <Input
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="Product name..."
+                            placeholder="Sample Service Title..."
                             {...field}
                           />
                         </FormControl>
@@ -118,7 +121,7 @@ const OurServicesEditor = () => {
                   )}
                 />
 
-                {/* Product Link */}
+                {/* External Link */}
                 <FormField
                   control={form.control}
                   name={`services.${index}.link`}
@@ -131,7 +134,7 @@ const OurServicesEditor = () => {
                         <FormControl>
                           <Input
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="https://example.com/product"
+                            placeholder="https://"
                             {...field}
                           />
                         </FormControl>
@@ -170,7 +173,7 @@ const OurServicesEditor = () => {
                   )}
                 />
 
-                {/* Product Image */}
+                {/* Services Image */}
                 <FormField
                   control={form.control}
                   name={`services.${index}.image`}

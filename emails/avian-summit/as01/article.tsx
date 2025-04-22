@@ -17,8 +17,8 @@ export const ArticleCard = ({ articles }: { articles: Article[] }) => {
             >
               <div className="border-[1px] p-4 border-solid border-gray-200 rounded-[8px] overflow-hidden">
                 <Img
-                  src={article.image}
-                  alt={article.name}
+                  src={article.image as string}
+                  alt={article.heading}
                   width="100%"
                   height="auto"
                   className="object-cover w-full h-[128px] rounded-[12px] overflow-hidden"

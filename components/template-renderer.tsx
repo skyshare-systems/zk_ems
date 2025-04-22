@@ -4,7 +4,7 @@ import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useModalStore } from "@/store/modal";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowUpRight, Upload } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Upload } from "lucide-react";
 import React, {
   ChangeEvent,
   KeyboardEvent,
@@ -15,9 +15,11 @@ import React, {
 } from "react";
 import { toast } from "sonner";
 import EmailEditor from "./email-editor";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Input } from "./ui/input";
 import useProps from "@/hooks/useProps";
+import { cn, colorizeButton } from "@/lib/utils";
+import ScrollTop from "./scroll-top";
 
 interface ValidationError {
   message: string;
@@ -354,7 +356,12 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setAttachments([]);
   }, [setAttachments]);
 
-  const { mutate, isPending: isGeneratingPreview } = useMutation({
+  const {
+    mutate,
+    isPending: isGeneratingPreview,
+    isError: isGeneratingPreviewError,
+    error: generatingPreviewError,
+  } = useMutation({
     mutationKey: ["generate-template"],
     mutationFn: () => {
       return generateTemplate({
@@ -512,11 +519,31 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             )}
           </div>
         )}
-        <p className="ty-descriptions text-white/[.32]">Email Content</p>
+
+        <div className="flex gap-4 items-center">
+          <p className="ty-descriptions text-white/[.32]">Email Content</p>
+          <Button
+            onClick={() => {
+              window.scrollTo(0, document.body.scrollHeight);
+            }}
+            className={cn(
+              buttonVariants({
+                size: "icon",
+              }),
+              colorizeButton(selectedTemplate.company.name),
+              "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
+            )}
+          >
+            <ArrowDown color="white" size={16} />
+          </Button>
+        </div>
+
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
           <EmailEditor
             isPreview={isPreview}
             isGeneratingPreview={isGeneratingPreview}
+            isErrorGeneratingPreview={isGeneratingPreviewError}
+            error={generatingPreviewError}
           />
         </div>
       </div>
@@ -541,6 +568,8 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
           <ArrowUpRight size={14} className="text-white/[.32]" />
         </Button>
       </div>
+
+      <ScrollTop />
     </div>
   );
 };

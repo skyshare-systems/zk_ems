@@ -68,6 +68,6 @@ export const GET = authorize(async (req: AuthenticatedRequest) => {
       { status: 200 }
     );
   } catch (error) {
-    return createErrorMessage(error);
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

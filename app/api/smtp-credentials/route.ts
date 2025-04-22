@@ -12,7 +12,10 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
       };
 
     if (!from || !host || !port || !username || !password || !companyId) {
-      return createErrorMessage("Invalid request data");
+      return NextResponse.json(
+        createErrorMessage({ error: "Invalid Request Data." }),
+        { status: 500 },
+      );
     }
 
     const smtp = await prisma.smtpCredential.findFirst({
@@ -24,7 +27,10 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
     });
 
     if (!smtp) {
-      return createErrorMessage("SMTP credentials not found");
+      return NextResponse.json(
+        createErrorMessage({ error: "SMTP Credentials not found." }),
+        { status: 500 },
+      );
     }
 
     const updatedSmtp = await prisma.smtpCredential.update({
@@ -41,9 +47,9 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
     });
 
     return NextResponse.json(
-      createApiResponse("SMTP credentials updated", updatedSmtp)
+      createApiResponse("SMTP credentials updated", updatedSmtp),
     );
   } catch (error) {
-    return createErrorMessage(error);
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

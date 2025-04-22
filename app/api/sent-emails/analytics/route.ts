@@ -32,7 +32,12 @@ const getMonthDateRange = (date: Date = new Date()) => {
 export const GET = authorize(async (request: AuthenticatedRequest) => {
   try {
     const companyId = request.nextUrl.searchParams.get("companyId");
-    if (!companyId) return createErrorMessage("Company not found");
+    if (!companyId) {
+    return NextResponse.json({
+      message: "Company ID is required",
+    }, { status: 500 });
+
+    }
 
     const { firstDay, lastDay } = getMonthDateRange();
 
@@ -63,6 +68,8 @@ export const GET = authorize(async (request: AuthenticatedRequest) => {
       })
     );
   } catch (error) {
-    return createErrorMessage(error);
+
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
+
   }
 });

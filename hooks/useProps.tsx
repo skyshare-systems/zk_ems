@@ -30,17 +30,103 @@ const useProps = () => {
             posts,
           };
         }
-        case "KPC IS": {
+        case "YourSkin School Of Integrated Aesthetics": {
           return {
-            articles: articles,
-          };
-        }
-        case "KPC TAX": {
-          return {
-            articles,
             cta,
             fromThePeople,
+            articles,
             upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "Avian Summit Travel Corporation": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "Kids Learning Ville": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "KPC Tax & Accounting Services": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "KPC Importation Services": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "KPC Payment Assistance": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "KPC Finance & Accounting Institute": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "Skyshare Labs": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
+          };
+        }
+        case "InnovatEd Business Solutions": {
+          return {
+            cta,
+            fromThePeople,
+            articles,
+            upcomingPrograms,
+            products,
+            services,
+            posts,
           };
         }
       }

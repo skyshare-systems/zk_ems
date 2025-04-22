@@ -13,7 +13,7 @@ export const GET = authorize( async (request: AuthenticatedRequest) => {
     const title = searchParams.get("title");
 
     if (!companyId || !userId) {
-      return createErrorMessage("Company or User not found");
+      return NextResponse.json(createErrorMessage({error:"Company or User not found"}),{status: 500});
     }
 
     const user = await prisma.user.findUnique({
@@ -21,7 +21,7 @@ export const GET = authorize( async (request: AuthenticatedRequest) => {
     });
 
     if (!user) {
-      return createErrorMessage("User not found");
+      return NextResponse.json(createErrorMessage({error:"User not found"}),{status: 500});
     }
 
     const company = await prisma.company.findUnique({
@@ -29,7 +29,7 @@ export const GET = authorize( async (request: AuthenticatedRequest) => {
     });
 
     if (!company) {
-      return createErrorMessage("Company not found");
+      return NextResponse.json(createErrorMessage({error:"Company not found"}),{status: 500});
     }
 
     const sentEmails = await prisma.sentEmail.findMany({
@@ -84,6 +84,7 @@ export const GET = authorize( async (request: AuthenticatedRequest) => {
       { status: 200 }
     );
   } catch (error) {
-    return createErrorMessage(error);
+                   return NextResponse.json(createErrorMessage(error), { status: 500 });
+
   }
 })

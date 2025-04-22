@@ -5,7 +5,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
   return (
     <Row key={article.heading}>
       <Img
-        src={article.image}
+        src={article.image as string}
         width={"100%"}
         height={128}
         className="h-32 w-full object-cover rounded-lg"

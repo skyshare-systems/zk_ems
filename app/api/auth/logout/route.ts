@@ -25,7 +25,6 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
-
     if (!tokenData) {
       return NextResponse.json(createApiResponse("Invalid Token", null), {
         status: HttpStatusCode.BadRequest,
@@ -68,6 +67,6 @@ export const POST = async (request: NextRequest) => {
       },
     );
   } catch (error) {
-    createErrorMessage(error);
+    return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 };

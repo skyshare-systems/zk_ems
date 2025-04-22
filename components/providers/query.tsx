@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import  React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -10,11 +10,11 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
   import("@tanstack/react-query-devtools/build/modern/production.js").then(
     (d) => ({
       default: d.ReactQueryDevtools,
-    })
-  )
+    }),
+  ),
 );
 
-export function QueryProvider({children}: PropsWithChildren) {
+export function QueryProvider({ children }: PropsWithChildren) {
   const [showDevtools, setShowDevtools] = React.useState(false);
 
   React.useEffect(() => {
@@ -25,7 +25,7 @@ export function QueryProvider({children}: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       {showDevtools && (
         <React.Suspense fallback={null}>
           <ReactQueryDevtoolsProduction />
@@ -34,4 +34,3 @@ export function QueryProvider({children}: PropsWithChildren) {
     </QueryClientProvider>
   );
 }
-

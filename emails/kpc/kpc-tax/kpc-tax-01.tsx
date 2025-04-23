@@ -66,13 +66,23 @@ export const KPCTAX01Template = ({
     <Html>
       <Head>
         <Font
-          fontFamily="Poppins"
+          fontFamily="Inter"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           webFont={{
-            url: "/static/fonts/poppins/Poppins-Regular.ttf",
-            format: "truetype",
+            url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
+            format: "woff2",
           }}
           fontWeight={400}
+          fontStyle="normal"
+        />
+        <Font
+          fontFamily="Inter"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          webFont={{
+            url: "https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2",
+            format: "woff2",
+          }}
+          fontWeight={700}
           fontStyle="normal"
         />
 
@@ -97,7 +107,7 @@ export const KPCTAX01Template = ({
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="font-poppins bg-black/20 my-auto mx-auto  px-2 py-[20px]">
+        <Body className="font-inter bg-black/20 my-auto mx-auto  px-2 py-[20px]">
           <Container className="border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
             {/* HEADER */}
 
@@ -108,7 +118,7 @@ export const KPCTAX01Template = ({
               className="text-black responsive-padding p-4 [&>img]:max-w-[640px] w-full"
               style={{
                 fontFamily:
-                  "Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                  "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
               }}
             >
               {isTemplate ? (
@@ -127,8 +137,11 @@ export const KPCTAX01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
-                      maxWidth: "640px",
-                      width: "100%",
+                    }}
+                    markdownCustomStyles={{
+                      image: {
+                        width: "100%",
+                      },
                     }}
                   >
                     {modifiedBody ?? "# KPC TAX"}
@@ -169,7 +182,7 @@ export const KPCTAX01Template = ({
               }}
             >
               <div className="bg-black/[.04] rounded-lg p-4">
-                <Text className="text-black/[.5] text-[12px] uppercase font-bold">
+                <Text className="text-black/[.5] text-[14px] uppercase font-bold">
                   ARTICLES
                 </Text>
 
@@ -191,7 +204,7 @@ export const KPCTAX01Template = ({
             <Section className="p-4 mx-auto w-full">
               <Row align="center" className="mb-[16px]">
                 <Column align="center">
-                  <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
+                  <Text className="text-[14px] uppercase font-bold text-[#000205]/50 text-center w-fit">
                     Discover Our Products
                   </Text>
                 </Column>

@@ -9,7 +9,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
       {services.map((service, index) => (
         <Row
           key={index}
-          className="rounded-lg border border-[#3467A929] bg-white p-4 mb-2"
+          className="rounded-lg border-[1px] border-solid border-[#dee6f1] bg-white p-4 mb-2"
         >
           {/* Left Column - Content */}
           <Column className="w-[50%] pr-[8px]">
@@ -38,7 +38,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
               }}
             >
               <Img
-                src="https://new.email/static/app/placeholder.png"
+                src={service.image}
                 alt="Placeholder image"
                 width="250"
                 height="141"

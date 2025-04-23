@@ -72,10 +72,10 @@ const FooterIcon = ({
         alt={alt}
         width={16}
         height={16}
-        className="w-4 h-4 inline-block align-middle"
+        className="w-4 h-4 inline-block align-middle p-0 m-0"
       />
 
-      <Text className="p-0 m-0 text-[12px] text-black/50 my-[4px] leading-normal inline-block align-middle">
+      <Text className="p-0 m-0 ml-2 text-[12px] text-black/50 my-[4px] leading-normal inline-block align-middle">
         {text}
       </Text>
     </div>

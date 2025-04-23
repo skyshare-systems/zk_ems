@@ -2,7 +2,9 @@ import {
   cn,
   colorizeButton,
   isCourseTakenFieldVisible,
+  isDatesOfTravelFieldVisible,
   isRatingFieldVisible,
+  isTourLocationFieldVisible,
   verifyPermission,
 } from "@/lib/utils";
 import { ArticleSchema } from "@/schema/articles";
@@ -119,7 +121,7 @@ const FromThePeopleEditor = () => {
                         <FormControl>
                           <Input
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="The Long Haul: How KPC built a shipping empire..."
+                            placeholder="John Doe"
                             {...field}
                           />
                         </FormControl>
@@ -144,7 +146,7 @@ const FromThePeopleEditor = () => {
                           <FormControl>
                             <Input
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="https://randomrepublika.com/the-long-haul..."
+                              placeholder="5"
                               {...field}
                             />
                           </FormControl>
@@ -194,7 +196,7 @@ const FromThePeopleEditor = () => {
                           <Textarea
                             rows={4}
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="Manila is busy with the constant motion of commerce..."
+                            placeholder="This workshop transformed my understanding of finance!"
                             {...field}
                           />
                         </FormControl>
@@ -204,29 +206,41 @@ const FromThePeopleEditor = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name={`fromThePeople.${index}.tourLocation`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Tour Location
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Input
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="8-Day Full Course Aesthetic Program and Courses"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                {isTourLocationFieldVisible(
+                  selectedTemplate.company.name as companies,
+                ) && (
+                  <FormField
+                    control={form.control}
+                    name={`fromThePeople.${index}.tourLocation`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          Tour Location
+                        </FormLabel>
+                        <div className="flex flex-col gap-2 w-full">
+                          <FormControl>
+                            <Input
+                              className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                              placeholder="Tokyo - Osaka, Japan"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
 
-                <NestedDates control={form.control} index={index} label="Dates of Travel" />
+                {isDatesOfTravelFieldVisible(
+                  selectedTemplate.company.name as companies,
+                ) && (
+                  <NestedDates
+                    control={form.control}
+                    index={index}
+                    label="Dates of Travel"
+                  />
+                )}
 
                 <FormField
                   control={form.control}

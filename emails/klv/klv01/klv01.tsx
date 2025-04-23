@@ -59,7 +59,7 @@ export const KLV01Template = ({
 }: KLV01TemplateProps) => {
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
-    '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
+    '<img style="width:100%; border-radius:12px" $1>',
   );
 
   return (
@@ -88,14 +88,14 @@ export const KLV01Template = ({
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className=" bg-black/20 my-auto mx-auto px-2 py-[20px]">
+        <Body className="font-inter bg-black/20 my-auto mx-auto px-2 py-[20px]">
           <Container className="border rounded-lg overflow-hidden text-white bg-[#fff] border-solid border-[#eaeaea]  mx-auto max-w-[680px] w-full p-4">
             {/* HEADER */}
             <Header />
 
             {/* BODY */}
             <Section
-              className="p-8 text-black"
+              className="text-black"
               style={{
                 fontFamily:
                   "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
@@ -117,10 +117,11 @@ export const KLV01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
-                      maxWidth: "640px",
-                      width: "100%",
-                      textAlign: "center",
-                      fontFamily: "Inter",
+                    }}
+                    markdownCustomStyles={{
+                      image: {
+                        width: "100%",
+                      },
                     }}
                   >
                     {modifiedBody ?? "# Kids Learning Ville"}

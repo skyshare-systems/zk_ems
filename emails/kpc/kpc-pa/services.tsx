@@ -19,8 +19,8 @@ export const OurServices = ({ services }: { services: Service[] }) => {
               }}
             >
               <Img
-                src="https://new.email/static/app/placeholder.png"
-                alt="Placeholder image"
+                src={service.image}
+                alt={service.title}
                 width="100"
                 height="100"
                 className="w-[100px] h-[100px] object-cover rounded-full"
@@ -39,7 +39,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
             </Text>
             <Link
               href={service.link}
-              className="bg-[#000205] rounded-[12px] text-white px-4 py-2 font-bold no-underline text-[14px] inline-block box-border"
+              className="bg-[#000205] text-white px-4 py-2 font-bold no-underline text-[14px] inline-block box-border"
             >
               Learn More
             </Link>

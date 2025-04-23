@@ -8,12 +8,13 @@ const ArticleCard = ({ article }: { article: Article }) => {
       <Row>
         <Column>
           <Text className="text-[#18181b] font-semibold text-[20px]">
-            This is just a placeholder headling
+            {article.heading.substring(0, 40)}
+            {article.heading.length > 40 ? "..." : ""}
           </Text>
         </Column>
         <Column align="right">
           <Link
-            href="#"
+            href={article.articleLink}
             className="rounded-[12px] bg-[#00A19B] text-white px-3 py-2 text-[10px] font-semibold"
           >
             Read Article
@@ -24,17 +25,15 @@ const ArticleCard = ({ article }: { article: Article }) => {
       <Row>
         <Column>
           <Img
-            src="https://new.email/static/app/placeholder.png"
+            src={article.image as string}
             width="100%"
             height={128}
             className="rounded-[8px] object-cover"
           />
 
           <Text className="text-[14px] text-[#18181b] leading-normal">
-            This is just placeholder text. Don’t be alarmed, this is just here
-            to fill up space since your finalized copy isn’t ready yet. Once we
-            have your content finalized, we’ll replace this placeholder text
-            with your real content.
+            {article.content.substring(0, 140)}
+            {article.content.length > 140 ? "..." : ""}
           </Text>
         </Column>
       </Row>

@@ -220,17 +220,20 @@ export function formatDateRanges(dates: Input): string {
 }
 
 export const colorizeButton = (companyName: string) => {
+  console.log("Company:", companyName);
+
   const colorMap: Record<string, string> = {
-    "InnovatEd Business Academy": "bg-[#09316F] hover:bg-opacity/90",
-    "YourSkin School Of Integrated Aesthetics": "bg-[#3467A9] hover:bg-opacity/90",
-    "Avian Summit Travel Corporation": "bg-[#18365A] hover:bg-opacity/90",
-    "Kids Learning Ville": "bg-[#00A19B] hover:bg-opacity/90",
-    "KPC Tax & Accounting Services": "bg-[#000205] hover:bg-opacity/90",
-    "KPC Importation Services": "bg-[#000205] hover:bg-opacity/90",
-    "KPC Payment Assistance": "bg-[#000205] hover:bg-opacity/90",
-    "KPC Finance & Accounting Institute": "bg-[#000205] hover:bg-opacity/90",
-    "Skyshare Labs": "bg-[#000205] hover:bg-opacity/90",
-    "InnovatEd Business Solutions": "bg-[#000205] hover:bg-opacity/90",
+    "InnovatEd Business Academy": "bg-[#09316F] hover:bg-opacity-90",
+    "YourSkin School Of Integrated Aesthetics":
+      "bg-[#3467A9] hover:bg-opacity-90",
+    "Avian Summit Travel Corporation": "bg-[#18365A] hover:bg-opacity-90",
+    "Kids Learning Ville": "bg-[#00A19B] hover:bg-opacity-90",
+    "KPC Tax & Accounting Services": "bg-[#000205] hover:bg-opacity-90",
+    "KPC Importation Services": "bg-[#000205] hover:bg-opacity-90",
+    "KPC Payment Assistance": "bg-[#000205] hover:bg-opacity-90",
+    "KPC Finance & Accounting Institute": "bg-[#000205] hover:bg-opacity-90",
+    "Skyshare Labs": "bg-[#000205] hover:bg-opacity-90",
+    "InnovatEd Business Solutions": "bg-[#000205] hover:bg-opacity-90",
   };
 
   return colorMap[companyName] || "bg-black"; // Default color if company name not found
@@ -243,18 +246,50 @@ export const shortenMonth = (date: Date) => {
 };
 
 export const isRatingFieldVisible = (companyName: companies): boolean => {
-  const allowedCompanies: companies[] = ["YourSkin School Of Integrated Aesthetics",];
+  const allowedCompanies: companies[] = [
+    "YourSkin School Of Integrated Aesthetics",
+    "KPC Tax & Accounting Services",
+    "KPC Importation Services",
+    "KPC Payment Assistance",
+    "KPC Finance & Accounting Institute"
+  ];
 
   return allowedCompanies.includes(companyName);
-
-
 };
-
 
 export const isCourseTakenFieldVisible = (companyName: companies): boolean => {
-  const allowedCompanies: companies[] = ["YourSkin School Of Integrated Aesthetics",];
+  const allowedCompanies: companies[] = [
+    "YourSkin School Of Integrated Aesthetics",
+  ];
 
   return allowedCompanies.includes(companyName);
-
-
 };
+
+export const isTourLocationFieldVisible = (companyName: companies): boolean => {
+  const allowedCompanies: companies[] = ["Avian Summit Travel Corporation"];
+
+  return allowedCompanies.includes(companyName);
+};
+
+export const isDatesOfTravelFieldVisible = (
+  companyName: companies,
+): boolean => {
+  const allowedCompanies: companies[] = ["Avian Summit Travel Corporation"];
+
+  return allowedCompanies.includes(companyName);
+};
+export const isArticleDateFieldVisible = (companyName: companies): boolean => {
+  const allowedCompanies: companies[] = ["InnovatEd Business Academy"];
+
+  return allowedCompanies.includes(companyName);
+};
+
+
+export const isArticlePhotoFieldHidden = (companyName: companies): boolean => {
+  const hiddenCompanies: companies[] = [
+    "KPC Importation Services",
+    "KPC Finance & Accounting Institute"
+  ]
+
+  return !hiddenCompanies.includes(companyName);
+}

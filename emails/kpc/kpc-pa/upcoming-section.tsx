@@ -19,7 +19,10 @@ export const UpcomingProgramsSection = ({
 
           {upcomingPrograms.map((program) => (
             <div key={program.title} className="p-2">
-              <Link className="text-[14px] font-semibold text-[#000205] underline">
+              <Link
+                href={program.externalLink}
+                className="text-[14px] font-semibold text-[#000205] underline"
+              >
                 {program.title}
               </Link>
               <Text className="m-0 p-0 text-[#000205] text-[14px] font-normal">

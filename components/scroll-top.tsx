@@ -38,7 +38,7 @@ const ScrollTop = () => {
           size: "icon",
         }),
         colorizeButton(company.name),
-        "w-full lg:w-fit fixed bottom-24 right-4 z-50 hover:bg-opacity-90 duration-500 transition-all hidden",
+        "w-fit fixed bottom-24 right-4 z-50 hover:bg-opacity-90 duration-500 transition-all hidden",
       )}
     >
       <ArrowUp color="white" size={16} />

@@ -19,8 +19,8 @@ export const OurServices = ({ services }: { services: Service[] }) => {
               }}
             >
               <Img
-                src="https://new.email/static/app/placeholder.png"
-                alt="Placeholder image"
+                src={service.image}
+                alt={service.title}
                 width="100"
                 height="100"
                 className="w-[100px] h-[100px] object-cover rounded-full"

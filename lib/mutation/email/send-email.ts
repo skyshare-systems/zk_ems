@@ -3,13 +3,14 @@ import { getErrorMessage } from "@/lib/utils";
 import { Template } from "@prisma/client";
 import { marked } from "marked";
 
-interface SendEmailProps {
+export interface SendEmailProps {
   subject: string;
   selectedTemplate: Template;
   recipients: string[];
   body: string;
   attachments?: File[];
   alignment?: "left" | "center" | "right";
+  signal?: AbortSignal;
   props?: Record<string, unknown>;
 }
 
@@ -20,6 +21,7 @@ export const sendEmail = async ({
   subject,
   attachments = [],
   alignment = "left",
+  signal,
   ...props
 }: SendEmailProps) => {
   try {
@@ -31,6 +33,8 @@ export const sendEmail = async ({
       attachments,
       alignment,
       ...props,
+    },{
+      signal
     });
 
     return response.data;
@@ -47,6 +51,7 @@ export const sendEmailSkyshare = async ({
   subject,
   attachments = [],
   alignment = "left",
+  signal,
   ...props
 }: SendEmailProps) => {
   try {
@@ -56,19 +61,20 @@ export const sendEmailSkyshare = async ({
     formData.append("templateId", selectedTemplate.id);
     formData.append("body", body);
     formData.append("alignment", alignment);
-    
-    recipients.forEach((recipient) => formData.append("recipients", recipient));
+
+    recipients.forEach((recipient) =>
+      formData.append("recipients", recipient)
+    );
 
     attachments.forEach((attachment) =>
       formData.append("attachments", attachment)
     );
 
-  /*   for (const key in props) {
-      formData.append(key, props[key]);
-    } */
+
 
     const response = await api.post("/email/skyshare", formData, {
       headers: { "Content-Type": "multipart/form-data" },
+      signal, 
     });
 
     return response.data;
@@ -76,4 +82,3 @@ export const sendEmailSkyshare = async ({
     throw getErrorMessage(error);
   }
 };
-

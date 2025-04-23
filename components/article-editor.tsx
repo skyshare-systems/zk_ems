@@ -1,4 +1,10 @@
-import { cn, colorizeButton, verifyPermission } from "@/lib/utils";
+import {
+  cn,
+  colorizeButton,
+  isArticleDateFieldVisible,
+  isArticlePhotoFieldHidden,
+  verifyPermission,
+} from "@/lib/utils";
 import { ArticleSchema } from "@/schema/articles";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +28,7 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import Image from "next/image";
 import ImageUploader from "./modals/image-uploader-no-context";
+import { companies } from "@/lib/constant";
 
 const ArticleEditor = () => {
   const { selectedTemplate, setArticles, articles } = useCreateEmailStore();
@@ -153,7 +160,7 @@ const ArticleEditor = () => {
                         <FormControl>
                           <Input
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="The Long Haul: How KPC built a shipping empire..."
+                            placeholder="https://randomrepublika.com/the-long-haul-how-kpc-built-a-shipping-empire-one-box-at-a-time/"
                             {...field}
                           />
                         </FormControl>
@@ -164,97 +171,102 @@ const ArticleEditor = () => {
                 />
 
                 {/* Date */}
-                <FormField
-                  control={form.control}
-                  name={`articles.${index}.date`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Date
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal  border-black/[.08] bg-transparent",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`articles.${index}.image`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        <div className="flex flex-col">
-                          <p className="ty-descriptions">Photo</p>
-                        </div>
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          {field.value ? (
-                            <div className="relative w-fit">
-                              <div
-                                onClick={() => field.onChange("")}
-                                className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                {isArticleDateFieldVisible(
+                  selectedTemplate.company.name as companies,
+                ) && (
+                  <FormField
+                    control={form.control}
+                    name={`articles.${index}.date`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          Date
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-[240px] pl-3 text-left font-normal  border-black/[.08] bg-transparent",
+                                  !field.value && "text-muted-foreground",
+                                )}
                               >
-                                <X size={14} />
-                              </div>
-                              <Image
-                                alt="Article Image"
-                                src={field.value}
-                                width={100}
-                                height={100}
-                                className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
-                              />
-                            </div>
-                          ) : (
-                            <div className="max-w-[250px] w-full">
-                              <ImageUploader
-                                onUploadComplete={(url) =>
-                                  update(index, {
-                                    ...watchArticles[index],
-                                    image: url,
-                                  })
-                                }
-                              />
-                            </div>
-                          )}
-                        </FormControl>
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+
                         <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {isArticlePhotoFieldHidden(
+                  selectedTemplate.company.name as companies,
+                ) && (
+                  <FormField
+                    control={form.control}
+                    name={`articles.${index}.image`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          <div className="flex flex-col">
+                            <p className="ty-descriptions">Photo</p>
+                          </div>
+                        </FormLabel>
+                        <div className="flex flex-col gap-2 w-full">
+                          <FormControl>
+                            {field.value ? (
+                              <div className="relative w-fit">
+                                <div
+                                  onClick={() => field.onChange("")}
+                                  className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                                >
+                                  <X size={14} />
+                                </div>
+                                <Image
+                                  alt="Article Image"
+                                  src={field.value}
+                                  width={100}
+                                  height={100}
+                                  className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
+                                />
+                              </div>
+                            ) : (
+                              <div className="max-w-[250px] w-full">
+                                <ImageUploader
+                                  onUploadComplete={(url) =>
+                                    update(index, {
+                                      ...watchArticles[index],
+                                      image: url,
+                                    })
+                                  }
+                                />
+                              </div>
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
             ))}
           </form>

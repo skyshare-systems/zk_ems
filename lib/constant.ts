@@ -70,12 +70,12 @@ export const emailTemplates: EmailTemplate[] = [
   {
     company: "Avian Summit Travel Corporation",
     template: AS01Template,
-    templateId: "cm9ifit570003ntuks5sgl1n4",
+    templateId: "cm9sb0gr0000hlxhvpym5xgeb",
   },
   {
     company: "Kids Learning Ville",
     template: KLV01Template,
-    templateId: "cm9ifit570003ntuks5sgl1n4",
+    templateId: "cm9tl5jo400024lihwc9t5q44",
   },
   {
     company: "KPC Tax & Accounting Services",
@@ -95,7 +95,7 @@ export const emailTemplates: EmailTemplate[] = [
   {
     company: "KPC Finance & Accounting Institute",
     template: KPCFAI01Template,
-    templateId: "cm8iiapml00022udm6ri6bj7s",
+    templateId: "cm9tripip0003z9g9gd8v3w4h",
   },
   {
     company: "Skyshare Labs",

@@ -9,9 +9,14 @@ import { useCreateEmailStore } from "@/store/create-email";
 import { marked } from "marked";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { sendEmail, sendEmailSkyshare } from "@/lib/mutation/email/send-email";
+import {
+  sendEmail,
+  SendEmailProps,
+  sendEmailSkyshare,
+} from "@/lib/mutation/email/send-email";
 import { useUserStore } from "@/store/user";
 import useProps from "@/hooks/useProps";
+import { getAnalytics } from "@/lib/query/analytics";
 
 const ConfirmEmailBlast = () => {
   const { isOpen, onClose } = useModalStore();
@@ -28,20 +33,26 @@ const ConfirmEmailBlast = () => {
 
   const { user } = useUserStore();
 
+  const abortControllerRef = React.useRef<AbortController | null>(null);
+
   const { mutate: sendNow, isPending } = useMutation({
-    mutationFn:
-      selectedTemplate?.company.name === "Skyshare Labs"
-        ? sendEmailSkyshare
-        : sendEmail,
+    mutationFn: (params: SendEmailProps) => {
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+
+      return selectedTemplate?.company.name === "Skyshare Labs"
+        ? sendEmailSkyshare({ ...params, signal })
+        : sendEmail({ ...params, signal });
+    },
     mutationKey: ["send-email"],
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Email sent successfully", {
-        onAutoClose: () => {
-          onClose();
-        },
-        onDismiss: (toast) => {
-          onClose();
-        },
+        onAutoClose: () => onClose(),
+        onDismiss: () => onClose(),
+      });
+
+      await getAnalytics({
+        params: `?companyId=${selectedTemplate?.company?.id}`,
       });
     },
     onError: (error: string) => {
@@ -50,17 +61,28 @@ const ConfirmEmailBlast = () => {
   });
 
   useEffect(() => {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        onClose();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isPending && abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        toast.info("Email sending aborted.");
+        setTimeout(() => onClose(), 1000);
       }
-    });
-  }, [onClose]);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose, isPending]);
 
   if (!isOpen) return null;
 
   function send() {
-    if (!selectedTemplate) return;
+    if (!selectedTemplate || recipients.length === 0) {
+      toast.error("Please select at least one recipient.");
+      return;
+    }
+
     sendNow({
       subject,
       selectedTemplate,

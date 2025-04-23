@@ -59,7 +59,7 @@ const OurServicesEditor = () => {
   return (
     <div className="flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04]">
       <div className="flex items-center gap-2 self-stretch mb-4">
-        <p className="ty-title flex-1 text-black/50">Discover Our Services</p>
+        <p className="ty-title flex-1 text-black/50">Our Services</p>
         <Button
           disabled={!form.formState.isValid}
           onClick={() =>

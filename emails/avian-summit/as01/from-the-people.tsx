@@ -2,13 +2,7 @@ import { FromThePeople } from "@/store/create-email";
 import { Column, Img, Row, Text, Section } from "@react-email/components";
 
 export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
-  const {
-    reviewerImage = "https://new.email/static/app/placeholder.png",
-    review = "Thank you Avian sa stress-free Japan tour! As someone na occupied na talaga most of the time, hindi na namin keri mag organize pa, ang convenient ng mga tours niyo. ‘Til our next tour!",
-    reviewerName = "Paula Christianne Del Rio & Edward darren Sarroca",
-    location = "Tokyo - Osaka, Japan",
-    date = "January 25 - January 31, 2024",
-  } = people;
+  const { reviewerImage, review, reviewerName, location, date } = people;
 
   return (
     <Section className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">

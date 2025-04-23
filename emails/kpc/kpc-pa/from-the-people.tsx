@@ -12,7 +12,7 @@ export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
             Array.from({ length: rating }).map((_, index) => (
               <Img
                 key={`star-${index}`}
-                src="https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/star.png"
+                src="https://kpc-pa.sgp1.cdn.digitaloceanspaces.com/star.png"
                 width={16}
                 height={16}
                 className="inline-block mr-[4px] mb-[8px]"
@@ -27,7 +27,7 @@ export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
 
           <div>
             <Img
-              src="https://new.email/static/app/placeholder.png"
+              src={reviewerImage}
               width={32}
               height={32}
               className="inline-block mr-[8px] rounded-full align-middle"

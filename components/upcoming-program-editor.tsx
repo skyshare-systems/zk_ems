@@ -115,7 +115,7 @@ const UpcomingProgramEditor = () => {
                           <FormControl>
                             <Input
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="The Long Haul: How KPC built a shipping empire..."
+                              placeholder="3-Day Corporate Finance Management Program"
                               {...field}
                             />
                           </FormControl>
@@ -131,7 +131,7 @@ const UpcomingProgramEditor = () => {
                     render={({ field }) => (
                       <FormItem className="w-full flex items-center gap-4 p-2">
                         <FormLabel className="max-w-[96px] w-full shrink-0">
-                          Article Link
+                          External Link
                         </FormLabel>
                         <div className="flex flex-col gap-2 w-full">
                           <FormControl>

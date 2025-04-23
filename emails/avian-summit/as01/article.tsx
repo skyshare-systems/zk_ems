@@ -28,7 +28,8 @@ export const ArticleCard = ({ articles }: { articles: Article[] }) => {
                     {article.heading}
                   </Text>
                   <Text className="text-gray-600 text-[14px] m-0 mb-[4px]">
-                    {article.content}
+                    {article.content.substring(0, 200)}
+                    {article.content.length > 200 ? "..." : null}
                   </Text>
                   <Link
                     href={`https://example.com/articles/${article.id}`}

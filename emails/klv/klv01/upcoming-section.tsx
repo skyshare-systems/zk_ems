@@ -1,4 +1,4 @@
-import { formatDateRanges } from "@/lib/utils";
+import { cn, formatDateRanges } from "@/lib/utils";
 import { UpcomingProgram } from "@/store/create-email";
 import {
   Row,
@@ -31,40 +31,26 @@ export const UpcomingProgramsSection = ({
               </Text>
             </Column>
           </Row>
-
           <Hr className="my-6" />
-
-          <Row className="mb-3">
-            <Column valign="middle">
-              <Text className="text-black text-[14px] font-normal p-0 m-0">
-                December 26-28
-              </Text>
-              <Text className="text-black text-[14px] font-normal p-0 m-0">
-                April 23-25
-              </Text>
-            </Column>
-            <Column className="w-[330px] bg-[#ed8606] rounded-[10px] p-4">
-              <Text className="text-[20px] font-semibold text-center">
-                3-Day Corporate Finance Management Program
-              </Text>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column valign="middle">
-              <Text className="text-black text-[14px] font-normal p-0 m-0">
-                December 26-28
-              </Text>
-              <Text className="text-black text-[14px] font-normal p-0 m-0">
-                April 23-25
-              </Text>
-            </Column>
-            <Column className="w-[330px] bg-[#00A19B] rounded-[10px] p-4">
-              <Text className="text-[20px] font-semibold text-center">
-                2-Day Accounting Program
-              </Text>
-            </Column>
-          </Row>
+          {upcomingPrograms.map((program, index) => (
+            <Row key={index} className="mb-3">
+              <Column valign="middle" className="">
+                <Text className="text-black text-[14px] font-normal p-0 m-0">
+                  {formatDateRanges(program.dates)}
+                </Text>
+              </Column>
+              <Column
+                className={cn(
+                  "pl-[16px] w-[330px] b rounded-[10px] p-4",
+                  index % 2 === 0 ? "bg-[#ED8606]" : "bg-[#00A19B]",
+                )}
+              >
+                <Text className="text-[20px] font-semibold text-center">
+                  {program.title}
+                </Text>
+              </Column>
+            </Row>
+          ))}
         </Column>
       </Row>
     </Section>

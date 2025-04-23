@@ -6,8 +6,9 @@ import { ImageIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, colorizeButton } from "@/lib/utils";
 import { useCompanyStore } from "@/store/company";
+import { companies } from "@/lib/constant";
 
 const ImageUploader = () => {
   const insertImage = usePublisher(insertImage$);
@@ -151,7 +152,10 @@ const ImageUploader = () => {
 
           <Button
             disabled={!uploadedUrl}
-            className="w-full bg-gold"
+            className={cn(
+              "w-full text-white",
+              colorizeButton(company?.name as companies),
+            )}
             onClick={handleUseImage}
           >
             Use Image

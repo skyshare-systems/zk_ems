@@ -38,7 +38,7 @@ export const FromThePeopleSection = ({
                   </Text>
 
                   <Img
-                    src={"https://new.email/static/app/placeholder.png"}
+                    src={reviewerImage}
                     width={32}
                     height={32}
                     className="inline-block mr-2 mb-2 rounded-full align-middle"

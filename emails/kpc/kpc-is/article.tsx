@@ -24,7 +24,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
       <Row>
         <Column>
           <Img
-            src="https://new.email/static/app/placeholder.png"
+            src={article.image as string}
             width="100%"
             height={128}
             className="rounded-[8px] object-cover"

@@ -13,7 +13,7 @@ export const UpcomingProgramsSection = ({
     <Section className="">
       <Row className="border-l-[32px] bg-[#f5f5f5] border-solid border-[#Dfd8e9] bg-4 mb-4 inline-block border-l-[#F3BC30]">
         <Column className="p-4 ">
-          <Text className="text-black/50 font-bold uppercase mb-3 p-0">
+          <Text className="text-black/50 font-bold mb-3 p-0">
             Upcoming Programs
           </Text>
 

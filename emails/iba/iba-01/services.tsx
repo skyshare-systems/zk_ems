@@ -14,10 +14,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
             {/* Rounded full image at top */}
             <div className="size-[128px] rounded-full mx-auto mb-4 overflow-hidden">
               <Img
-                src={
-                  service.image ||
-                  "https://new.email/static/app/placeholder.png"
-                }
+                src={service.image}
                 width="128"
                 height="128"
                 alt={service.title}

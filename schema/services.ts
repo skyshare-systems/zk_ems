@@ -10,7 +10,9 @@ export const ServicesSchema = z.object({
       description: z.string().min(1, {
         message: "Description is required",
       }),
-      image: z.string(),
+      image: z.string().min(1, {
+        message: "Service image is required",
+      }),
       link: z
         .string()
         .refine(

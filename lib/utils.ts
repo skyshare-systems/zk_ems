@@ -220,7 +220,6 @@ export function formatDateRanges(dates: Input): string {
 }
 
 export const colorizeButton = (companyName: string) => {
-  console.log("Company:", companyName);
 
   const colorMap: Record<string, string> = {
     "InnovatEd Business Academy": "bg-[#09316F] hover:bg-opacity-90",

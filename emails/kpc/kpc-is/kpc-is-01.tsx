@@ -107,14 +107,19 @@ export const KPCIS01Template = ({
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
         <Body className="font-inter bg-black/20 my-auto mx-auto  px-2 py-[20px]">
-          <Container className="border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
+          <Container
+            style={{
+              padding: "16px",
+            }}
+            className=" border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full"
+          >
             {/* HEADER */}
 
             <Header />
 
             {/* BODY */}
             <Section
-              className="text-black responsive-padding  [&>img]:max-w-[640px] w-full"
+              className="w-full text-black"
               style={{
                 fontFamily:
                   "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
@@ -160,92 +165,108 @@ export const KPCIS01Template = ({
               )}
             </Section>
 
-            <Section className="text-center p-4">
-              <Heading
-                as="h5"
-                className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
-              >
-                From the people
-              </Heading>
+            {/* FROM THE PEOPLE */}
+            {fromThePeople && fromThePeople.length >= 1 && (
+              <Section className="text-center p-4">
+                <Heading
+                  as="h5"
+                  className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
+                >
+                  From the people
+                </Heading>
 
-              {fromThePeople.map((people) => (
-                <FromThePeopleCard key={people.reviewerName} people={people} />
-              ))}
-            </Section>
-
-            <Section
-              className="w-full p-4 mx-auto text-black"
-              style={{
-                maxWidth: "640px",
-                width: "100%",
-              }}
-            >
-              <div className="bg-black/[.04] p-4 rounded-lg">
-                <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
-                  ARTICLE
-                </Text>
-                {articles.map((article) => (
-                  <Row key={article.heading} className="mt-[24px]">
-                    <Column>
-                      <Text className="text-[20px] font-semibold break-words">
-                        {article.heading}
-                      </Text>
-                      <Text className="text-[14px] break-words">
-                        {article.content}
-                      </Text>
-                      <Link
-                        href={article.articleLink}
-                        className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
-                      >
-                        Read Article
-                      </Link>
-                    </Column>
-                  </Row>
+                {fromThePeople.map((people) => (
+                  <FromThePeopleCard
+                    key={people.reviewerName}
+                    people={people}
+                  />
                 ))}
-              </div>
-            </Section>
+              </Section>
+            )}
+
+            {articles && articles.length >= 1 && (
+              <Section
+                className="w-full p-4 mx-auto text-black"
+                style={{
+                  maxWidth: "640px",
+                  width: "100%",
+                }}
+              >
+                <div className="bg-black/[.04] p-4 rounded-lg">
+                  <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
+                    ARTICLE
+                  </Text>
+                  {articles.map((article) => (
+                    <Row key={article.heading} className="mt-[24px]">
+                      <Column>
+                        <Text className="text-[20px] font-semibold break-words">
+                          {article.heading}
+                        </Text>
+                        <Text className="text-[14px] break-words">
+                          {article.content}
+                        </Text>
+                        <Link
+                          href={article.articleLink}
+                          className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
+                        >
+                          Read Article
+                        </Link>
+                      </Column>
+                    </Row>
+                  ))}
+                </div>
+              </Section>
+            )}
 
             {/* UPCOMING PROGRAMS */}
-            <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+            {articles && articles.length >= 1 && (
+              <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+            )}
 
             {/* Discover Our Products */}
-            <Section className="p-4 mx-auto w-full">
-              <Row align="center" className="mb-[16px]">
-                <Column align="center">
-                  <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
-                    Discover Our Products
-                  </Text>
-                </Column>
-              </Row>
+            {products && products.length >= 1 && (
+              <Section className=" mx-auto w-full">
+                <Row align="center" className="mb-[16px]">
+                  <Column align="center">
+                    <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
+                      Discover Our Products
+                    </Text>
+                  </Column>
+                </Row>
 
-              <ProductCards products={products} />
-            </Section>
+                <ProductCards products={products} />
+              </Section>
+            )}
 
             {/* OUR SERVICES */}
-            <Section className="p-4">
-              <Row align="center" className="mb-[16px]">
-                <Column align="center">
-                  <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                    Our Services
-                  </Text>
-                </Column>
-              </Row>
+            {services && services.length >= 1 && (
+              <Section className="">
+                <Row align="center" className="mb-[16px]">
+                  <Column align="center">
+                    <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                      Our Services
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurServices services={services} />
-            </Section>
+                <OurServices services={services} />
+              </Section>
+            )}
 
             {/* Our Recent Posts */}
-            <Section className="p-4">
-              <Row align="center" className="mb-[20px]">
-                <Column align="center">
-                  <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                    Our Recent Posts
-                  </Text>
-                </Column>
-              </Row>
+            {posts && posts.length >= 1 && (
+              <Section className="">
+                <Row align="center" className="mb-[20px]">
+                  <Column align="center">
+                    <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                      Our Recent Posts
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurRecentPosts posts={posts} />
-            </Section>
+                <OurRecentPosts posts={posts} />
+              </Section>
+            )}
 
             <Footer />
           </Container>

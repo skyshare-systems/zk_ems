@@ -1,14 +1,13 @@
-import { insertImage$, usePublisher } from "@mdxeditor/editor";
-import Image from "next/image";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { ImageIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { toast } from "sonner";
+import { companies } from "@/lib/constant";
 import { cn, colorizeButton } from "@/lib/utils";
 import { useCompanyStore } from "@/store/company";
-import { companies } from "@/lib/constant";
+import { insertImage$, usePublisher } from "@mdxeditor/editor";
+import { ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
 const ImageUploader = () => {
   const insertImage = usePublisher(insertImage$);
@@ -83,10 +82,11 @@ const ImageUploader = () => {
         altText: file?.name || "Uploaded image",
         title: file?.name || "Uploaded image",
       });
-      setOpenImageDialog(false);
+      // Clear the state to unfocus the image after it's used
       setFile(null);
       setPreviewUrl(null);
       setUploadedUrl(null);
+      setOpenImageDialog(false);
     }
   };
 

@@ -89,7 +89,7 @@ const OurServicesEditor = () => {
                 className="flex flex-col items-start rounded-lg border border-black/[.08] w-full flex-1 relative"
                 key={field.id}
               >
-                {fields.length > 1 && (
+                {fields.length > 0 && (
                   <div
                     onClick={() => remove(index)}
                     className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"

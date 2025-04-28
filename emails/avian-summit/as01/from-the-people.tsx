@@ -1,9 +1,17 @@
+import { formatDateRanges } from "@/lib/utils";
 import { FromThePeople } from "@/store/create-email";
 import { Column, Img, Row, Text, Section } from "@react-email/components";
 
 export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
-  const { reviewerImage, review, reviewerName, location, date } = people;
+  const { reviewerImage, review, reviewerName, tourLocation, dates } = people;
 
+  console.log({
+    reviewerImage,
+    review,
+    reviewerName,
+    tourLocation,
+    dates,
+  });
   return (
     <Section className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">
       <Row className="m-0">
@@ -49,14 +57,14 @@ export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
 
           <div className="mb-3">
             <Text className="text-[10.24px] text-[#070e17] font-medium mb-2">
-              {location as string}
+              {tourLocation as string}
             </Text>
             <Text className="text-[20px] text-[#18181b] font-semibold mb-2">
               {reviewerName}
             </Text>
 
             <Text className="text-[10.25px] font-medium text-black/50">
-              {date as string}
+              {formatDateRanges(dates as Date[])}
             </Text>
           </div>
         </Column>

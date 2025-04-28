@@ -16,7 +16,7 @@ type Props = {
   label: string
 };
 
-export const NestedDates = ({ index, control, label }: Props) => {
+export const NestedUpcomingDates = ({ index, control, label }: Props) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `upcomingPrograms.${index}.dates`,

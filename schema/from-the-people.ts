@@ -11,7 +11,7 @@ export const FromThePeopleSchema = z.object({
       }),
       rating: z.coerce.number().optional(),
       tourLocation: z.string().optional(),
-      datesOfTravel: z
+      dates: z
         .array(
           z.object({
             date: z.coerce.date(),

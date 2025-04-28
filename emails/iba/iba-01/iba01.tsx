@@ -126,123 +126,139 @@ export const IBA01Template = ({
                     {modifiedBody ?? "# IBA"}
                   </Markdown>
 
-                  <Link
-                    href={cta.link}
-                    className={cn(
-                      "bg-[#0E3773] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
-                    )}
-                  >
-                    {cta.text}
-                  </Link>
+                  {/* CTA */}
+
+                  {cta && cta.link && cta.text && (
+                    <Link
+                      href={cta.link}
+                      className={cn(
+                        "bg-[#0E3773] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
+                      )}
+                    >
+                      {cta.text}
+                    </Link>
+                  )}
                 </div>
               )}
             </Section>
 
             {/* FROM THE PEOPLE */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text
-                    style={{
-                      borderBottom: "4px solid #dda624",
-                    }}
-                    className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                  >
-                    From The People
-                  </Text>
-                </Column>
-              </Row>
+            {fromThePeople && fromThePeople.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text
+                      style={{
+                        borderBottom: "4px solid #dda624",
+                      }}
+                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                    >
+                      From The People
+                    </Text>
+                  </Column>
+                </Row>
 
-              {fromThePeople?.map((people, index) => (
-                <FromThePeopleCard key={index} people={people} />
-              ))}
-            </Section>
+                {fromThePeople?.map((people, index) => (
+                  <FromThePeopleCard key={index} people={people} />
+                ))}
+              </Section>
+            )}
 
             {/* Articles */}
-            <Section className="p-4">
-              <Text
-                style={{
-                  borderBottom: "4px solid #dda624",
-                }}
-                className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-              >
-                Articles
-              </Text>
+            {articles && articles.length >= 1 && (
+              <Section className="p-4">
+                <Text
+                  style={{
+                    borderBottom: "4px solid #dda624",
+                  }}
+                  className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                >
+                  Articles
+                </Text>
 
-              {articles?.map((article, index) => (
-                <ArticleCard key={index} article={article} />
-              ))}
-            </Section>
+                {articles?.map((article, index) => (
+                  <ArticleCard key={index} article={article} />
+                ))}
+              </Section>
+            )}
 
             {/* Upcoming Programs */}
-            <Section className="p-4">
-              <Text
-                style={{
-                  borderBottom: "4px solid #dda624",
-                }}
-                className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-              >
-                Upcoming Programs
-              </Text>
+            {upcomingPrograms && upcomingPrograms.length >= 1 && (
+              <Section className="p-4">
+                <Text
+                  style={{
+                    borderBottom: "4px solid #dda624",
+                  }}
+                  className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                >
+                  Upcoming Programs
+                </Text>
 
-              {upcomingPrograms?.map((program, index) => (
-                <UpcomingProgramCard program={program} key={index} />
-              ))}
-            </Section>
+                {upcomingPrograms?.map((program, index) => (
+                  <UpcomingProgramCard program={program} key={index} />
+                ))}
+              </Section>
+            )}
 
             {/* Discover Our Products */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text
-                    style={{
-                      borderBottom: "4px solid #dda624",
-                    }}
-                    className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                  >
-                    Discover Our Products
-                  </Text>
-                </Column>
-              </Row>
+            {products && products.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text
+                      style={{
+                        borderBottom: "4px solid #dda624",
+                      }}
+                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                    >
+                      Discover Our Products
+                    </Text>
+                  </Column>
+                </Row>
 
-              <ProductCards products={products} />
-            </Section>
+                <ProductCards products={products} />
+              </Section>
+            )}
 
             {/* Our Services */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text
-                    style={{
-                      borderBottom: "4px solid #dda624",
-                    }}
-                    className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                  >
-                    Our Services
-                  </Text>
-                </Column>
-              </Row>
+            {services && services.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text
+                      style={{
+                        borderBottom: "4px solid #dda624",
+                      }}
+                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                    >
+                      Our Services
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurServices services={services} />
-            </Section>
+                <OurServices services={services} />
+              </Section>
+            )}
 
             {/* Our Recent Posts */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text
-                    style={{
-                      borderBottom: "4px solid #dda624",
-                    }}
-                    className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                  >
-                    Our Recent Posts
-                  </Text>
-                </Column>
-              </Row>
+            {posts && posts.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text
+                      style={{
+                        borderBottom: "4px solid #dda624",
+                      }}
+                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                    >
+                      Our Recent Posts
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurRecentPosts posts={posts} />
-            </Section>
+                <OurRecentPosts posts={posts} />
+              </Section>
+            )}
 
             <Footer />
           </Container>

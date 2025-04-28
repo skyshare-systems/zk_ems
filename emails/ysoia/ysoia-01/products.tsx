@@ -32,7 +32,7 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
                     {product.description.length >= 40 && "..."}
                   </Text>
                   <Link
-                    href={`https://example.com/products/${product.name}`}
+                    href={product.link}
                     className=" font-normal text-[14px] box-border w-fit text-black/40 underline underline-offset-2"
                     style={{ display: "block" }}
                   >

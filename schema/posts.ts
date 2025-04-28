@@ -6,7 +6,9 @@ export const PostsSchema = z.object({
       description: z.string().min(1, {
         message: "Description is required",
       }),
-      image: z.string(),
+      image: z.string().min(1, {
+        message: "Post image is required",
+      }),
       link: z
         .string()
         .refine(

@@ -123,83 +123,97 @@ export const YSOIA01Template = ({
                     {modifiedBody ?? "# Your Skin"}
                   </Markdown>
 
-                  <Link
-                    href={cta.link}
-                    className={cn(
-                      "bg-[#3467A9] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
-                    )}
-                  >
-                    {cta.text}
-                  </Link>
+                  {cta && cta.link && cta.text && (
+                    <Link
+                      href={cta.link}
+                      className={cn(
+                        "bg-[#3467A9] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
+                      )}
+                    >
+                      {cta.text}
+                    </Link>
+                  )}
                 </div>
               )}
             </Section>
 
             {/* FROM THE PEOPLE */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="center">
-                  <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
-                    From The People
-                  </Text>
-                </Column>
-              </Row>
+            {fromThePeople && fromThePeople.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="center">
+                    <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
+                      From The People
+                    </Text>
+                  </Column>
+                </Row>
 
-              {fromThePeople.map((people, index) => (
-                <FromThePeopleCard people={people} key={index} />
-              ))}
-            </Section>
+                {fromThePeople.map((people, index) => (
+                  <FromThePeopleCard people={people} key={index} />
+                ))}
+              </Section>
+            )}
 
             {/* Articles */}
-            <Section className="p-4">
-              <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
-                Articles
-              </Text>
+            {articles && articles.length >= 1 && (
+              <Section className="p-4">
+                <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
+                  Articles
+                </Text>
 
-              <ArticleCard articles={articles} />
-            </Section>
+                <ArticleCard articles={articles} />
+              </Section>
+            )}
 
             {/* Upcoming Programs */}
-            <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+            {upcomingPrograms && upcomingPrograms.length >= 1 && (
+              <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+            )}
 
             {/* Discover Our Products */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text className="text-[20px] text-black font-medium  text-center w-fit">
-                    Discover Our Products
-                  </Text>
-                </Column>
-              </Row>
+            {products && products.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text className="text-[20px] text-black font-medium  text-center w-fit">
+                      Discover Our Products
+                    </Text>
+                  </Column>
+                </Row>
 
-              <ProductCards products={products} />
-            </Section>
+                <ProductCards products={products} />
+              </Section>
+            )}
 
             {/* Our Services */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text className="text-[20px] text-black font-medium w-fit">
-                    Our Services
-                  </Text>
-                </Column>
-              </Row>
+            {services && services.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text className="text-[20px] text-black font-medium w-fit">
+                      Our Services
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurServices services={services} />
-            </Section>
+                <OurServices services={services} />
+              </Section>
+            )}
 
             {/* Our Recent Posts */}
-            <Section>
-              <Row align="center" className="mb-[20px]">
-                <Column align="left">
-                  <Text className="text-[20px] text-black font-medium text-center w-fit">
-                    Our Recent Posts
-                  </Text>
-                </Column>
-              </Row>
+            {posts && posts.length >= 1 && (
+              <Section>
+                <Row align="center" className="mb-[20px]">
+                  <Column align="left">
+                    <Text className="text-[20px] text-black font-medium text-center w-fit">
+                      Our Recent Posts
+                    </Text>
+                  </Column>
+                </Row>
 
-              <OurRecentPosts posts={posts} />
-            </Section>
+                <OurRecentPosts posts={posts} />
+              </Section>
+            )}
 
             <Footer />
           </Container>

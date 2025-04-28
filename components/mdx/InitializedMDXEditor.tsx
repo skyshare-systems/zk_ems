@@ -66,7 +66,7 @@ export const Mdx = ({ ref }: Props) => {
           "text-right": alignment === "right",
         },
       )}
-      className="h-full flex flex-col grow w-full mx-auto"
+      className="h-full flex flex-col grow w-full mx-auto sticky top-0"
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (
@@ -123,7 +123,9 @@ export const Mdx = ({ ref }: Props) => {
           allowedHeadingLevels: [1, 2, 3, 4, 5, 6],
         }),
         linkPlugin(),
-        linkDialogPlugin(),
+        linkDialogPlugin({
+          
+        }),
         imagePlugin({
           /* ImageDialog: () => {
             return <p>test</p>;

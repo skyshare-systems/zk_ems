@@ -32,7 +32,7 @@ export const ArticleCard = ({ articles }: { articles: Article[] }) => {
                     {article.content.length > 200 ? "..." : null}
                   </Text>
                   <Link
-                    href={`https://example.com/articles/${article.id}`}
+                    href={article.articleLink}
                     className="text-black/40 font-bold rounded-[4px] text-[14px] box-border bg-[#18365A] w-fit px-6 py-4 text-white"
                     style={{ display: "block" }}
                   >

@@ -1,7 +1,7 @@
 import { chunkArray } from "@/emails/utils";
 import { cn } from "@/lib/utils";
 import { Post } from "@/store/create-email";
-import { Column, Img, Row, Text } from "@react-email/components";
+import { Column, Img, Link, Row, Text } from "@react-email/components";
 
 export const OurRecentPosts = ({ posts }: { posts: Post[] }) => {
   const postRows = chunkArray(posts, 3);
@@ -23,7 +23,10 @@ export const OurRecentPosts = ({ posts }: { posts: Post[] }) => {
                 )}
                 style={{ width: "33.33%" }}
               >
-                <div className="border-[1px] p-[8px] border-solid border-gray-200 rounded-[8px] overflow-hidden">
+                <Link
+                  href={post.link}
+                  className="border-[1px] p-[8px] border-solid border-gray-200 rounded-[8px] overflow-hidden"
+                >
                   <Img
                     src={post.image}
                     alt={post.description.substring(0, 10)}
@@ -52,7 +55,7 @@ export const OurRecentPosts = ({ posts }: { posts: Post[] }) => {
                       {post.description.length > 60 && "..."}
                     </Text>
                   </div>
-                </div>
+                </Link>
               </Column>
             ))}
 

@@ -77,7 +77,7 @@ const OurServicesEditor = () => {
           )}
         >
           <PlusIcon color="white" />
-          <span className="text-white ty-subtitle">Add a product</span>
+          <span className="text-white ty-subtitle">Add a service</span>
         </Button>
       </div>
 
@@ -163,7 +163,7 @@ const OurServicesEditor = () => {
                           <Textarea
                             rows={4}
                             className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="Short product description..."
+                            placeholder="Short service description..."
                             {...field}
                           />
                         </FormControl>
@@ -198,7 +198,7 @@ const OurServicesEditor = () => {
                                 <X size={14} />
                               </div>
                               <Image
-                                alt="Product Image"
+                                alt="Service Image"
                                 src={field.value}
                                 width={100}
                                 height={100}

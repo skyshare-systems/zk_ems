@@ -40,7 +40,10 @@ const Error = ({
           access is not available at the moment. Please try again later or
           navigate to the homepage.
         </p>
-        <p className="text-red-400">{error.message}</p>
+
+        {process.env.NODE_ENV === "development" && (
+          <p className="text-red-400">{error.message}</p>
+        )}
         <Button
           onClick={() => reset()}
           className={buttonVariants({

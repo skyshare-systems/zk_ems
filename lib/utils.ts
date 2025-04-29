@@ -278,7 +278,7 @@ export const isDatesOfTravelFieldVisible = (
   return allowedCompanies.includes(companyName);
 };
 export const isArticleDateFieldVisible = (companyName: companies): boolean => {
-  const allowedCompanies: companies[] = ["InnovatEd Business Academy"];
+  const allowedCompanies: companies[] = ["InnovatEd Business Academy", "InnovatEd Business Solutions"];
 
   return allowedCompanies.includes(companyName);
 };

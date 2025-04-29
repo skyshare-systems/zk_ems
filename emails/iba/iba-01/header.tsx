@@ -8,7 +8,7 @@ const Header = () => {
         src={`https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/header.png`}
         width="100%"
         height="100%"
-        alt="Skyshare Labs"
+        alt="Innovated Business Academy"
         className="object-cover w-full"
       />
     </Section>

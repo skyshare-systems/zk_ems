@@ -55,7 +55,7 @@ export interface Service {
 
 export interface Post {
   image: string;
-  link:string;
+  link: string;
   description: string;
 }
 

@@ -4,7 +4,7 @@ import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useModalStore } from "@/store/modal";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowDown, ArrowUpRight, Upload } from "lucide-react";
+import { ArrowDown, ArrowUpRight, RotateCcw, Upload } from "lucide-react";
 import React, {
   ChangeEvent,
   KeyboardEvent,
@@ -20,6 +20,7 @@ import { Input } from "./ui/input";
 import useProps from "@/hooks/useProps";
 import { cn, colorizeButton } from "@/lib/utils";
 import ScrollTop from "./scroll-top";
+import { useConfirmResetStore } from "@/store/confirm-reset";
 
 interface ValidationError {
   message: string;
@@ -50,7 +51,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     preview,
     setPreview,
     articles,
+    reset,
   } = useCreateEmailStore();
+  const { onOpen: openResetFieldsModal } = useConfirmResetStore();
   const { propsBuilder } = useProps();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
@@ -520,22 +523,42 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
           </div>
         )}
 
-        <div className="flex gap-4 items-center">
-          <p className="ty-descriptions text-white/[.32]">Email Content</p>
-          <Button
-            onClick={() => {
-              window.scrollTo(0, document.body.scrollHeight);
-            }}
-            className={cn(
-              buttonVariants({
-                size: "icon",
-              }),
-              colorizeButton(selectedTemplate.company.name),
-              "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
-            )}
-          >
-            <ArrowDown color="white" size={16} />
-          </Button>
+        <div className="flex gap-4 items-center w-full">
+          <p className="ty-descriptions text-white/[.32] flex-1">
+            Email Content
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              title="Scroll to Bottom"
+              onClick={() => {
+                window.scrollTo(0, document.body.scrollHeight);
+              }}
+              className={cn(
+                buttonVariants({
+                  size: "sm",
+                }),
+                colorizeButton(selectedTemplate.company.name),
+                "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
+              )}
+            >
+              <ArrowDown color="white" size={12} />
+            </Button>
+            <Button
+              title="Reset Fields"
+              onClick={() => {
+                openResetFieldsModal();
+              }}
+              className={cn(
+                buttonVariants({
+                  size: "sm",
+                  variant: "destructive",
+                }),
+                "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
+              )}
+            >
+              <RotateCcw color="white" size={12} />
+            </Button>
+          </div>
         </div>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">

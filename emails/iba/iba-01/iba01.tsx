@@ -86,7 +86,7 @@ export const IBA01Template = ({
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="font-inter bg-black/20 my-auto mx-auto px-2 py-[20px]">
+        <Body className="font-inter bg-black/[.08] my-auto mx-auto px-2 py-[20px]">
           <Container className="border rounded-lg overflow-hidden text-white bg-[#f5f7f9] border-solid border-[#eaeaea]  mx-auto max-w-[680px] w-full p-4">
             {/* HEADER */}
             <Header />
@@ -115,6 +115,8 @@ export const IBA01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
+                      maxWidth: "680px",
+                      overflowWrap: "break-word",
                       width: "100%",
                     }}
                     markdownCustomStyles={{

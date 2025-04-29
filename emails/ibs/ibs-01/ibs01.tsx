@@ -46,7 +46,7 @@ export const IBS01Template = ({ body, isTemplate }: IBS01TemplateProps) => {
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="font-geist bg-black/20 my-auto mx-auto px-2 py-[20px]">
+        <Body className="font-geist bg-black/[.08] my-auto mx-auto px-2 py-[20px]">
           <Container className="border rounded-lg overflow-hidden text-white bg-white border-solid py-[20px] border-[#eaeaea]  mx-auto max-w-[640px] w-full">
             <Section className="my-0 mx-auto max-w-[640px] w-full object-cover">
               <Img
@@ -81,9 +81,9 @@ export const IBS01Template = ({ body, isTemplate }: IBS01TemplateProps) => {
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
-                      maxWidth: "640px",
+                      maxWidth: "680px",
+                      overflowWrap: "break-word",
                       width: "100%",
-                      textAlign: "center",
                     }}
                   >
                     {modifiedBody ?? "# KPC TAX"}

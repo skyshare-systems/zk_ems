@@ -5,6 +5,7 @@ import { TailwindIndicator } from "@/components/globals/tailwind-indicator";
 import AuthProvider from "@/components/providers/auth";
 import ModalProvider from "@/components/providers/modal";
 import { QueryProvider } from "@/components/providers/query";
+import SmoothScroll from "@/components/providers/smooth-scroll";
 import { ThemeProvider } from "@/components/providers/theme";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -121,7 +122,7 @@ export default function DashboardLayout({
         >
           <QueryProvider>
             <AuthProvider>
-              <div className="">
+              <SmoothScroll>
                 <SidebarProvider>
                   <Suspense fallback={null}>
                     <AppSidebar />
@@ -131,7 +132,7 @@ export default function DashboardLayout({
                 <Footer />
                 <ModalProvider />
                 <TailwindIndicator />
-              </div>
+              </SmoothScroll>
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>

@@ -107,7 +107,7 @@ export const KPCTAX01Template = ({
       </Head>
       {/* <Preview>{previewText}</Preview> */}
       <Tailwind>
-        <Body className="font-inter bg-black/20 my-auto mx-auto  px-2 py-[20px]">
+        <Body className="font-inter bg-black/[.08] my-auto mx-auto  px-2 py-[20px]">
           <Container className="p-4 border rounded-lg overflow-hidden text-white my-[32px] bg-white border-solid border-[#eaeaea]  mx-auto max-w-[640px] w-full">
             {/* HEADER */}
 
@@ -137,6 +137,8 @@ export const KPCTAX01Template = ({
                       container: "prose max-w-none",
                       containerType: "unset",
                       aspectRatio: "none",
+                      maxWidth: "680px",
+                      overflowWrap: "break-word",
                     }}
                     markdownCustomStyles={{
                       image: {

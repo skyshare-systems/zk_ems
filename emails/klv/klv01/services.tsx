@@ -41,7 +41,7 @@ export const OurServices = ({ services }: { services: Service[] }) => {
             </Text>
             <Link
               href={service.link}
-              className="bg-[#00A19B] align-top mb-2 p-0 rounded-[12px] text-white px-4 py-2 font-medium no-underline text-[14px] inline-block box-border"
+              className="bg-[#00A19B] align-top mb-2 p-0 rounded-[12px] text-white px-4 py-2 font-medium no-underline text-[14px] inline-block box-border w-full"
             >
               Learn More
             </Link>

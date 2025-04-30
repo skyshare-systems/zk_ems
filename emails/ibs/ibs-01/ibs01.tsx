@@ -47,31 +47,102 @@ interface IBS01TemplateProps {
 export const IBS01Template = ({
   body,
   isTemplate,
-  cta,
-  fromThePeople,
-  articles,
-  upcomingPrograms,
-  products,
+  cta = {
+    link: "https://example.com",
+    text: "Learn More",
+  },
+  fromThePeople = [
+    {
+      review:
+        "I had an amazing experience with the team! They were professional and attentive to my needs. Highly recommend!",
+      reviewerImage: "https://new.email/static/app/placeholder.png",
+      reviewerName: "Jane Smith",
+      rating: 5,
+    },
+  ],
+  articles = [
+    {
+      date: new Date("2023-10-01"),
+      articleLink: "https://example.com/article",
+      image: "https://new.email/static/app/placeholder.png",
+      content:
+        "Explore the latest trends and innovations in aesthetic medicine. From cutting-edge technologies to breakthrough treatments, stay informed about the future of beauty and wellness.",
+      heading: "The Future of Aesthetic Medicine",
+    },
+  ],
+  upcomingPrograms = [
+    {
+      dates: [
+        {
+          date: new Date("2023-10-01"),
+        },
+        {
+          date: new Date("2023-10-02"),
+        },
+      ],
+      externalLink: "https://example.com/upcoming-program",
+      title: "Upcoming Program",
+    },
+    {
+      dates: [
+        {
+          date: new Date("2023-10-01"),
+        },
+      ],
+      externalLink: "https://example.com/upcoming-program",
+      title: "Upcoming Program",
+    },
+  ],
+  products = [
+    {
+      description:
+        "Discover our range of skincare products designed to enhance your natural beauty.",
+      image: "https://new.email/static/app/placeholder.png",
+      link: "https://example.com/skincare-products",
+      name: "Skincare Products",
+    },
+    {
+      description:
+        "Discover our range of skincare products designed to enhance your natural beauty.",
+      image: "https://new.email/static/app/placeholder.png",
+      link: "https://example.com/skincare-products",
+      name: "Skincare Products",
+    },
+    {
+      description:
+        "Discover our range of skincare products designed to enhance your natural beauty.",
+      image: "https://new.email/static/app/placeholder.png",
+      link: "https://example.com/skincare-products",
+      name: "Skincare Products",
+    },
+    {
+      description:
+        "Discover our range of skincare products designed to enhance your natural beauty.",
+      image: "https://new.email/static/app/placeholder.png",
+      link: "https://example.com/skincare-products",
+      name: "Skincare Products",
+    },
+  ],
   services = [
     {
       title: "Skin Rejuvenation",
       description:
         "Experience the latest in skin rejuvenation technology with our advanced treatments.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/skin-rejuvenation",
     },
     {
       title: "Laser Hair Removal",
       description:
         "Say goodbye to unwanted hair with our safe and effective laser hair removal services.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/laser-hair-removal",
     },
     {
       title: "Anti-Aging Treatments",
       description:
         "Turn back the clock with our range of anti-aging treatments tailored to your needs.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/anti-aging-treatments",
     },
   ],
@@ -79,19 +150,19 @@ export const IBS01Template = ({
     {
       description:
         "Explore the latest trends and innovations in aesthetic medicine.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/future-aesthetic-medicine",
     },
     {
       description:
         "Discover the top 10 skincare tips to keep your skin looking youthful and radiant.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/top-10-skincare-tips",
     },
     {
       description:
         "A comprehensive guide to understanding laser treatments and their benefits.",
-      image: "https://via.placeholder.com/150",
+      image: "https://new.email/static/app/placeholder.png",
       link: "https://example.com/understanding-laser-treatments",
     },
   ],

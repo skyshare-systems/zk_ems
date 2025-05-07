@@ -8,7 +8,7 @@ import {
 import { ArticleSchema } from "@/schema/articles";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, PlusIcon, X } from "lucide-react";
+import { CalendarIcon, Move, PlusIcon, X } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -31,7 +31,8 @@ import ImageUploader from "./modals/image-uploader-no-context";
 import { companies } from "@/lib/constant";
 
 const ArticleEditor = () => {
-  const { selectedTemplate, setArticles, articles } = useCreateEmailStore();
+  const { selectedTemplate, setArticles, articles, isRearranging } =
+    useCreateEmailStore();
 
   const form = useForm<z.infer<typeof ArticleSchema>>({
     resolver: zodResolver(ArticleSchema),
@@ -66,212 +67,248 @@ const ArticleEditor = () => {
 
   return (
     <div className="flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04]">
-      <div className="flex items-center gap-2 self-stretch mb-4">
-        <p className="ty-title flex-1 text-black/50">ARTICLE</p>
-        <Button
-          disabled={!form.formState.isValid}
-          onClick={() => append({ heading: "", content: "", articleLink: "" })}
-          type="button"
-          className={cn(
-            "flex px-3 py-2 gap-2",
-            colorizeButton(selectedTemplate.company.name),
+      {!isRearranging && (
+        <div className="w-full cursor-grab">
+          <Image
+            src={"/assets/draggable.png"}
+            width={80}
+            height={8}
+            alt="draggable"
+            className="mx-auto pointer-events-none"
+          />
+        </div>
+      )}
+
+      <div
+        className={cn(
+          "flex items-center gap-2 self-stretch",
+          !isRearranging && "mb-4",
+        )}
+      >
+        <div className="flex justify-between items-center w-full">
+          <p className="ty-title flex-1 text-black/50">Articles</p>
+
+          {isRearranging && (
+            <div className="flex gap-2 items-center">
+              <Move size={14} color="black" />
+              <p className="text-[#000205] text-[12.8px]">Drag to sort</p>
+            </div>
           )}
-        >
-          <PlusIcon color="white" />
-          <span className="text-white ty-subtitle">Add an article</span>
-        </Button>
+        </div>
+
+        {!isRearranging && (
+          <Button
+            disabled={!form.formState.isValid}
+            onClick={() =>
+              append({ heading: "", content: "", articleLink: "" })
+            }
+            type="button"
+            className={cn(
+              "flex px-3 py-2 gap-2",
+              colorizeButton(selectedTemplate.company.name),
+            )}
+          >
+            <PlusIcon color="white" />
+            <span className="text-white ty-subtitle">Add an article</span>
+          </Button>
+        )}
       </div>
 
-      <div className="w-full text-black">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            {fields.map((field, index) => (
-              <div
-                className="flex flex-col items-start rounded-lg border border-black/[.08] w-full flex-1 relative"
-                key={field.id}
-              >
-                {fields.length > 0 && (
-                  <div
-                    onClick={() => remove(index)}
-                    className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
-                  >
-                    <X size={14} />
-                  </div>
-                )}
-                <FormField
-                  control={form.control}
-                  name={`articles.${index}.heading`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Heading
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Input
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="The Long Haul: How KPC built a shipping empire..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
+      {!isRearranging && (
+        <div className="w-full text-black">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              {fields.map((field, index) => (
+                <div
+                  className="flex flex-col items-start rounded-lg border border-black/[.08] w-full flex-1 relative"
+                  key={field.id}
+                >
+                  {fields.length > 0 && (
+                    <div
+                      onClick={() => remove(index)}
+                      className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                    >
+                      <X size={14} color="white" />
+                    </div>
                   )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`articles.${index}.content`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        <div className="flex flex-col">
-                          <p className="ty-descriptions">Content</p>
-                          <p className="ty-subtext text-black/50">
-                            Put the first paragraph only
-                          </p>
-                        </div>
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Textarea
-                            rows={4}
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="Manila is busy with the constant motion of commerce..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`articles.${index}.articleLink`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Article Link
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Input
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="https://randomrepublika.com/the-long-haul-how-kpc-built-a-shipping-empire-one-box-at-a-time/"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Date */}
-                {isArticleDateFieldVisible(
-                  selectedTemplate.company.name as companies,
-                ) && (
                   <FormField
                     control={form.control}
-                    name={`articles.${index}.date`}
+                    name={`articles.${index}.heading`}
                     render={({ field }) => (
                       <FormItem className="w-full flex items-center gap-4 p-2">
                         <FormLabel className="max-w-[96px] w-full shrink-0">
-                          Date
-                        </FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[240px] pl-3 text-left font-normal  border-black/[.08] bg-transparent",
-                                  !field.value && "text-muted-foreground",
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {isArticlePhotoFieldHidden(
-                  selectedTemplate.company.name as companies,
-                ) && (
-                  <FormField
-                    control={form.control}
-                    name={`articles.${index}.image`}
-                    render={({ field }) => (
-                      <FormItem className="w-full flex items-center gap-4 p-2">
-                        <FormLabel className="max-w-[96px] w-full shrink-0">
-                          <div className="flex flex-col">
-                            <p className="ty-descriptions">Photo</p>
-                          </div>
+                          Heading
                         </FormLabel>
                         <div className="flex flex-col gap-2 w-full">
                           <FormControl>
-                            {field.value ? (
-                              <div className="relative w-fit">
-                                <div
-                                  onClick={() => field.onChange("")}
-                                  className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
-                                >
-                                  <X size={14} />
-                                </div>
-                                <Image
-                                  alt="Article Image"
-                                  src={field.value}
-                                  width={100}
-                                  height={100}
-                                  className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
-                                />
-                              </div>
-                            ) : (
-                              <div className="max-w-[250px] w-full">
-                                <ImageUploader
-                                  onUploadComplete={(url) =>
-                                    update(index, {
-                                      ...watchArticles[index],
-                                      image: url,
-                                    })
-                                  }
-                                />
-                              </div>
-                            )}
+                            <Input
+                              className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                              placeholder="The Long Haul: How KPC built a shipping empire..."
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </div>
                       </FormItem>
                     )}
                   />
-                )}
-              </div>
-            ))}
-          </form>
-        </Form>
-      </div>
+
+                  <FormField
+                    control={form.control}
+                    name={`articles.${index}.content`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          <div className="flex flex-col">
+                            <p className="ty-descriptions">Content</p>
+                            <p className="ty-subtext text-black/50">
+                              Put the first paragraph only
+                            </p>
+                          </div>
+                        </FormLabel>
+                        <div className="flex flex-col gap-2 w-full">
+                          <FormControl>
+                            <Textarea
+                              rows={4}
+                              className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                              placeholder="Manila is busy with the constant motion of commerce..."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`articles.${index}.articleLink`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          Article Link
+                        </FormLabel>
+                        <div className="flex flex-col gap-2 w-full">
+                          <FormControl>
+                            <Input
+                              className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                              placeholder="https://randomrepublika.com/the-long-haul-how-kpc-built-a-shipping-empire-one-box-at-a-time/"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Date */}
+                  {isArticleDateFieldVisible(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <FormField
+                      control={form.control}
+                      name={`articles.${index}.date`}
+                      render={({ field }) => (
+                        <FormItem className="w-full flex items-center gap-4 p-2">
+                          <FormLabel className="max-w-[96px] w-full shrink-0">
+                            Date
+                          </FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-[240px] pl-3 text-left font-normal  border-black/[.08] bg-transparent",
+                                    !field.value && "text-muted-foreground",
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {isArticlePhotoFieldHidden(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <FormField
+                      control={form.control}
+                      name={`articles.${index}.image`}
+                      render={({ field }) => (
+                        <FormItem className="w-full flex items-center gap-4 p-2">
+                          <FormLabel className="max-w-[96px] w-full shrink-0">
+                            <div className="flex flex-col">
+                              <p className="ty-descriptions">Photo</p>
+                            </div>
+                          </FormLabel>
+                          <div className="flex flex-col gap-2 w-full">
+                            <FormControl>
+                              {field.value ? (
+                                <div className="relative w-fit">
+                                  <div
+                                    onClick={() => field.onChange("")}
+                                    className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                                  >
+                                    <X size={14} color="white" />
+                                  </div>
+                                  <Image
+                                    alt="Article Image"
+                                    src={field.value}
+                                    width={100}
+                                    height={100}
+                                    className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="max-w-[250px] w-full">
+                                  <ImageUploader
+                                    onUploadComplete={(url) =>
+                                      update(index, {
+                                        ...watchArticles[index],
+                                        image: url,
+                                      })
+                                    }
+                                  />
+                                </div>
+                              )}
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              ))}
+            </form>
+          </Form>
+        </div>
+      )}
     </div>
   );
 };

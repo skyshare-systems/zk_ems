@@ -1,3 +1,4 @@
+import { getDefaultOrder, SectionType } from "@/emails/utils";
 import { cn } from "@/lib/utils";
 import {
   Article,
@@ -15,22 +16,21 @@ import {
   Font,
   Head,
   Html,
-  Img,
   Link,
   Markdown,
   Row,
   Section,
   Tailwind,
-  Text,
+  Text
 } from "@react-email/components";
 import { ArticleCard } from "./article";
+import Footer from "./footer";
 import { FromThePeopleCard } from "./from-the-people";
+import Header from "./header";
 import { OurRecentPosts } from "./posts";
 import { ProductCards } from "./products";
 import { OurServices } from "./services";
 import { UpcomingProgramCard } from "./upcoming-section";
-import Header from "./header";
-import Footer from "./footer";
 
 interface IBS01TemplateProps {
   body: string;
@@ -42,6 +42,8 @@ interface IBS01TemplateProps {
   products: Product[];
   services: Service[];
   posts: Post[];
+  isSectionOrderUpdated: boolean;
+  sectionOrder: SectionType[];
 }
 
 export const IBA01Template = ({
@@ -54,7 +56,19 @@ export const IBA01Template = ({
   products,
   services,
   posts,
+  sectionOrder,
+  isSectionOrderUpdated,
 }: IBS01TemplateProps) => {
+  const finalSectionOrder = getDefaultOrder(
+    sectionOrder,
+    "InnovatEd Business Academy",
+    isSectionOrderUpdated,
+  );
+
+  console.log({
+    isSectionOrderUpdated,
+  });
+
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="width:100%; border-radius:12px" $1>',
@@ -144,123 +158,130 @@ export const IBA01Template = ({
               )}
             </Section>
 
-            {/* FROM THE PEOPLE */}
-            {fromThePeople && fromThePeople.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text
-                      style={{
-                        borderBottom: "4px solid #dda624",
-                      }}
-                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                    >
-                      From The People
-                    </Text>
-                  </Column>
-                </Row>
+            {finalSectionOrder.map((section) => {
+              switch (section) {
+                case "fromThePeople":
+                  return fromThePeople?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text
+                            style={{
+                              borderBottom: "4px solid #dda624",
+                            }}
+                            className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                          >
+                            From The People
+                          </Text>
+                        </Column>
+                      </Row>
 
-                {fromThePeople?.map((people, index) => (
-                  <FromThePeopleCard key={index} people={people} />
-                ))}
-              </Section>
-            )}
+                      {fromThePeople?.map((people, index) => (
+                        <FromThePeopleCard key={index} people={people} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {/* Articles */}
-            {articles && articles.length >= 1 && (
-              <Section className="p-4">
-                <Text
-                  style={{
-                    borderBottom: "4px solid #dda624",
-                  }}
-                  className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                >
-                  Articles
-                </Text>
+                case "articles":
+                  return articles?.length ? (
+                    <Section className="p-4">
+                      <Text
+                        style={{
+                          borderBottom: "4px solid #dda624",
+                        }}
+                        className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                      >
+                        Articles
+                      </Text>
 
-                {articles?.map((article, index) => (
-                  <ArticleCard key={index} article={article} />
-                ))}
-              </Section>
-            )}
+                      {articles?.map((article, index) => (
+                        <ArticleCard key={index} article={article} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {/* Upcoming Programs */}
-            {upcomingPrograms && upcomingPrograms.length >= 1 && (
-              <Section className="p-4">
-                <Text
-                  style={{
-                    borderBottom: "4px solid #dda624",
-                  }}
-                  className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                >
-                  Upcoming Programs
-                </Text>
+                case "upcomingPrograms":
+                  return upcomingPrograms?.length ? (
+                    <Section className="p-4">
+                      <Text
+                        style={{
+                          borderBottom: "4px solid #dda624",
+                        }}
+                        className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                      >
+                        Upcoming Programs
+                      </Text>
 
-                {upcomingPrograms?.map((program, index) => (
-                  <UpcomingProgramCard program={program} key={index} />
-                ))}
-              </Section>
-            )}
+                      {upcomingPrograms?.map((program, index) => (
+                        <UpcomingProgramCard program={program} key={index} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {/* Discover Our Products */}
-            {products && products.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text
-                      style={{
-                        borderBottom: "4px solid #dda624",
-                      }}
-                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                    >
-                      Discover Our Products
-                    </Text>
-                  </Column>
-                </Row>
+                case "products":
+                  return products?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text
+                            style={{
+                              borderBottom: "4px solid #dda624",
+                            }}
+                            className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                          >
+                            Discover Our Products
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <ProductCards products={products} />
-              </Section>
-            )}
+                      <ProductCards products={products} />
+                    </Section>
+                  ) : null;
 
-            {/* Our Services */}
-            {services && services.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text
-                      style={{
-                        borderBottom: "4px solid #dda624",
-                      }}
-                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                    >
-                      Our Services
-                    </Text>
-                  </Column>
-                </Row>
+                case "services":
+                  return services?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text
+                            style={{
+                              borderBottom: "4px solid #dda624",
+                            }}
+                            className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                          >
+                            Our Services
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <OurServices services={services} />
-              </Section>
-            )}
+                      <OurServices services={services} />
+                    </Section>
+                  ) : null;
 
-            {/* Our Recent Posts */}
-            {posts && posts.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text
-                      style={{
-                        borderBottom: "4px solid #dda624",
-                      }}
-                      className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
-                    >
-                      Our Recent Posts
-                    </Text>
-                  </Column>
-                </Row>
+                case "posts":
+                  return posts?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text
+                            style={{
+                              borderBottom: "4px solid #dda624",
+                            }}
+                            className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+                          >
+                            Our Recent Posts
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <OurRecentPosts posts={posts} />
-              </Section>
-            )}
+                      <OurRecentPosts posts={posts} />
+                    </Section>
+                  ) : null;
+
+                default:
+                  return null;
+              }
+            })}
 
             <Footer />
           </Container>
@@ -271,3 +292,145 @@ export const IBA01Template = ({
 };
 
 export default IBA01Template;
+
+// {
+//   /* FROM THE PEOPLE */
+// }
+// {
+//   fromThePeople && fromThePeople.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text
+//             style={{
+//               borderBottom: "4px solid #dda624",
+//             }}
+//             className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//           >
+//             From The People
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       {fromThePeople?.map((people, index) => (
+//         <FromThePeopleCard key={index} people={people} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Articles */
+// }
+// {
+//   articles && articles.length >= 1 && (
+//     <Section className="p-4">
+//       <Text
+//         style={{
+//           borderBottom: "4px solid #dda624",
+//         }}
+//         className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//       >
+//         Articles
+//       </Text>
+
+//       {articles?.map((article, index) => (
+//         <ArticleCard key={index} article={article} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Upcoming Programs */
+// }
+// {
+//   upcomingPrograms && upcomingPrograms.length >= 1 && (
+//     <Section className="p-4">
+//       <Text
+//         style={{
+//           borderBottom: "4px solid #dda624",
+//         }}
+//         className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//       >
+//         Upcoming Programs
+//       </Text>
+
+//       {upcomingPrograms?.map((program, index) => (
+//         <UpcomingProgramCard program={program} key={index} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Discover Our Products */
+// }
+// {
+//   products && products.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text
+//             style={{
+//               borderBottom: "4px solid #dda624",
+//             }}
+//             className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//           >
+//             Discover Our Products
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <ProductCards products={products} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Our Services */
+// }
+// {
+//   services && services.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text
+//             style={{
+//               borderBottom: "4px solid #dda624",
+//             }}
+//             className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//           >
+//             Our Services
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurServices services={services} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Our Recent Posts */
+// }
+// {
+//   posts && posts.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text
+//             style={{
+//               borderBottom: "4px solid #dda624",
+//             }}
+//             className="text-[20px] text-black font-semibold mx-auto text-center w-fit"
+//           >
+//             Our Recent Posts
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurRecentPosts posts={posts} />
+//     </Section>
+//   );
+// }

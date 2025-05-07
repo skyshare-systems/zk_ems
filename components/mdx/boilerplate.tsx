@@ -1,5 +1,4 @@
 import React from "react";
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   diffSourcePlugin,
   markdownShortcutPlugin,
@@ -69,7 +68,6 @@ export const virtuosoSampleSandpackConfig: SandpackConfig = {
         "react-virtuoso": "latest",
         "@ngneat/falso": "latest",
       },
-    
     },
   ],
 };
@@ -84,7 +82,6 @@ export async function expressImageUploadHandler(image: File) {
   const json = (await response.json()) as { url: string };
   return json.url;
 }
-
 
 export const ALL_PLUGINS = [
   toolbarPlugin({ toolbarContents: () => <KitchenSinkToolbar /> }),
@@ -116,9 +113,7 @@ export const ALL_PLUGINS = [
     },
   }),
   directivesPlugin({
-    directiveDescriptors: [
-      AdmonitionDirectiveDescriptor,
-    ],
+    directiveDescriptors: [AdmonitionDirectiveDescriptor],
   }),
   diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "boo" }),
   markdownShortcutPlugin(),

@@ -11,6 +11,7 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
         <Row key={`row-${rowIndex}`} className="mb-[16px]">
           {row.map((product, colIndex) => (
             <Column
+              valign="top"
               key={product.name}
               className={
                 colIndex === 0

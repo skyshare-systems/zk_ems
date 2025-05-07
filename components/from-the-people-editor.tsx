@@ -10,7 +10,7 @@ import {
 import { ArticleSchema } from "@/schema/articles";
 import { useCreateEmailStore } from "@/store/create-email";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, X } from "lucide-react";
+import { Move, PlusIcon, X } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,7 +33,7 @@ import { FromThePeopleDates } from "./from-the-people-dates";
 import { NestedDates } from "./nested-dates";
 
 const FromThePeopleEditor = () => {
-  const { selectedTemplate, fromThePeople, setFromThePeople } =
+  const { selectedTemplate, fromThePeople, setFromThePeople, isRearranging } =
     useCreateEmailStore();
 
   const form = useForm<z.infer<typeof FromThePeopleSchema>>({
@@ -68,86 +68,96 @@ const FromThePeopleEditor = () => {
   if (!selectedTemplate || !isFromThePeopleAllowed) return null;
 
   return (
-    <div className="flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04]">
-      <div className="flex items-center gap-2 self-stretch mb-4">
-        <p className="ty-title flex-1 text-black/50">From The People</p>
-        <Button
-          disabled={!form.formState.isValid}
-          onClick={() =>
-            append({
-              reviewerName: "",
-              reviewerImage: "",
-              rating: 0,
-              review: "",
-            })
-          }
-          type="button"
-          className={cn(
-            "flex px-3 py-2 gap-2 ",
-            colorizeButton(selectedTemplate.company.name),
+    <div
+      className={cn(
+        "flex p-4 flex-col justify-center items-center gap-2 self-stretch bg-black/[.04] relative",
+        // isRearranging && "border border-dashed",
+      )}
+    >
+      {!isRearranging && (
+        <div className="w-full cursor-grab">
+          <Image
+            src={"/assets/draggable.png"}
+            width={80}
+            height={8}
+            alt="draggable"
+            className="mx-auto pointer-events-none"
+          />
+        </div>
+      )}
+
+      <div
+        className={cn(
+          "flex items-center gap-2 self-stretch",
+          !isRearranging && "mb-4",
+        )}
+      >
+        <div className="flex justify-between items-center w-full">
+          <p className="ty-title flex-1 text-black/50">From The People</p>
+
+          {isRearranging && (
+            <div className="flex gap-2 items-center">
+              <Move size={14} color="black" />
+              <p className="text-[#000205] text-[12.8px]">Drag to sort</p>
+            </div>
           )}
-        >
-          <PlusIcon color="white" />
-          <span className="text-white ty-subtitle">Add a review</span>
-        </Button>
+        </div>
+
+        {!isRearranging && (
+          <Button
+            disabled={!form.formState.isValid}
+            onClick={() =>
+              append({
+                reviewerName: "",
+                reviewerImage: "",
+                rating: 0,
+                review: "",
+              })
+            }
+            type="button"
+            className={cn(
+              "flex px-3 py-2 gap-2 ",
+              colorizeButton(selectedTemplate.company.name),
+            )}
+          >
+            <PlusIcon color="white" />
+            <span className="text-white ty-subtitle">Add a review</span>
+          </Button>
+        )}
       </div>
 
-      <div className="w-full text-black">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            {fields.map((field, index) => (
-              <div
-                className="flex flex-col items-start rounded-lg border border-black/[.08] w-full flex-1 relative"
-                key={field.id}
-              >
-                {fields.length > 0 && (
-                  <div
-                    onClick={() => remove(index)}
-                    className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
-                  >
-                    <X size={14} />
-                  </div>
-                )}
-
-                {/* REVIEWERS NAME */}
-                <FormField
-                  control={form.control}
-                  name={`fromThePeople.${index}.reviewerName`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Reviewer’s Name
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Input
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="John Doe"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
+      {!isRearranging && (
+        <div className="w-full text-black">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              {fields.map((field, index) => (
+                <div
+                  className="flex flex-col items-start rounded-lg border border-black/[.08] w-full flex-1 relative"
+                  key={field.id}
+                >
+                  {fields.length > 0 && (
+                    <div
+                      onClick={() => remove(index)}
+                      className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                    >
+                      <X size={14} color="white" />
+                    </div>
                   )}
-                />
 
-                {isRatingFieldVisible(
-                  selectedTemplate.company.name as companies,
-                ) && (
+                  {/* REVIEWERS NAME */}
                   <FormField
                     control={form.control}
-                    name={`fromThePeople.${index}.rating`}
+                    name={`fromThePeople.${index}.reviewerName`}
                     render={({ field }) => (
                       <FormItem className="w-full flex items-center gap-4 p-2">
                         <FormLabel className="max-w-[96px] w-full shrink-0">
-                          Rating
+                          Reviewer’s Name
                         </FormLabel>
                         <div className="flex flex-col gap-2 w-full">
                           <FormControl>
                             <Input
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="5"
+                              placeholder="John Doe"
                               {...field}
                             />
                           </FormControl>
@@ -156,73 +166,73 @@ const FromThePeopleEditor = () => {
                       </FormItem>
                     )}
                   />
-                )}
 
-                {isCourseTakenFieldVisible(
-                  selectedTemplate.company.name as companies,
-                ) && (
-                  <FormField
-                    control={form.control}
-                    name={`fromThePeople.${index}.courseTaken`}
-                    render={({ field }) => (
-                      <FormItem className="w-full flex items-center gap-4 p-2">
-                        <FormLabel className="max-w-[96px] w-full shrink-0">
-                          Course Taken
-                        </FormLabel>
-                        <div className="flex flex-col gap-2 w-full">
-                          <FormControl>
-                            <Input
-                              className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="8-Day Full Course Aesthetic Program and Courses"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                <FormField
-                  control={form.control}
-                  name={`fromThePeople.${index}.review`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        Review
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          <Textarea
-                            rows={4}
-                            className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                            placeholder="This workshop transformed my understanding of finance!"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
+                  {isRatingFieldVisible(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <FormField
+                      control={form.control}
+                      name={`fromThePeople.${index}.rating`}
+                      render={({ field }) => (
+                        <FormItem className="w-full flex items-center gap-4 p-2">
+                          <FormLabel className="max-w-[96px] w-full shrink-0">
+                            Rating
+                          </FormLabel>
+                          <div className="flex flex-col gap-2 w-full">
+                            <FormControl>
+                              <Input
+                                className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                                placeholder="5"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
                   )}
-                />
 
-                {isTourLocationFieldVisible(
-                  selectedTemplate.company.name as companies,
-                ) && (
+                  {isCourseTakenFieldVisible(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <FormField
+                      control={form.control}
+                      name={`fromThePeople.${index}.courseTaken`}
+                      render={({ field }) => (
+                        <FormItem className="w-full flex items-center gap-4 p-2">
+                          <FormLabel className="max-w-[96px] w-full shrink-0">
+                            Course Taken
+                          </FormLabel>
+                          <div className="flex flex-col gap-2 w-full">
+                            <FormControl>
+                              <Input
+                                className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                                placeholder="8-Day Full Course Aesthetic Program and Courses"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
                   <FormField
                     control={form.control}
-                    name={`fromThePeople.${index}.tourLocation`}
+                    name={`fromThePeople.${index}.review`}
                     render={({ field }) => (
                       <FormItem className="w-full flex items-center gap-4 p-2">
                         <FormLabel className="max-w-[96px] w-full shrink-0">
-                          Tour Location
+                          Review
                         </FormLabel>
                         <div className="flex flex-col gap-2 w-full">
                           <FormControl>
-                            <Input
+                            <Textarea
+                              rows={4}
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="Tokyo - Osaka, Japan"
+                              placeholder="This workshop transformed my understanding of finance!"
                               {...field}
                             />
                           </FormControl>
@@ -231,72 +241,98 @@ const FromThePeopleEditor = () => {
                       </FormItem>
                     )}
                   />
-                )}
 
-                {isDatesOfTravelFieldVisible(
-                  selectedTemplate.company.name as companies,
-                ) && (
-                  <NestedDates
-                    fieldName="fromThePeople"
+                  {isTourLocationFieldVisible(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <FormField
+                      control={form.control}
+                      name={`fromThePeople.${index}.tourLocation`}
+                      render={({ field }) => (
+                        <FormItem className="w-full flex items-center gap-4 p-2">
+                          <FormLabel className="max-w-[96px] w-full shrink-0">
+                            Tour Location
+                          </FormLabel>
+                          <div className="flex flex-col gap-2 w-full">
+                            <FormControl>
+                              <Input
+                                className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                                placeholder="Tokyo - Osaka, Japan"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {isDatesOfTravelFieldVisible(
+                    selectedTemplate.company.name as companies,
+                  ) && (
+                    <NestedDates
+                      fieldName="fromThePeople"
+                      control={form.control}
+                      index={index}
+                      label="Dates of Travel"
+                    />
+                  )}
+
+                  <FormField
                     control={form.control}
-                    index={index}
-                    label="Dates of Travel"
-                  />
-                )}
-
-                <FormField
-                  control={form.control}
-                  name={`fromThePeople.${index}.reviewerImage`}
-                  render={({ field }) => (
-                    <FormItem className="w-full flex items-center gap-4 p-2">
-                      <FormLabel className="max-w-[96px] w-full shrink-0">
-                        <div className="flex flex-col">
-                          <p className="ty-descriptions">
-                            Reviewer&rsquo;s Image
-                          </p>
-                        </div>
-                      </FormLabel>
-                      <div className="flex flex-col gap-2 w-full">
-                        <FormControl>
-                          {field.value ? (
-                            <div className="relative w-fit">
-                              <div
-                                onClick={() => field.onChange("")}
-                                className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
-                              >
-                                <X size={14} />
+                    name={`fromThePeople.${index}.reviewerImage`}
+                    render={({ field }) => (
+                      <FormItem className="w-full flex items-center gap-4 p-2">
+                        <FormLabel className="max-w-[96px] w-full shrink-0">
+                          <div className="flex flex-col">
+                            <p className="ty-descriptions">
+                              Reviewer&rsquo;s Image
+                            </p>
+                          </div>
+                        </FormLabel>
+                        <div className="flex flex-col gap-2 w-full">
+                          <FormControl>
+                            {field.value ? (
+                              <div className="relative w-fit">
+                                <div
+                                  onClick={() => field.onChange("")}
+                                  className="h-5 w-5 rounded-full flex justify-center items-center absolute bg-red-400 top-0 right-0 -m-2 cursor-pointer"
+                                >
+                                  <X size={14} color="white" />
+                                </div>
+                                <Image
+                                  alt="Product Image"
+                                  src={field.value}
+                                  width={100}
+                                  height={100}
+                                  className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
+                                />
                               </div>
-                              <Image
-                                alt="Product Image"
-                                src={field.value}
-                                width={100}
-                                height={100}
-                                className="rounded-lg mb-2 h-[100px] w-[100px] object-cover"
-                              />
-                            </div>
-                          ) : (
-                            <div className="max-w-[250px] w-full">
-                              <ImageUploader
-                                onUploadComplete={(url) =>
-                                  update(index, {
-                                    ...watchFromThePeople[index],
-                                    reviewerImage: url,
-                                  })
-                                }
-                              />
-                            </div>
-                          )}
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            ))}
-          </form>
-        </Form>
-      </div>
+                            ) : (
+                              <div className="max-w-[250px] w-full">
+                                <ImageUploader
+                                  onUploadComplete={(url) =>
+                                    update(index, {
+                                      ...watchFromThePeople[index],
+                                      reviewerImage: url,
+                                    })
+                                  }
+                                />
+                              </div>
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              ))}
+            </form>
+          </Form>
+        </div>
+      )}
     </div>
   );
 };

@@ -13,147 +13,36 @@ const useProps = () => {
     products,
     services,
     posts,
+    sectionOrder,
+    isSectionOrderUpdated,
   } = useCreateEmailStore();
 
-  const propsBuilder = useCallback(
-    function propsBuilder() {
-      if (!selectedTemplate) return;
-      console.log("COMPANY NAME IS", selectedTemplate.company.name);
+  const propsBuilder = useCallback(() => {
+    if (!selectedTemplate) return;
 
-      return {
-        cta,
-        fromThePeople,
-        articles,
-        upcomingPrograms,
-        products,
-        services,
-        posts,
-      };
-      // switch (selectedTemplate.company.name) {
-      //   case "IBS": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "YourSkin School Of Integrated Aesthetics": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "Avian Summit Travel Corporation": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "Kids Learning Ville": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "KPC Tax & Accounting Services": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "KPC Importation Services": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "KPC Payment Assistance": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "KPC Finance & Accounting Institute": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "Skyshare Labs": {
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      //   case "InnovatEd Business Solutions": {
-      //     console.log("RETURNING HERE IBS");
-      //     return {
-      //       cta,
-      //       fromThePeople,
-      //       articles,
-      //       upcomingPrograms,
-      //       products,
-      //       services,
-      //       posts,
-      //     };
-      //   }
-      // }
-    },
-    [
-      articles,
-      selectedTemplate,
+    return {
       cta,
       fromThePeople,
+      articles,
       upcomingPrograms,
       products,
       services,
       posts,
-    ],
-  );
+      sectionOrder,
+      isSectionOrderUpdated,
+    };
+  }, [
+    articles,
+    selectedTemplate,
+    cta,
+    fromThePeople,
+    upcomingPrograms,
+    products,
+    services,
+    posts,
+    sectionOrder,
+    isSectionOrderUpdated,
+  ]);
 
   return { propsBuilder };
 };

@@ -33,6 +33,7 @@ import Header from "./header";
 import { FromThePeopleCard } from "./from-the-people";
 import Footer from "./footer";
 import ArticleCard from "./article";
+import { getDefaultOrder, SectionType } from "@/emails/utils";
 
 interface KLV01TemplateProps {
   body: string;
@@ -44,6 +45,8 @@ interface KLV01TemplateProps {
   products: Product[];
   services: Service[];
   posts: Post[];
+  isSectionOrderUpdated: boolean;
+  sectionOrder: SectionType[];
 }
 
 export const KLV01Template = ({
@@ -56,7 +59,14 @@ export const KLV01Template = ({
   products,
   services,
   posts,
+  sectionOrder,
+  isSectionOrderUpdated,
 }: KLV01TemplateProps) => {
+  const finalSectionOrder = getDefaultOrder(
+    sectionOrder,
+    "Kids Learning Ville",
+    isSectionOrderUpdated,
+  );
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="width:100%; border-radius:12px" $1>',
@@ -143,86 +153,94 @@ export const KLV01Template = ({
               )}{" "}
             </Section>
 
-            {/* FROM THE PEOPLE */}
-            {fromThePeople && fromThePeople.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="center">
-                    <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                      See what our clients say
-                    </Text>
-                  </Column>
-                </Row>
+            {finalSectionOrder.map((section) => {
+              switch (section) {
+                case "fromThePeople":
+                  return fromThePeople?.length ? (
+                    <Section className="mt-4">
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="center">
+                          <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                            See what our clients say
+                          </Text>
+                        </Column>
+                      </Row>
 
-                {fromThePeople.map((people, index) => (
-                  <FromThePeopleCard people={people} key={index} />
-                ))}
-              </Section>
-            )}
+                      {fromThePeople.map((people, index) => (
+                        <FromThePeopleCard people={people} key={index} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {/* Articles */}
-            {articles && articles.length >= 1 && (
-              <Section className="p-4">
-                <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
-                  Articles
-                </Text>
+                case "articles":
+                  return articles?.length ? (
+                    <Section className="p-4">
+                      <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
+                        Articles
+                      </Text>
 
-                {articles.map((article, index) => (
-                  <ArticleCard article={article} key={index} />
-                ))}
-              </Section>
-            )}
+                      {articles.map((article, index) => (
+                        <ArticleCard article={article} key={index} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {/* Upcoming Programs */}
+                case "upcomingPrograms":
+                  return upcomingPrograms?.length ? (
+                    <UpcomingProgramsSection
+                      upcomingPrograms={upcomingPrograms}
+                    />
+                  ) : null;
 
-            {upcomingPrograms && upcomingPrograms.length >= 1 && (
-              <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
-            )}
+                case "products":
+                  return products?.length ? (
+                    <Section className="p-4 bg-[#fff9e6]">
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-medium  text-center w-fit">
+                            Discover Our Products
+                          </Text>
+                        </Column>
+                      </Row>
 
-            {/* Discover Our Products */}
-            {products && products.length >= 1 && (
-              <Section className="p-4 bg-[#fff9e6]">
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-medium  text-center w-fit">
-                      Discover Our Products
-                    </Text>
-                  </Column>
-                </Row>
+                      <ProductCards products={products} />
+                    </Section>
+                  ) : null;
 
-                <ProductCards products={products} />
-              </Section>
-            )}
+                case "services":
+                  return services?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-medium w-fit">
+                            Our Services
+                          </Text>
+                        </Column>
+                      </Row>
 
-            {/* Our Services */}
-            {services && services.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-medium w-fit">
-                      Our Services
-                    </Text>
-                  </Column>
-                </Row>
+                      <OurServices services={services} />
+                    </Section>
+                  ) : null;
 
-                <OurServices services={services} />
-              </Section>
-            )}
+                case "posts":
+                  return posts?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-medium text-center w-fit">
+                            Our Recent Posts
+                          </Text>
+                        </Column>
+                      </Row>
 
-            {/* Our Recent Posts */}
-            {posts && posts.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-medium text-center w-fit">
-                      Our Recent Posts
-                    </Text>
-                  </Column>
-                </Row>
+                      <OurRecentPosts posts={posts} />
+                    </Section>
+                  ) : null;
 
-                <OurRecentPosts posts={posts} />
-              </Section>
-            )}
+                default:
+                  return null;
+              }
+            })}
 
             <Footer />
           </Container>
@@ -233,3 +251,108 @@ export const KLV01Template = ({
 };
 
 export default KLV01Template;
+
+// {
+//   /* FROM THE PEOPLE */
+// }
+// {
+//   fromThePeople && fromThePeople.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="center">
+//           <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+//             See what our clients say
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       {fromThePeople.map((people, index) => (
+//         <FromThePeopleCard people={people} key={index} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Articles */
+// }
+// {
+//   articles && articles.length >= 1 && (
+//     <Section className="p-4">
+//       <Text className="text-[20px] text-black font-medium mx-auto text-center w-fit">
+//         Articles
+//       </Text>
+
+//       {articles.map((article, index) => (
+//         <ArticleCard article={article} key={index} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Upcoming Programs */
+// }
+
+// {
+//   upcomingPrograms && upcomingPrograms.length >= 1 && (
+//     <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+//   );
+// }
+
+// {
+//   /* Discover Our Products */
+// }
+// {
+//   products && products.length >= 1 && (
+//     <Section className="p-4 bg-[#fff9e6]">
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text className="text-[20px] text-black font-medium  text-center w-fit">
+//             Discover Our Products
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <ProductCards products={products} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Our Services */
+// }
+// {
+//   services && services.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text className="text-[20px] text-black font-medium w-fit">
+//             Our Services
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurServices services={services} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Our Recent Posts */
+// }
+// {
+//   posts && posts.length >= 1 && (
+//     <Section>
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="left">
+//           <Text className="text-[20px] text-black font-medium text-center w-fit">
+//             Our Recent Posts
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurRecentPosts posts={posts} />
+//     </Section>
+//   );
+// }

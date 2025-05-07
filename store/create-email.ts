@@ -1,3 +1,4 @@
+import { SectionType } from "@/emails/utils";
 import api from "@/lib/axios";
 import { GenerateTemplateResponse } from "@/lib/mutation/template/generateTemplate";
 import { Company, Prisma, Template } from "@prisma/client";
@@ -76,6 +77,11 @@ interface CreateEmailState {
   products: Product[];
   services: Service[];
   posts: Post[];
+  sectionOrder: SectionType[];
+  isSectionOrderUpdated: boolean;
+  isRearranging: boolean;
+
+  // availableSections: SectionType[];
 }
 
 interface CreateEmailActions {
@@ -95,7 +101,11 @@ interface CreateEmailActions {
   setProducts: (products: Product[]) => void;
   setServices: (services: Service[]) => void;
   setPosts: (posts: Post[]) => void;
+  setSectionOrder: (sectionOrder: SectionType[]) => void;
+  setIsRearranging: (isRearranging: boolean) => void;
+  // setAvailableSections: (availableSections: SectionType[]) => void;
   reset: () => void;
+  resetSectionOrder: () => void;
 }
 
 const initialState: CreateEmailState = {
@@ -120,6 +130,24 @@ const initialState: CreateEmailState = {
   products: [],
   services: [],
   posts: [],
+  sectionOrder: [
+    "fromThePeople",
+    "articles",
+    "upcomingPrograms",
+    "products",
+    "services",
+    "posts",
+  ],
+  isSectionOrderUpdated: false,
+  isRearranging: false,
+  // availableSections: [
+  //   "fromThePeople",
+  //   "articles",
+  //   "upcomingPrograms",
+  //   "products",
+  //   "services",
+  //   "posts",
+  // ],
 };
 
 export const useCreateEmailStore = create<
@@ -135,6 +163,11 @@ export const useCreateEmailStore = create<
       setProducts: (products) => set({ products }),
       setServices: (services) => set({ services }),
       setPosts: (posts) => set({ posts }),
+      setSectionOrder: (sectionOrder) =>
+        set({ sectionOrder, isSectionOrderUpdated: true }),
+      setIsRearranging: (isRearranging) => set({ isRearranging }),
+      // setAvailableSections: (availableSections) =>
+      // set({ availableSections }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
       setEditorData: (data) => set({ editorData: data }),
@@ -148,6 +181,11 @@ export const useCreateEmailStore = create<
       },
       setAlignment: (alignment) => set({ alignment }),
       reset: () => set(initialState),
+      resetSectionOrder: () =>
+        set({
+          sectionOrder: initialState.sectionOrder,
+          isSectionOrderUpdated: false,
+        }),
     }),
     {
       name: "create-email-store",

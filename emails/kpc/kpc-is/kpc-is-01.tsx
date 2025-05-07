@@ -32,17 +32,25 @@ import { OurRecentPosts } from "./posts";
 import { ProductCards } from "./products";
 import { OurServices } from "./services";
 import { UpcomingProgramsSection } from "./upcoming-section";
+import {
+  defaultSectionOrders,
+  getDefaultOrder,
+  SectionType,
+} from "@/emails/utils";
+import ArticleCard from "./article";
 
 interface KPCIS01TemplateProps {
   body: string;
   isTemplate: boolean;
-  articles: Article[];
   cta: Cta;
   fromThePeople: FromThePeople[];
+  articles: Article[];
   upcomingPrograms: UpcomingProgram[];
   products: Product[];
   services: Service[];
   posts: Post[];
+  isSectionOrderUpdated: boolean;
+  sectionOrder: SectionType[];
 }
 
 export const KPCIS01Template = ({
@@ -55,7 +63,15 @@ export const KPCIS01Template = ({
   products,
   services,
   posts,
+  sectionOrder,
+  isSectionOrderUpdated,
 }: KPCIS01TemplateProps) => {
+  const finalSectionOrder = getDefaultOrder(
+    sectionOrder,
+    "KPC Importation Services",
+    isSectionOrderUpdated,
+  );
+
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="max-width:640px; width:100%; border-radius:12px" $1>',
@@ -167,108 +183,108 @@ export const KPCIS01Template = ({
               )}
             </Section>
 
-            {/* FROM THE PEOPLE */}
-            {fromThePeople && fromThePeople.length >= 1 && (
-              <Section className="text-center p-4">
-                <Heading
-                  as="h5"
-                  className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
-                >
-                  From the people
-                </Heading>
+            {finalSectionOrder.map((section) => {
+              switch (section) {
+                case "fromThePeople":
+                  return fromThePeople?.length ? (
+                    <Section className="text-center p-4" key={"fromThePeople"}>
+                      <Heading
+                        as="h5"
+                        className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
+                      >
+                        From the people
+                      </Heading>
 
-                {fromThePeople.map((people) => (
-                  <FromThePeopleCard
-                    key={people.reviewerName}
-                    people={people}
-                  />
-                ))}
-              </Section>
-            )}
+                      {fromThePeople.map((people) => (
+                        <FromThePeopleCard
+                          key={people.reviewerName}
+                          people={people}
+                        />
+                      ))}
+                    </Section>
+                  ) : null;
 
-            {articles && articles.length >= 1 && (
-              <Section
-                className="w-full p-4 mx-auto text-black"
-                style={{
-                  maxWidth: "640px",
-                  width: "100%",
-                }}
-              >
-                <div className="bg-black/[.04] p-4 rounded-lg">
-                  <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
-                    ARTICLE
-                  </Text>
-                  {articles.map((article) => (
-                    <Row key={article.heading} className="mt-[24px]">
-                      <Column>
-                        <Text className="text-[20px] font-semibold break-words">
-                          {article.heading}
+                case "articles":
+                  return articles?.length ? (
+                    <Section
+                      key={"articles"}
+                      className="w-full p-4 mx-auto text-black"
+                      style={{
+                        maxWidth: "640px",
+                        width: "100%",
+                      }}
+                    >
+                      <div className="bg-black/[.04] p-4 rounded-lg">
+                        <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
+                          ARTICLE
                         </Text>
-                        <Text className="text-[14px] break-words">
-                          {article.content}
-                        </Text>
-                        <Link
-                          href={article.articleLink}
-                          className="text-black block mt-[8px] mx-auto w-fit bg-[#F3BC30] px-4 py-3 text-[14px] font-bold"
-                        >
-                          Read Article
-                        </Link>
-                      </Column>
-                    </Row>
-                  ))}
-                </div>
-              </Section>
-            )}
+                        {articles.map((article) => (
+                          <ArticleCard
+                            article={article}
+                            key={article.heading}
+                          />
+                        ))}
+                      </div>
+                    </Section>
+                  ) : null;
 
-            {/* UPCOMING PROGRAMS */}
-            {articles && articles.length >= 1 && (
-              <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
-            )}
+                case "upcomingPrograms":
+                  return upcomingPrograms?.length ? (
+                    <UpcomingProgramsSection
+                      key="upcomingPrograms"
+                      upcomingPrograms={upcomingPrograms}
+                    />
+                  ) : null;
 
-            {/* Discover Our Products */}
-            {products && products.length >= 1 && (
-              <Section className=" mx-auto w-full">
-                <Row align="center" className="mb-[16px]">
-                  <Column align="center">
-                    <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
-                      Discover Our Products
-                    </Text>
-                  </Column>
-                </Row>
+                case "products":
+                  return products?.length ? (
+                    <Section key={"products"} className=" mx-auto w-full">
+                      <Row align="center" className="mb-[16px]">
+                        <Column align="center">
+                          <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
+                            Discover Our Products
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <ProductCards products={products} />
-              </Section>
-            )}
+                      <ProductCards products={products} />
+                    </Section>
+                  ) : null;
 
-            {/* OUR SERVICES */}
-            {services && services.length >= 1 && (
-              <Section className="">
-                <Row align="center" className="mb-[16px]">
-                  <Column align="center">
-                    <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                      Our Services
-                    </Text>
-                  </Column>
-                </Row>
+                case "services":
+                  return services?.length ? (
+                    <Section className="">
+                      <Row align="center" className="mb-[16px]">
+                        <Column align="center">
+                          <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                            Our Services
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <OurServices services={services} />
-              </Section>
-            )}
+                      <OurServices services={services} />
+                    </Section>
+                  ) : null;
 
-            {/* Our Recent Posts */}
-            {posts && posts.length >= 1 && (
-              <Section className="">
-                <Row align="center" className="mb-[20px]">
-                  <Column align="center">
-                    <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                      Our Recent Posts
-                    </Text>
-                  </Column>
-                </Row>
+                case "posts":
+                  return posts?.length ? (
+                    <Section className="">
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="center">
+                          <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+                            Our Recent Posts
+                          </Text>
+                        </Column>
+                      </Row>
 
-                <OurRecentPosts posts={posts} />
-              </Section>
-            )}
+                      <OurRecentPosts posts={posts} />
+                    </Section>
+                  ) : null;
+
+                default:
+                  return null;
+              }
+            })}
 
             <Footer />
           </Container>
@@ -279,3 +295,110 @@ export const KPCIS01Template = ({
 };
 
 export default KPCIS01Template;
+
+// {
+//   /* FROM THE PEOPLE */
+// }
+// {
+//   fromThePeople && fromThePeople.length >= 1 && (
+//     <Section className="text-center p-4">
+//       <Heading
+//         as="h5"
+//         className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
+//       >
+//         From the people
+//       </Heading>
+
+//       {fromThePeople.map((people) => (
+//         <FromThePeopleCard key={people.reviewerName} people={people} />
+//       ))}
+//     </Section>
+//   );
+// }
+
+// {
+//   articles && articles.length >= 1 && (
+//     <Section
+//       className="w-full p-4 mx-auto text-black"
+//       style={{
+//         maxWidth: "640px",
+//         width: "100%",
+//       }}
+//     >
+//       <div className="bg-black/[.04] p-4 rounded-lg">
+//         <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
+//           ARTICLE
+//         </Text>
+//         {articles.map((article) => (
+//           <ArticleCard article={article} key={article.heading} />
+//         ))}
+//       </div>
+//     </Section>
+//   );
+// }
+
+// {
+//   /* UPCOMING PROGRAMS */
+// }
+// {
+//   articles && articles.length >= 1 && (
+//     <UpcomingProgramsSection upcomingPrograms={upcomingPrograms} />
+//   );
+// }
+
+// {
+//   /* Discover Our Products */
+// }
+// {
+//   products && products.length >= 1 && (
+//     <Section className=" mx-auto w-full">
+//       <Row align="center" className="mb-[16px]">
+//         <Column align="center">
+//           <Text className="text-[14px] uppercase font-bold text-black/50 text-center w-fit">
+//             Discover Our Products
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <ProductCards products={products} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* OUR SERVICES */
+// }
+// {
+//   services && services.length >= 1 && (
+//     <Section className="">
+//       <Row align="center" className="mb-[16px]">
+//         <Column align="center">
+//           <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+//             Our Services
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurServices services={services} />
+//     </Section>
+//   );
+// }
+
+// {
+//   /* Our Recent Posts */
+// }
+// {
+//   posts && posts.length >= 1 && (
+//     <Section className="">
+//       <Row align="center" className="mb-[20px]">
+//         <Column align="center">
+//           <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
+//             Our Recent Posts
+//           </Text>
+//         </Column>
+//       </Row>
+
+//       <OurRecentPosts posts={posts} />
+//     </Section>
+//   );
+// }

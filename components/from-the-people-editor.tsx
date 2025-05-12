@@ -181,7 +181,11 @@ const FromThePeopleEditor = () => {
                           <div className="flex flex-col gap-2 w-full">
                             <FormControl>
                               <Input
-                                className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
+                                type="number"
+                                inputMode="numeric" // helps on mobile for numeric keypad
+                                max={5}
+                                min={1}
+                                className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 placeholder="5"
                                 {...field}
                               />

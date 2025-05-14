@@ -1,22 +1,22 @@
 "use client";
 
+import { SectionType } from "@/emails/utils";
 import { updateFontHtml } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import { Loader, Move, RotateCw, X } from "lucide-react";
+import { Reorder } from "framer-motion";
+import { Loader, Move, RotateCw } from "lucide-react";
 import { JSX, useEffect, useRef, useState } from "react";
 import ArticleEditor from "./article-editor";
 import CtaEditor from "./cta-editor";
 import FromThePeopleEditor from "./from-the-people-editor";
 import { Mdx } from "./mdx/InitializedMDXEditor";
-import UpcomingProgramEditor from "./upcoming-program-editor";
-import ProductsEditor from "./product-editor";
+import OurProgramsEditor from "./our-programs-editor";
 import OurServicesEditor from "./our-services-editor";
+import ProductsEditor from "./product-editor";
 import RecentPostsEditor from "./recent-posts-editor";
-import { motion, Reorder } from "framer-motion";
-import { SectionType } from "@/emails/utils";
-import AvailableSectionSelector from "./available-sections";
 import { Button } from "./ui/button";
+import UpcomingProgramEditor from "./upcoming-program-editor";
 
 const sectionComponents: Record<SectionType, JSX.Element> = {
   fromThePeople: <FromThePeopleEditor />,
@@ -25,6 +25,7 @@ const sectionComponents: Record<SectionType, JSX.Element> = {
   products: <ProductsEditor />,
   services: <OurServicesEditor />,
   posts: <RecentPostsEditor />,
+  programs: <OurProgramsEditor />,
 };
 
 const EmailEditor = ({
@@ -67,6 +68,10 @@ const EmailEditor = ({
 
   if (!selectedTemplate) return null;
 
+  console.log({
+    sections,
+  });
+
   return (
     <div className="flex flex-col self-stretch h-full gap-6 p-4 bg-white rounded-2xl grow">
       {isPreview ? (
@@ -104,13 +109,10 @@ const EmailEditor = ({
               Note: Alignment Plugin will make all content follow the selected
               alignment. Since markdown doesn&rsquo;t support alignment at all.
             </p>
-
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden min-h-[450px]">
               <Mdx ref={ref} />
             </div>
-
             <CtaEditor />
-
             {/* <AvailableSectionSelector /> */}
             <div className="flex justify-between self-stretch items-start">
               <Button

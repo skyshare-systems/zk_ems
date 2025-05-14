@@ -5,6 +5,7 @@ import {
   FromThePeople,
   Post,
   Product,
+  Program,
   Service,
   UpcomingProgram,
 } from "@/store/create-email";
@@ -34,6 +35,7 @@ import { FromThePeopleCard } from "./from-the-people";
 import Footer from "./footer";
 import ArticleCard from "./article";
 import { getDefaultOrder, SectionType } from "@/emails/utils";
+import { OurPrograms } from "./program";
 
 interface KLV01TemplateProps {
   body: string;
@@ -47,6 +49,7 @@ interface KLV01TemplateProps {
   posts: Post[];
   isSectionOrderUpdated: boolean;
   sectionOrder: SectionType[];
+  programs: Program[];
 }
 
 export const KLV01Template = ({
@@ -61,6 +64,7 @@ export const KLV01Template = ({
   posts,
   sectionOrder,
   isSectionOrderUpdated,
+  programs,
 }: KLV01TemplateProps) => {
   const finalSectionOrder = getDefaultOrder(
     sectionOrder,
@@ -143,7 +147,7 @@ export const KLV01Template = ({
                     <Link
                       href={cta.link}
                       className={cn(
-                        "bg-[#00A19B] rounded-[12px] px-[12px] py-[8px] text-white box-border inline-block font-bold",
+                        "bg-[#00A19B] rounded-[12px] mb-[24px] px-[12px] py-[8px] text-white box-border inline-block font-bold",
                       )}
                     >
                       {cta.text}
@@ -190,6 +194,20 @@ export const KLV01Template = ({
                     <UpcomingProgramsSection
                       upcomingPrograms={upcomingPrograms}
                     />
+                  ) : null;
+                case "programs":
+                  return programs?.length ? (
+                    <Section className="p-4 bg-[#fff9e6]">
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-medium text-center w-fit">
+                            Our Programs
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <OurPrograms programs={programs} />
+                    </Section>
                   ) : null;
 
                 case "products":

@@ -44,7 +44,8 @@ export type rules =
   | "upcoming_programs"
   | "discover_our_products"
   | "our_services"
-  | "recent_posts";
+  | "recent_posts"
+  | "programs";
 
 interface Company {
   id: string;
@@ -145,4 +146,19 @@ export const companyRule: CompanyRule[] = [
       "recent_posts",
     ],
   },
+  {
+    companies:[
+      { id: "cm9s5oq900005lxhv1xtk0mlj", name: "Kids Learning Ville" },
+
+    ],
+    rules: [
+      "cta_button",
+      "from_the_people",
+      "articles",
+      "upcoming_programs",
+      "discover_our_products",
+      "our_services",
+      "recent_posts",
+      "programs"
+    ],  }
 ];

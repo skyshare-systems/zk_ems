@@ -34,6 +34,7 @@ import Header from "./header";
 import { FromThePeopleCard } from "./from-the-people";
 import Footer from "./footer";
 import { getDefaultOrder, SectionType } from "@/emails/utils";
+import { OurPrograms } from "@/emails/klv/klv01/program";
 
 interface IBS01TemplateProps {
   body: string;
@@ -207,7 +208,7 @@ export const YSOIA01Template = ({
                       <Row align="center" className="mb-[20px]">
                         <Column align="left">
                           <Text className="text-[20px] text-black font-medium w-fit">
-                            Our Services
+                            Our Courses
                           </Text>
                         </Column>
                       </Row>

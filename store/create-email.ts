@@ -60,6 +60,13 @@ export interface Post {
   description: string;
 }
 
+export interface Program {
+  image: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
 interface CreateEmailState {
   editorData: { blocks: any[] };
   body: string;
@@ -77,6 +84,7 @@ interface CreateEmailState {
   products: Product[];
   services: Service[];
   posts: Post[];
+  programs: Program[];
   sectionOrder: SectionType[];
   isSectionOrderUpdated: boolean;
   isRearranging: boolean;
@@ -101,6 +109,7 @@ interface CreateEmailActions {
   setProducts: (products: Product[]) => void;
   setServices: (services: Service[]) => void;
   setPosts: (posts: Post[]) => void;
+  setPrograms: (programs: Program[]) => void;
   setSectionOrder: (sectionOrder: SectionType[]) => void;
   setIsRearranging: (isRearranging: boolean) => void;
   // setAvailableSections: (availableSections: SectionType[]) => void;
@@ -130,6 +139,7 @@ const initialState: CreateEmailState = {
   products: [],
   services: [],
   posts: [],
+  programs:[],
   sectionOrder: [
     "fromThePeople",
     "articles",
@@ -137,6 +147,7 @@ const initialState: CreateEmailState = {
     "products",
     "services",
     "posts",
+    "programs",
   ],
   isSectionOrderUpdated: false,
   isRearranging: false,
@@ -174,6 +185,7 @@ export const useCreateEmailStore = create<
       setBody: (body) => set({ body }),
       setSubject: (subject) => set({ subject }),
       setRecipients: (recipients) => set({ recipients }),
+      setPrograms: (programs) => set({ programs }),
       setSelectedTemplate: (template) => set({ selectedTemplate: template }),
       getUserTemplates: async () => {
         const response = await api("/templates");

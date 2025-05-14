@@ -16,7 +16,8 @@ export type SectionType =
   | "upcomingPrograms"
   | "products"
   | "services"
-  | "posts";
+  | "posts"
+  | "programs";
 
 export const defaultSectionOrders: Record<
   companies | "default",
@@ -75,6 +76,7 @@ export const defaultSectionOrders: Record<
   ],
   "Kids Learning Ville": [
     "upcomingPrograms",
+    "programs",
     "services",
     "products",
     "articles",
@@ -90,6 +92,7 @@ export const defaultSectionOrders: Record<
     "products",
     "services",
     "posts",
+    "programs",
   ],
 };
 

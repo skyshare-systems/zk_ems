@@ -13,6 +13,7 @@ const useProps = () => {
     products,
     services,
     posts,
+    programs,
     sectionOrder,
     isSectionOrderUpdated,
   } = useCreateEmailStore();
@@ -30,6 +31,7 @@ const useProps = () => {
       posts,
       sectionOrder,
       isSectionOrderUpdated,
+      programs,
     };
   }, [
     articles,
@@ -42,6 +44,7 @@ const useProps = () => {
     posts,
     sectionOrder,
     isSectionOrderUpdated,
+    programs,
   ]);
 
   return { propsBuilder };

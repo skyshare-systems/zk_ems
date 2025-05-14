@@ -140,7 +140,7 @@ export const YSOIA01Template = ({
                     <Link
                       href={cta.link}
                       className={cn(
-                        "bg-[#3467A9] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold",
+                        "bg-[#3467A9] rounded-[8px] px-[16px] py-[12px] text-white box-border inline-block font-bold mb-6",
                       )}
                     >
                       {cta.text}

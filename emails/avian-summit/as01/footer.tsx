@@ -32,7 +32,7 @@ const Footer = () => {
           />
 
           <Container align="center" className="mx-auto mb-3 w-fit">
-            <Link href="#">
+            <Link href="https://www.instagram.com/aviansummit/">
               <Img
                 src="https://avian-summit-travel-corporation.sgp1.cdn.digitaloceanspaces.com/instagram.png"
                 width={"100%"}
@@ -41,7 +41,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.youtube.com/@AvianSummit">
               <Img
                 src="https://avian-summit-travel-corporation.sgp1.cdn.digitaloceanspaces.com/youtube.png"
                 width={"100%"}
@@ -50,7 +50,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.facebook.com/AvianSummitTravel">
               <Img
                 src="https://avian-summit-travel-corporation.sgp1.cdn.digitaloceanspaces.com/facebook.png"
                 width={"100%"}
@@ -59,7 +59,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.tiktok.com/@aviansummit">
               <Img
                 src="https://avian-summit-travel-corporation.sgp1.cdn.digitaloceanspaces.com/tiktok.png"
                 width={"100%"}
@@ -99,8 +99,8 @@ const Footer = () => {
             </Column>
             <Column valign="top">
               <Text className="text-[#18365AB8] m-0 leading-[120%] align-top">
-                3F ZK Summit, In Arca Strip Commercial Bldg., McArthur Highway,
-                Corner Action Drive Center, Balubaran Dalandanan, Valenzuela,
+                2F In Arca Strip Commercial Bldg., McArthur Highway, Corner
+                Action Drive Center, Balubaran Dalandanan, Valenzuela,
                 Philippines, 1443
               </Text>
             </Column>

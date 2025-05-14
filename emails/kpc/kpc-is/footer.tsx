@@ -45,7 +45,7 @@ const Footer = () => {
         <Row>
           <Column align="center">
             <Link
-              href="#"
+              href="https://www.youtube.com/@KPCImportationServices"
               style={{
                 display: "inline-flex",
               }}
@@ -59,7 +59,7 @@ const Footer = () => {
               />
             </Link>
             <Link
-              href="#"
+              href="https://www.facebook.com/kpcimportservices"
               style={{
                 display: "inline-flex",
                 marginLeft: "20px",
@@ -74,7 +74,7 @@ const Footer = () => {
               />
             </Link>
             <Link
-              href="#"
+              href="https://www.tiktok.com/@kpcimport_jepoy"
               style={{
                 display: "inline-flex",
                 marginLeft: "20px",

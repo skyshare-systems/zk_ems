@@ -158,7 +158,7 @@ export const AS01Template = ({
                       <Row align="center" className="mb-[20px]">
                         <Column>
                           <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                            See what our clients say
+                            Feedback
                           </Text>
                         </Column>
                       </Row>

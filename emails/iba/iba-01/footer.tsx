@@ -24,16 +24,7 @@ const Footer = () => {
           />
 
           <Container align="center" className="mx-auto mb-3 w-fit">
-            <Link href="#">
-              <Img
-                src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/linkedin.png"
-                width={"100%"}
-                height={"100%"}
-                className="aspect-[1/1] size-8 inline-block mr-[20px]"
-              />
-            </Link>
-
-            <Link href="#">
+            <Link href="https://www.instagram.com/innovatedsolutionsph/">
               <Img
                 src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/instagram.png"
                 width={"100%"}
@@ -42,27 +33,9 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
-              <Img
-                src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/youtube.png"
-                width={"100%"}
-                height={"100%"}
-                className="aspect-[1/1] size-8 inline-block mr-[20px]"
-              />
-            </Link>
-
-            <Link href="#">
+            <Link href="https://www.facebook.com/share/19mUERaoCZ/">
               <Img
                 src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/facebook.png"
-                width={"100%"}
-                height={"100%"}
-                className="aspect-[1/1] size-8 inline-block mr-[20px]"
-              />
-            </Link>
-
-            <Link href="#">
-              <Img
-                src="https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/tiktok.png"
                 width={"100%"}
                 height={"100%"}
                 className="aspect-[1/1] size-8 inline-block"
@@ -149,8 +122,42 @@ const Footer = () => {
                 }}
                 className="m-0 leading-[1rem] tracking-normal text-white/[.72]"
               >
-                0927-547-8713 / 0953-883-9132
+                Admission Inquiries: 09766078446 (Kim)
               </span>
+            </Text>
+
+            <Text
+              className={cn("")}
+              style={{
+                margin: "0 !important",
+              }}
+            >
+              <Img
+                style={{
+                  verticalAlign: "middle",
+                }}
+                className="size-[16px] mr-1 inline-block"
+                src={
+                  "https://innovated-business-academy-ems.sgp1.digitaloceanspaces.com/call.png"
+                }
+                width={16}
+                height={16}
+              />
+              <span
+                style={{
+                  verticalAlign: "middle",
+                }}
+                className="m-0 leading-[1rem] tracking-normal text-white/[.72]"
+              >
+                Reservation: 09922075046 (Juhlia)
+              </span>
+            </Text>
+
+            <Text className="mt-3 leading-[1rem] tracking-normal text-white/[.50] inline-block">
+              Innovated Business Academy
+            </Text>
+            <Text className="m-0 leading-[1rem] tracking-normal text-white/[.50] inline-block">
+              All rights reserved.
             </Text>
           </Container>
         </Column>

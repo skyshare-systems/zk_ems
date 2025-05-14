@@ -45,7 +45,7 @@ const Footer = () => {
       <Row>
         <Column align="center">
           <Link
-            href="#"
+            href="https://www.youtube.com/@KPCTaxandAccountingServices"
             style={{
               display: "inline-flex",
             }}
@@ -59,7 +59,7 @@ const Footer = () => {
             />
           </Link>
           <Link
-            href="#"
+            href="https://www.facebook.com/KPCTaxAndAccounting"
             style={{
               display: "inline-flex",
               marginLeft: "20px",
@@ -74,7 +74,7 @@ const Footer = () => {
             />
           </Link>
           <Link
-            href="#"
+            href="https://www.tiktok.com/@kpctaxaccntg"
             style={{
               display: "inline-flex",
               marginLeft: "20px",
@@ -82,6 +82,21 @@ const Footer = () => {
           >
             <Img
               src={`https://kpc-is.sgp1.cdn.digitaloceanspaces.com/tiktok.png`}
+              width="32"
+              height="32"
+              alt="Skyshare Labs"
+              className="w-8 object-cover mx-auto"
+            />
+          </Link>
+          <Link
+            href="https://www.instagram.com/kpctaxacctg/"
+            style={{
+              display: "inline-flex",
+              marginLeft: "20px",
+            }}
+          >
+            <Img
+              src={`https://kpc-tax.sgp1.cdn.digitaloceanspaces.com/instagram.png`}
               width="32"
               height="32"
               alt="Skyshare Labs"

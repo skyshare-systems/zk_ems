@@ -24,7 +24,7 @@ const Footer = () => {
           />
 
           <Container align="center" className="mx-auto mb-3 w-fit">
-            <Link href="#">
+            <Link href="https://www.instagram.com/yourskin.school/">
               <Img
                 src="https://your-skin.sgp1.cdn.digitaloceanspaces.com/instagram.png"
                 width={"100%"}
@@ -33,7 +33,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.youtube.com/@YourSkinSchool">
               <Img
                 src="https://your-skin.sgp1.cdn.digitaloceanspaces.com/youtube.png"
                 width={"100%"}
@@ -42,7 +42,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.facebook.com/share/1UKoDrSaWK/">
               <Img
                 src="https://your-skin.sgp1.cdn.digitaloceanspaces.com/facebook.png"
                 width={"100%"}
@@ -51,7 +51,7 @@ const Footer = () => {
               />
             </Link>
 
-            <Link href="#">
+            <Link href="https://www.tiktok.com/@yourskin_school">
               <Img
                 src="https://your-skin.sgp1.cdn.digitaloceanspaces.com/tiktok.png"
                 width={"100%"}
@@ -85,7 +85,7 @@ const Footer = () => {
                 }}
                 className="m-0 leading-[1rem] tracking-normal "
               >
-                #3101 Tycoon Center, Pearl Drive, Ortigas Center, Sam Antonio,
+                #3101 Tycoon Center, Pearl Drive, Ortigas Center, San Antonio,
                 Ortigas, Pasig City
               </span>
             </Text>
@@ -146,10 +146,10 @@ const Footer = () => {
           </Container>
 
           <Container>
-            <Text className="text-[#3467A9B8] inline-block  p-0 m-0 mr-4">
+            <Text className="text-[#3467A980] inline-block  p-0 m-0 mr-4">
               YourSkin School of Integrated Aesthetics
             </Text>
-            <Text className="text-[#3467A9B8] inline-block  p-0 m-0">
+            <Text className="text-[#3467A980] inline-block  p-0 m-0">
               All rights reserved.
             </Text>
           </Container>

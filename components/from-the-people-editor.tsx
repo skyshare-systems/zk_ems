@@ -47,6 +47,9 @@ const FromThePeopleEditor = () => {
     control: form.control,
   });
 
+  console.log({
+    errors: form.formState.errors,
+  });
   const watchFromThePeople = form.watch("fromThePeople");
 
   useEffect(() => {

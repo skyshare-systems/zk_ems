@@ -9,12 +9,10 @@ export const FromThePeopleSchema = z.object({
       reviewerImage: z.string().min(1, {
         message: "Reviewer image is required",
       }),
-      rating: z.coerce.number().min(1, {
-        message: "Rating is required."
-      }).max(5,{
-        message: "Rating must be between 1 and 5."
-      })
-      .optional(),
+      rating: z.coerce
+        .number()
+        .max(5, { message: "Rating must be at most 5." })
+        .optional(),
       tourLocation: z.string().optional(),
       dates: z
         .array(

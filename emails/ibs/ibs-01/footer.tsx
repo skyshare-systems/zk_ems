@@ -118,7 +118,10 @@ const Footer = () => {
             </Text>
           </Container>
           <Container align="center" className="mx-auto mb-3 w-fit">
-            <Link href="#" className="p-2 rounded-[8px] bg-white/[.04] mr-4 ">
+            <Link
+              href="https://www.facebook.com/innovatedacademyph/"
+              className="p-2 rounded-[8px] bg-white/[.04] mr-4 "
+            >
               <Img
                 src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/facebook.png"
                 width={"14"}
@@ -126,19 +129,45 @@ const Footer = () => {
                 className="object-cover h-[14px] w-[14px] align-center inline-block"
               />
             </Link>
-
-            <Link href="#" className="p-2  rounded-[8px] bg-white/[.04] mr-4 ">
+            <Link
+              href="www.linkedin.com/in/innovated-business-academy"
+              className="p-2  rounded-[8px] bg-white/[.04] mr-4 "
+            >
               <Img
                 src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/linkedin.png"
                 width={"14"}
                 height={"14"}
                 className="object-cover h-[14px] w-[14px] align-center inline-block"
               />
-            </Link>
-
-            <Link href="#" className="p-2 rounded-[8px] bg-white/[.04] ">
+            </Link>{" "}
+            <Link
+              href="https://www.tiktok.com/@innovatedacademy"
+              className="p-2  rounded-[8px] bg-white/[.04] mr-4 "
+            >
               <Img
-                src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/twitter.png"
+                src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/tiktok.png"
+                width={"14"}
+                height={"14"}
+                className="object-cover h-[14px] w-[14px] align-center inline-block"
+              />
+            </Link>{" "}
+            <Link
+              href="https://www.youtube.com/@InnovatedBusinessAcademy"
+              className="p-2  rounded-[8px] bg-white/[.04] mr-4 "
+            >
+              <Img
+                src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/youtube.png"
+                width={"14"}
+                height={"14"}
+                className="object-cover h-[14px] w-[14px] align-center inline-block"
+              />
+            </Link>{" "}
+            <Link
+              href="https://www.instagram.com/innovated_ph/"
+              className="p-2  rounded-[8px] bg-white/[.04]"
+            >
+              <Img
+                src="https://innovated-business-solutions.sgp1.cdn.digitaloceanspaces.com/instagram.png"
                 width={"14"}
                 height={"14"}
                 className="object-cover h-[14px] w-[14px] align-center inline-block"

@@ -214,7 +214,7 @@ export const KLV01Template = ({
                   return products?.length ? (
                     <Section className="p-4 bg-[#fff9e6]">
                       <Row align="center" className="mb-[20px]">
-                        <Column align="left">
+                        <Column align="left"> 
                           <Text className="text-[20px] text-black font-medium  text-center w-fit">
                             Discover Our Products
                           </Text>

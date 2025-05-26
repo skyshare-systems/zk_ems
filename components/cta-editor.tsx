@@ -96,7 +96,7 @@ const CtaEditor = () => {
                   <FormControl>
                     <Input
                       className="w-full border-black/[.08] text-background placeholder:text-black/[.80] focus:border-gold"
-                      placeholder="https://randomrepublika.com/the-long-haul-how-kpc-built-a-shipping-empire-one-box-at-a-time/"
+                      placeholder="https://site.com"
                       {...field}
                     />
                   </FormControl>

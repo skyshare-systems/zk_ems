@@ -52,26 +52,25 @@ export const defaultSectionOrders: Record<
     "posts",
   ],
   "InnovatEd Business Academy": [
-    "fromThePeople",
     "articles",
-    "upcomingPrograms",
-    "products",
     "services",
+    "upcomingPrograms",
+    "fromThePeople",
     "posts",
   ],
   "YourSkin School Of Integrated Aesthetics": [
+    "articles",
+    "services",
+    "fromThePeople",
+    "upcomingPrograms",
+    "posts",
+  ],
+  "Avian Summit Travel Corporation": [
     "fromThePeople",
     "articles",
     "upcomingPrograms",
     "products",
     "services",
-    "posts",
-  ],
-  "Avian Summit Travel Corporation": [
-    "articles",
-    "upcomingPrograms",
-    "services",
-    "fromThePeople",
     "posts",
   ],
   "Kids Learning Ville": [
@@ -83,7 +82,14 @@ export const defaultSectionOrders: Record<
     "fromThePeople",
     "posts",
   ],
-  "InnovatEd Business Solutions": ["articles", "fromThePeople", "services"],
+  "InnovatEd Business Solutions": [
+    "fromThePeople",
+    "articles",
+    "upcomingPrograms",
+    "products",
+    "services",
+    "posts",
+  ],
   "Skyshare Labs": ["articles", "fromThePeople", "services"],
   default: [
     "fromThePeople",
@@ -109,4 +115,40 @@ export const getDefaultOrder = (
   }
 
   return defaultOrder;
+};
+
+interface EditorParams {
+  companyName: companies;
+  sectionType: SectionType;
+}
+
+const defaultSectionLabels: Record<SectionType, string> = {
+  fromThePeople: "From The People",
+  articles: "Articles",
+  upcomingPrograms: "Upcoming Programs",
+  products: "Products",
+  services: "Services",
+  posts: "Posts",
+  programs: "Programs",
+};
+
+const labelOverrides: Partial<
+  Record<companies, Partial<Record<SectionType, string>>>
+> = {
+  "YourSkin School Of Integrated Aesthetics": {
+    upcomingPrograms: "UPCOMING COURSES SCHEDULE",
+  },
+  "Avian Summit Travel Corporation": {
+    upcomingPrograms: "UPCOMING DEPARTURES",
+    fromThePeople: "FEEDBACK",
+    products: "OUR TOUR PACKAGES",
+  },
+};
+
+export const getEditorLabel = ({
+  companyName,
+  sectionType,
+}: EditorParams): string => {
+  const override = labelOverrides[companyName]?.[sectionType];
+  return override ?? defaultSectionLabels[sectionType];
 };

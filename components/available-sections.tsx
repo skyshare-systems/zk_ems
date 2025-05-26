@@ -13,6 +13,7 @@ const sectionLabels: Record<SectionType, string> = {
   products: "Products",
   services: "Our Services",
   posts: "Recent Posts",
+  programs: "Programs",
 };
 
 const AvailableSectionSelector = () => {

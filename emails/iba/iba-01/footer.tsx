@@ -102,7 +102,7 @@ const Footer = () => {
             <Text
               className={cn("")}
               style={{
-                margin: "0 !important",
+                margin: "8px !important",
               }}
             >
               <Img
@@ -120,7 +120,7 @@ const Footer = () => {
                 style={{
                   verticalAlign: "middle",
                 }}
-                className="m-0 leading-[1rem] tracking-normal text-white/[.72]"
+                className=" leading-[1rem] tracking-normal text-white/[.72]"
               >
                 Admission Inquiries: 09766078446 (Kim)
               </span>
@@ -129,7 +129,7 @@ const Footer = () => {
             <Text
               className={cn("")}
               style={{
-                margin: "0 !important",
+                margin: "8px !important",
               }}
             >
               <Img
@@ -147,16 +147,16 @@ const Footer = () => {
                 style={{
                   verticalAlign: "middle",
                 }}
-                className="m-0 leading-[1rem] tracking-normal text-white/[.72]"
+                className="leading-[1rem] tracking-normal text-white/[.72]"
               >
                 Reservation: 09922075046 (Juhlia)
               </span>
             </Text>
 
-            <Text className="mt-3 leading-[1rem] tracking-normal text-white/[.50] inline-block">
+            <Text className="mt-3 mr-2 leading-[1rem] tracking-normal text-white/[.50] inline-block">
               Innovated Business Academy
             </Text>
-            <Text className="m-0 leading-[1rem] tracking-normal text-white/[.50] inline-block">
+            <Text className="m-0 pl-2 leading-[1rem] tracking-normal text-white/[.50] inline-block">
               All rights reserved.
             </Text>
           </Container>

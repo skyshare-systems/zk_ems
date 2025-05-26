@@ -24,7 +24,7 @@ export const UpcomingProgramsSection = ({
     >
       <div className="p-[16px]">
         <Text className="text-[20px] font-medium text-white text-left my-[16px]">
-          Upcoming Programs
+          Upcoming Departures
         </Text>
 
         {upcomingPrograms.map((program, index) => (

@@ -59,7 +59,7 @@ const Footer = () => {
                 className="m-0 text-[10.24px]  leading-[1rem] tracking-normal text-white/50 "
               >
                 Unit 3101, Tycoon Center Building, Pearl Drive, Ortigas Center,
-                Pasig City
+                Pasig
               </span>
             </Text>
 
@@ -86,7 +86,7 @@ const Footer = () => {
                 }}
                 className="no-underline m-0 text-[10.24px]  leading-[1rem] tracking-normal text-white/50 "
               >
-                innovatedacademyph@gmail.com
+                innovatedsolutionsph@gmail.com
               </span>
             </Text>
 
@@ -113,7 +113,7 @@ const Footer = () => {
                 }}
                 className="m-0 text-[10.24px]  leading-[1rem] tracking-normal text-white/50"
               >
-                0927-547-8713 / 0953-883-9132
+                0927 547 8713
               </span>
             </Text>
           </Container>

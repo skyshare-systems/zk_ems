@@ -14,11 +14,10 @@ export const UpcomingProgramsSection = ({
       <Row>
         {/* Left side - Title and programs with borders */}
         <Column valign="top" className="w-[50%] pr-[16px]">
-          {/* Title with star beside it */}
           <Row>
             <Column className="align-middle">
               <Text className="text-[24px] font-medium m-0 inline">
-                Upcoming Programs
+                Upcoming Courses Schedule
               </Text>
             </Column>
           </Row>

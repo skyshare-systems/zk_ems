@@ -31,6 +31,7 @@ import Image from "next/image";
 import { companies } from "@/lib/constant";
 import { FromThePeopleDates } from "./from-the-people-dates";
 import { NestedDates } from "./nested-dates";
+import { getEditorLabel } from "@/emails/utils";
 
 const FromThePeopleEditor = () => {
   const { selectedTemplate, fromThePeople, setFromThePeople, isRearranging } =
@@ -96,7 +97,12 @@ const FromThePeopleEditor = () => {
         )}
       >
         <div className="flex justify-between items-center w-full">
-          <p className="ty-title flex-1 text-black/50">From The People</p>
+          <p className="ty-title flex-1 text-black/50">
+            {getEditorLabel({
+              companyName: selectedTemplate.company.name as companies,
+              sectionType: "fromThePeople",
+            })}
+          </p>
 
           {isRearranging && (
             <div className="flex gap-2 items-center">

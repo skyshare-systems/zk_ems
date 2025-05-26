@@ -106,7 +106,9 @@ const Footer = () => {
             </Column>
           </Row>
 
-          <Text className="text-[14px] text-[#18365A] font-bold">Contact</Text>
+          <Text className="text-[14px] text-[#18365A] font-bold">
+            Book Now!
+          </Text>
           <Row className="">
             <Column valign="top" className="w-[24px]">
               <Img
@@ -117,7 +119,7 @@ const Footer = () => {
             </Column>
             <Column valign="top">
               <Text className="text-[#18365AB8] m-0 leading-none align-top">
-                aviansummit@gmail.com
+                sales@aviansummit.ph
               </Text>
             </Column>
           </Row>
@@ -131,7 +133,21 @@ const Footer = () => {
             </Column>
             <Column valign="top">
               <Text className="text-[#18365AB8] m-0 leading-none align-top">
-                0928 291 7170 (VIBER)
+                09282917170 (for call, answers 8AM to 5PM)
+              </Text>
+            </Column>
+          </Row>
+          <Row className="mt-1">
+            <Column valign="top" className="w-[24px]">
+              <Img
+                src="https://avian-summit-travel-corporation.sgp1.cdn.digitaloceanspaces.com/.png"
+                width={16}
+                height={16}
+              />
+            </Column>
+            <Column valign="top">
+              <Text className="text-[#18365AB8] m-0 leading-none align-top">
+                aviansummit.ph
               </Text>
             </Column>
           </Row>

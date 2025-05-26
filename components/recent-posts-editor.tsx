@@ -78,7 +78,7 @@ const RecentPostsEditor = () => {
         )}
       >
         <div className="flex justify-between items-center w-full">
-          <p className="ty-title flex-1 text-black/50">Our Recent Posts</p>
+          <p className="ty-title flex-1 text-black/50">OUR RECENT POSTS</p>
 
           {isRearranging && (
             <div className="flex gap-2 items-center">
@@ -140,7 +140,7 @@ const RecentPostsEditor = () => {
                           <FormControl>
                             <Input
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="https://example.com"
+                              placeholder="https://site.com"
                               {...field}
                             />
                           </FormControl>

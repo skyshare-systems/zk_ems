@@ -31,6 +31,7 @@ import { OurServices } from "./services";
 import { UpcomingProgramCard } from "./upcoming-section";
 import Header from "./header";
 import Footer from "./footer";
+import { getDefaultOrder, SectionType } from "@/emails/utils";
 
 interface IBS01TemplateProps {
   body: string;
@@ -42,6 +43,8 @@ interface IBS01TemplateProps {
   products: Product[];
   services: Service[];
   posts: Post[];
+  isSectionOrderUpdated: boolean;
+  sectionOrder: SectionType[];
 }
 
 export const IBS01Template = ({
@@ -166,7 +169,15 @@ export const IBS01Template = ({
       link: "https://example.com/understanding-laser-treatments",
     },
   ],
+  sectionOrder,
+  isSectionOrderUpdated,
 }: IBS01TemplateProps) => {
+  const finalSectionOrder = getDefaultOrder(
+    sectionOrder,
+    "InnovatEd Business Solutions",
+    isSectionOrderUpdated,
+  );
+
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="width:100%; border-radius:12px" $1>',
@@ -254,88 +265,101 @@ export const IBS01Template = ({
                 </div>
               )}
             </Section>
-            {/* FROM THE PEOPLE */}
-            {fromThePeople && fromThePeople.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                      From The People
-                    </Text>
-                  </Column>
-                </Row>
 
-                {fromThePeople.map((people, index) => (
-                  <FromThePeopleCard key={index} people={people} />
-                ))}
-              </Section>
-            )}
-            {/* Articles */}
-            {articles && articles.length >= 1 && (
-              <Section>
-                <Text className="text-[20px] text-black font-semibold">
-                  Articles
-                </Text>
+            {finalSectionOrder.map((section) => {
+              switch (section) {
+                case "fromThePeople":
+                  return fromThePeople?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                            From The People
+                          </Text>
+                        </Column>
+                      </Row>
 
-                {articles.map((article, index) => (
-                  <ArticleCard key={index} article={article} />
-                ))}
-              </Section>
-            )}
-            {/* Upcoming Programs */}
-            {upcomingPrograms && upcomingPrograms.length >= 1 && (
-              <Section>
-                <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                  Upcoming Programs
-                </Text>
+                      {fromThePeople.map((people, index) => (
+                        <FromThePeopleCard key={index} people={people} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-                {upcomingPrograms?.map((program, index) => (
-                  <UpcomingProgramCard program={program} key={index} />
-                ))}
-              </Section>
-            )}
-            {/* Discover Our Products */}
-            {products && products.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                      Discover Our Products
-                    </Text>
-                  </Column>
-                </Row>
+                case "articles":
+                  return articles?.length ? (
+                    <Section>
+                      <Text className="text-[20px] text-black font-semibold">
+                        Articles
+                      </Text>
 
-                <ProductCards products={products} />
-              </Section>
-            )}
-            {/* Our Services */}
-            {services && services.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                      Our Services
-                    </Text>
-                  </Column>
-                </Row>
+                      {articles.map((article, index) => (
+                        <ArticleCard key={index} article={article} />
+                      ))}
+                    </Section>
+                  ) : null;
 
-                <OurServices services={services} />
-              </Section>
-            )}
-            {/* Our Recent Posts */}
-            {posts && posts.length >= 1 && (
-              <Section>
-                <Row align="center" className="mb-[20px]">
-                  <Column align="left">
-                    <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
-                      Our Recent Posts
-                    </Text>
-                  </Column>
-                </Row>
+                case "upcomingPrograms":
+                  return upcomingPrograms?.length ? (
+                    <Section>
+                      <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                        Upcoming Programs
+                      </Text>
 
-                <OurRecentPosts posts={posts} />
-              </Section>
-            )}
+                      {upcomingPrograms?.map((program, index) => (
+                        <UpcomingProgramCard program={program} key={index} />
+                      ))}
+                    </Section>
+                  ) : null;
+                case "products":
+                  return products?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                            Discover Our Products
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <ProductCards products={products} />
+                    </Section>
+                  ) : null;
+
+                case "services":
+                  return services?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                            Our Services
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <OurServices services={services} />
+                    </Section>
+                  ) : null;
+
+                case "posts":
+                  return posts?.length ? (
+                    <Section>
+                      <Row align="center" className="mb-[20px]">
+                        <Column align="left">
+                          <Text className="text-[20px] text-black font-semibold mx-auto text-center w-fit">
+                            Our Recent Posts
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <OurRecentPosts posts={posts} />
+                    </Section>
+                  ) : null;
+
+                default:
+                  return null;
+              }
+            })}
+
             <Footer />
           </Container>
         </Body>

@@ -140,7 +140,7 @@ const Footer = () => {
                 }}
                 className="m-0 leading-[1rem] tracking-normal"
               >
-                0917-622-0676 / 0927-735-9793
+                0927-735-9793
               </span>
             </Text>
           </Container>

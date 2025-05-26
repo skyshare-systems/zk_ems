@@ -165,7 +165,7 @@ const OurProgramsEditor = () => {
                           <FormControl>
                             <Input
                               className="w-full border-black/[.08] placeholder:text-black/[.80] focus:border-gold"
-                              placeholder="https://"
+                              placeholder="https://site.com"
                               {...field}
                             />
                           </FormControl>

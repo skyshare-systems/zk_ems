@@ -20,6 +20,8 @@ import { UpcomingProgramsSchema } from "@/schema/upcoming-program";
 import { NestedUpcomingDates } from "./upcoming-program-dates";
 import { NestedDates } from "./nested-dates";
 import Image from "next/image";
+import { getEditorLabel } from "@/emails/utils";
+import { companies } from "@/lib/constant";
 
 const UpcomingProgramEditor = () => {
   const {
@@ -82,7 +84,12 @@ const UpcomingProgramEditor = () => {
         )}
       >
         <div className="flex justify-between items-center w-full">
-          <p className="ty-title flex-1 text-black/50">Upcoming Programs</p>
+          <p className="ty-title flex-1 text-black/50">
+            {getEditorLabel({
+              companyName: selectedTemplate.company.name as companies,
+              sectionType: "upcomingPrograms",
+            })}
+          </p>
 
           {isRearranging && (
             <div className="flex gap-2 items-center">
@@ -170,7 +177,7 @@ const UpcomingProgramEditor = () => {
                             <FormControl>
                               <Input
                                 className="w-full border-black/[.08] placeholder:text-black/[.32] focus:border-gold placeholder:ty-descriptions"
-                                placeholder="https://"
+                                placeholder="https://site.com"
                                 {...field}
                               />
                             </FormControl>

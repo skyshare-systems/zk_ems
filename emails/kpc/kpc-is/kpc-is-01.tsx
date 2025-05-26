@@ -192,7 +192,7 @@ export const KPCIS01Template = ({
                         as="h5"
                         className="text-[18px] uppercase font-bold m-0 mb-[16px] text-black/50 font-geist"
                       >
-                        From the people
+                        Feedback from Our Community
                       </Heading>
 
                       {fromThePeople.map((people) => (
@@ -216,7 +216,7 @@ export const KPCIS01Template = ({
                     >
                       <div className="bg-black/[.04] p-4 rounded-lg">
                         <Text className="text-black/[.5] p-0 m-0 text-[12px] uppercase font-bold">
-                          ARTICLE
+                          ARTICLES
                         </Text>
                         {articles.map((article) => (
                           <ArticleCard
@@ -257,7 +257,7 @@ export const KPCIS01Template = ({
                       <Row align="center" className="mb-[16px]">
                         <Column align="center">
                           <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                            Our Services
+                            Our Offerings
                           </Text>
                         </Column>
                       </Row>
@@ -272,7 +272,7 @@ export const KPCIS01Template = ({
                       <Row align="center" className="mb-[20px]">
                         <Column align="center">
                           <Text className="text-[14px] text-[#000205] opacity-50 uppercase font-bold  w-fit">
-                            Our Recent Posts
+                            Our Latest Updates
                           </Text>
                         </Column>
                       </Row>

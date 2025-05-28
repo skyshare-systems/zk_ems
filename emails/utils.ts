@@ -1,12 +1,8 @@
 import { companies } from "@/lib/constant";
 
 export const chunkArray = <T>(array: T[], size: number) => {
-  // if (size <= 0 || array.length === 0) {
-  //   throw new Error("Recent Posts, Articles, Services, Products, Upcoming Programs, and From The People should not be empty.");
-  // }
-
   return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
-    array.slice(index * size, index * size + size),
+    array.slice(index * size, index * size + size)
   );
 };
 
@@ -51,18 +47,18 @@ export const defaultSectionOrders: Record<
     "fromThePeople",
     "posts",
   ],
-  "InnovatEd Business Academy": [
-    "articles",
-    "services",
-    "upcomingPrograms",
-    "fromThePeople",
-    "posts",
-  ],
   "YourSkin School Of Integrated Aesthetics": [
     "articles",
     "services",
     "fromThePeople",
     "upcomingPrograms",
+    "posts",
+  ],
+  "InnovatEd Business Academy": [
+    "articles",
+    "services",
+    "upcomingPrograms",
+    "fromThePeople",
     "posts",
   ],
   "Avian Summit Travel Corporation": [
@@ -105,7 +101,7 @@ export const defaultSectionOrders: Record<
 export const getDefaultOrder = (
   sectionOrder: SectionType[],
   companyName: companies,
-  isSectionOrderUpdated: boolean,
+  isSectionOrderUpdated: boolean
 ) => {
   const defaultOrder =
     defaultSectionOrders[companyName] || defaultSectionOrders["default"];
@@ -123,13 +119,13 @@ interface EditorParams {
 }
 
 const defaultSectionLabels: Record<SectionType, string> = {
-  fromThePeople: "From The People",
-  articles: "Articles",
-  upcomingPrograms: "Upcoming Programs",
-  products: "Products",
-  services: "Services",
-  posts: "Posts",
-  programs: "Programs",
+  fromThePeople: "FROM THE PEOPLE",
+  articles: "ARTICLES",
+  upcomingPrograms: "UPCOMING PROGRAMS",
+  products: "OUR PRODUCTS",
+  services: "OUR SERVICES",
+  posts: "OUR RECENT POSTS",
+  programs: "PROGRAMS",
 };
 
 const labelOverrides: Partial<

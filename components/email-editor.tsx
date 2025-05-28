@@ -1,6 +1,10 @@
 "use client";
 
-import { SectionType } from "@/emails/utils";
+import {
+  defaultSectionOrders,
+  getDefaultOrder,
+  SectionType,
+} from "@/emails/utils";
 import { updateFontHtml } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
 import { MDXEditorMethods } from "@mdxeditor/editor";
@@ -17,6 +21,7 @@ import ProductsEditor from "./product-editor";
 import RecentPostsEditor from "./recent-posts-editor";
 import { Button } from "./ui/button";
 import UpcomingProgramEditor from "./upcoming-program-editor";
+import { companies } from "@/lib/constant";
 
 const sectionComponents: Record<SectionType, JSX.Element> = {
   fromThePeople: <FromThePeopleEditor />,
@@ -68,8 +73,16 @@ const EmailEditor = ({
 
   if (!selectedTemplate) return null;
 
+  const defaultSections = getDefaultOrder(
+    defaultSectionOrders[selectedTemplate.company.name as companies] ||
+      defaultSectionOrders["default"],
+    selectedTemplate.company.name as companies,
+    isSectionOrderUpdated,
+  );
+
   console.log({
     sections,
+    defaultSections,
   });
 
   return (
@@ -102,18 +115,16 @@ const EmailEditor = ({
         </>
       ) : (
         <>
-          {/* Body */}
           <div className="flex flex-col items-center w-full gap-4 my-4 grow">
             <p className="text-black ty-subtext">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
               Note: Alignment Plugin will make all content follow the selected
-              alignment. Since markdown doesn&rsquo;t support alignment at all.
+              alignment. Since markdown doesn’t support alignment at all.
             </p>
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden min-h-[450px]">
               <Mdx ref={ref} />
             </div>
             <CtaEditor />
-            {/* <AvailableSectionSelector /> */}
             <div className="flex justify-between self-stretch items-start">
               <Button
                 onClick={resetSections}
@@ -121,8 +132,7 @@ const EmailEditor = ({
                 className="px-3 py-2 flex items-center gap-2 rounded-lg border border-black hover:bg-red-500 hover:text-white bg-black/[.16]"
               >
                 <RotateCw size={14} />
-
-                <p className="text-[12.8px]  font-normal tracking-normal">
+                <p className="text-[12.8px] font-normal tracking-normal">
                   Reset Arrangement
                 </p>
               </Button>
@@ -133,8 +143,7 @@ const EmailEditor = ({
                 className="bg-gold hover:bg-gold/60"
               >
                 <Move size={14} color="black" />
-
-                <p className="text-[12.8px]  font-normal tracking-normal">
+                <p className="text-[12.8px] font-normal tracking-normal">
                   {isRearranging ? "Done" : "Arrange"}
                 </p>
               </Button>
@@ -146,15 +155,21 @@ const EmailEditor = ({
               onReorder={setSections}
               className="flex flex-col gap-4 w-full"
             >
-              {sections.map((key) => (
-                <Reorder.Item
-                  key={key}
-                  value={key}
-                  className="relative bg-white rounded-lg shadow-md"
-                >
-                  {sectionComponents[key]}
-                </Reorder.Item>
-              ))}
+              {sections
+                .filter((key) => defaultSections.includes(key))
+                .sort(
+                  (a, b) =>
+                    defaultSections.indexOf(a) - defaultSections.indexOf(b),
+                )
+                .map((key) => (
+                  <Reorder.Item
+                    key={key}
+                    value={key}
+                    className="relative bg-white rounded-lg shadow-md"
+                  >
+                    {sectionComponents[key]}
+                  </Reorder.Item>
+                ))}
             </Reorder.Group>
           </div>
         </>

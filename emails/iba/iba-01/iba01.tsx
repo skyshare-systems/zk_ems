@@ -65,9 +65,6 @@ export const IBA01Template = ({
     isSectionOrderUpdated,
   );
 
-  console.log({
-    isSectionOrderUpdated,
-  });
 
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,

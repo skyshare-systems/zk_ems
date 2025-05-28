@@ -5,13 +5,6 @@ import { Column, Img, Row, Text, Section } from "@react-email/components";
 export const FromThePeopleCard = ({ people }: { people: FromThePeople }) => {
   const { reviewerImage, review, reviewerName, tourLocation, dates } = people;
 
-  console.log({
-    reviewerImage,
-    review,
-    reviewerName,
-    tourLocation,
-    dates,
-  });
   return (
     <Section className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4 p-4">
       <Row className="m-0">

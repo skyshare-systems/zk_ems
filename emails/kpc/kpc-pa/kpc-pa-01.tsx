@@ -68,9 +68,7 @@ export const KPCPA01Template = ({
     isSectionOrderUpdated,
   );
 
-  console.log({
-    finalSectionOrder,
-  });
+
   const modifiedBody = body?.replace(
     /<img(?![^>]*\bwidth\b)([^>]*)>/gi,
     '<img style="width:100%; border-radius:12px" $1>',

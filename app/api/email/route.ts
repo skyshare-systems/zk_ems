@@ -113,7 +113,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     const emailResult = await transporter.sendMail({
       from: smtp.from, // Use SMTP username as sender
-      to: ["ijohnpaul2000@gmail.com", ...recipients],
+      to: [...recipients],
       subject,
       html: updatedHtml,
       

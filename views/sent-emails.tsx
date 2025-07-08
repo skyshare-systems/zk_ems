@@ -45,7 +45,7 @@ const SentEmails = () => {
       setDebouncedTitle(title);
     },
     1500,
-    [title]
+    [title],
   );
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {

@@ -21,6 +21,10 @@ import useProps from "@/hooks/useProps";
 import { cn, colorizeButton } from "@/lib/utils";
 import ScrollTop from "./scroll-top";
 import { useConfirmResetStore } from "@/store/confirm-reset";
+import { geist } from "@/public/fonts";
+import EraserIcon from "./icons/eraser";
+import CancelIcon from "./icons/cancel";
+import UserRemoveIcon from "./icons/user-remove";
 
 interface ValidationError {
   message: string;
@@ -345,6 +349,10 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setRecipients(recipients.filter((_, index) => index !== indexToRemove));
   };
 
+  const removeAllRecipients = () => {
+    setRecipients([]);
+  };
+
   const sendEmailConfirmation = (): void => {
     onOpen();
   };
@@ -393,8 +401,8 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow w-full">
       <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start justify-start gap-4 self-stretch">
-          <div className="flex flex-col 2xl:flex-row items-center gap-2 self-stretch">
-            <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
+          <div className="flex flex-col 2xl:flex-row items-center  gap-2 self-stretch">
+            <p className="ty-descriptions text-white/[.32] 2xl:w-[100px] leading-[120%]">
               Subject
             </p>
             <Input
@@ -407,9 +415,10 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2 self-stretch">
-            <div className="flex flex-col 2xl:flex-row gap-2 self-stretch">
-              <p className="ty-descriptions text-white/[.32] self-stretch 2xl:w-[100px]">
-                Recipients ({recipients.length}/{maxRecipientsAllowed})
+            <div className="flex flex-col 2xl:flex-row items-center gap-2 self-stretch">
+              <p className="ty-descriptions text-white/[.32]  2xl:w-[100px]">
+                Recipients
+                {/* ({recipients.length}/{maxRecipientsAllowed}) */}
               </p>
               <div className="flex flex-col 2xl:flex-row gap-2 w-full items-center">
                 <Input
@@ -426,9 +435,12 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                     !recipientInput || !validateEmail(recipientInput).isValid
                   }
                   onClick={handleAddRecipient}
-                  className="bg-white/[.8] text-black w-full 2xl:w-fit"
+                  className={cn(
+                    geist.className,
+                    "bg-gold_v2-100 text-black_v2-100 w-full 2xl:w-fit flex items-center gap-2",
+                  )}
                 >
-                  Add
+                  + Add
                 </Button>
                 <input
                   type="file"
@@ -439,7 +451,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 />
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-white/[.8] text-black flex items-center gap-2 w-full 2xl:w-fit"
+                  className="text-gold_v2-100 flex items-center gap-2 w-full 2xl:w-fit rounded-lg border border-gold_v2-16 bg-gold_v2-4 hover:bg-gold_v2-100 hover:text-black_v2-100 ease-out duration-300"
                   disabled={isProcessingCSV}
                 >
                   <Upload size={16} />
@@ -453,17 +465,15 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                   {recipients.slice(0, 5).map((email, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 bg-white/[.08] px-2 py-1 rounded"
+                      className="flex items-center gap-1 bg-white/[.08] px-2 py-1 rounded-full"
                     >
-                      <span className="text-white/[.8] text-[10.24px]">
-                        {email}
-                      </span>
+                      <span className="text-white-100 ty-subtext">{email}</span>
                       <button
                         onClick={() => removeRecipient(index)}
-                        className="text-white/[.32] hover:text-white/[.8] text-[10.24px]"
+                        className="text-white_v2-50 hover:text-white_v2-100 text-[10.24px] ease-out duration-300"
                         aria-label={`Remove ${email}`}
                       >
-                        ×
+                        <CancelIcon />
                       </button>
                     </div>
                   ))}
@@ -475,6 +485,16 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                       </span>
                     </div>
                   )}
+
+                  <button
+                    onClick={() => removeAllRecipients()}
+                    className={cn(
+                      geist.className,
+                      "rounded-full border border-[#DA000080] text-[#DA0000] ease-out duration-300 ty-subtext flex items-center gap-1 py-1 px-2 hover:bg-[#DA0000] hover:text-white_v2-100",
+                    )}
+                  >
+                    <UserRemoveIcon /> Clear All
+                  </button>
                 </div>
               )}
             </div>
@@ -534,14 +554,16 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 window.scrollTo(0, document.body.scrollHeight);
               }}
               className={cn(
-                buttonVariants({
-                  size: "sm",
-                }),
-                colorizeButton(selectedTemplate.company.name),
-                "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
+                // buttonVariants({
+                //   size: "sm",
+                // }),
+                // colorizeButton(selectedTemplate.company.name),
+                geist.className,
+                "w-full lg:w-fit z-50 p-0 rounded-none border-b border-b-white_v2-100 flex items-center gap-1 bg-transparent text-white_v2-100 opacity-60 hover:opacity-100 hover:bg-transparent duration-300 ease-out ty-descriptions",
               )}
             >
               <ArrowDown color="white" size={12} />
+              Scroll to bottom
             </Button>
             <Button
               title="Reset Fields"
@@ -549,14 +571,17 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 openResetFieldsModal();
               }}
               className={cn(
-                buttonVariants({
-                  size: "sm",
-                  variant: "destructive",
-                }),
-                "w-full lg:w-fit z-50 hover:bg-opacity-90 duration-500 transition-all",
+                // buttonVariants({
+                //   size: "sm",
+                //   variant: "destructive",
+                // }),
+                geist.className,
+                "w-full lg:w-fit p-0 z-50 rounded-none border-b border-b-white_v2-100 bg-transparent text-white_v2-100 opacity-60 hover:opacity-100 hover:bg-transparent duration-300 ease-out ty-descriptions",
               )}
             >
-              <RotateCcw color="white" size={12} />
+              {/* <RotateCcw color="white" size={12} /> */}
+              <EraserIcon />
+              Clear
             </Button>
           </div>
         </div>
@@ -577,9 +602,9 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             generatePreview();
           }}
           variant={"ghost"}
-          className="bg-gold/[.04] w-full lg:w-fit"
+          className="bg-gold_v2-4 border border-gold_v2-100 w-full lg:w-fit ease-out duration-300 hover:bg-gold_v2-100 text-gold_v2-100 hover:text-black_v2-100"
         >
-          <p className="text-gold">{isPreview ? "Hide" : "Generate"} Preview</p>
+          <p className="">{isPreview ? "Hide" : "Show"} Preview</p>
         </Button>
         <Button
           disabled={recipients.length === 0 || subject.trim() === ""}

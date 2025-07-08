@@ -35,7 +35,9 @@ export type companies =
   | "KPC Payment Assistance"
   | "KPC Finance & Accounting Institute"
   | "Skyshare Labs"
-  | "InnovatEd Business Solutions";
+  | "InnovatEd Business Solutions"
+  | "New Company"
+  | "Company 6";
 
 export type rules =
   | "cta_button"
@@ -108,6 +110,16 @@ export const emailTemplates: EmailTemplate[] = [
     template: IBS01Template,
     templateId: "cm7d95epl0000b42bu0qvm3vg",
   },
+  {
+    company: "New Company",
+    template: IBS01Template,
+    templateId: "cmcu5hufj000suxnm8twe1asd",
+  },
+  {
+    company: "Company 6",
+    template: KPCFAI01Template,
+    templateId: "cmcu5hufj000suxnm8twe1a2d",
+  },
 ];
 
 export const companyRule: CompanyRule[] = [
@@ -147,9 +159,8 @@ export const companyRule: CompanyRule[] = [
     ],
   },
   {
-    companies:[
+    companies: [
       { id: "cm9s5oq900005lxhv1xtk0mlj", name: "Kids Learning Ville" },
-
     ],
     rules: [
       "cta_button",
@@ -159,6 +170,7 @@ export const companyRule: CompanyRule[] = [
       "discover_our_products",
       "our_services",
       "recent_posts",
-      "programs"
-    ],  }
+      "programs",
+    ],
+  },
 ];

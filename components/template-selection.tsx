@@ -4,6 +4,7 @@ import { cn, localizedTime } from "@/lib/utils";
 import { TemplateWithCompany, useCreateEmailStore } from "@/store/create-email";
 import { fromZonedTime } from "date-fns-tz";
 import { Skeleton } from "./ui/skeleton";
+import { albert_sans, geist } from "@/public/fonts";
 interface Props {
   template: TemplateWithCompany;
 }
@@ -26,7 +27,7 @@ const TemplateSelection = ({ template }: Props) => {
         }
       }}
       className={cn(
-        "flex cursor-pointer hover:bg-white/[.16] p-3 flex-col justify-center items-start gap-2 self-stretch rounded-xl relative mr-2",
+        "flex cursor-pointer hover:bg-white_v2-8 p-3 flex-col justify-center items-start gap-2 self-stretch rounded-xl relative",
         selectedTemplate?.id === template.id &&
           "border border-gold bg-gold/[.04]",
       )}
@@ -49,15 +50,20 @@ const TemplateSelection = ({ template }: Props) => {
           </svg>
         </div>
       )}
-      <div className="flex flex-col items-start justify-center gap-2 self-stretch">
-        <p className="ty-title self-stretch font-bold line-clamp-2 text-ellipsis">
+      <div className="flex flex-col items-start justify-center gap-1 self-stretch">
+        <p className={cn(geist.className, "ty-title text-white_v2-100")}>
           {name}
         </p>
-        <p className="line-clamp-3 text-ellipsis font-medium self-stretch text-[12.8px]">
+        <p
+          className={cn(
+            albert_sans.className,
+            "line-clamp-3 text-ellipsis ty-subtext text-white_v2-50",
+          )}
+        >
           {description}
         </p>
 
-        <p className="ty-subtitle text-white/[.32] self-stretch">
+        <p className={cn(geist.className, "ty-outline text-white_v2-32")}>
           Created at {localizedTime(createdAt, "MMMM d yyyy • h:mm a")}
         </p>
 
@@ -65,9 +71,16 @@ const TemplateSelection = ({ template }: Props) => {
           {tags.map((tag) => (
             <div
               key={tag}
-              className="bg-gold/[.08] rounded-[4px] flex px-2 py-1 justify-center items-start gap-2"
+              className="bg-gold_v2-8 rounded-[4px] flex px-2 py-1 justify-center items-start"
             >
-              <p className="text-gold text-[12.8px]">{tag}</p>
+              <p
+                className={cn(
+                  albert_sans.className,
+                  "ty-subtext text-gold_v2-100 capitalize",
+                )}
+              >
+                {tag}
+              </p>
             </div>
           ))}
         </div>

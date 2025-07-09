@@ -60,19 +60,22 @@ export function TeamSwitcher() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger
+            asChild
+            className="focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+          >
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-white_v2-16 data-[state=open]:text-sidebar-accent-foreground hover:bg-white_v2-16"
             >
               {company.image ? (
-                <div className="flex aspect-square size-12 items-center justify-center rounded-lg text-sidebar-primary-foreground bg-gold/[.32]">
+                <div className="flex aspect-square size-12 items-center justify-center rounded-lg text-sidebar-primary-foreground border border-white_v2-50">
                   <Image
                     src={company.image}
                     width={64}
                     height={64}
                     alt={company.name}
-                    className="rounded-lg size-12 object-contain p-1"
+                    className="rounded-lg size-12 object-contain"
                   />
                 </div>
               ) : (

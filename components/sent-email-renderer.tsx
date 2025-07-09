@@ -8,16 +8,13 @@ const SentEmailRenderer = () => {
 
   if (!selectedSentEmail) return null;
 
-
   return (
     <div className="flex p-4 flex-col  gap-6 self-stretch rounded-2xl bg-white/[.08] h-full grow w-full">
       <div className="flex flex-col grow justify-center items-start gap-4 self-stretch h-full">
         <div className="flex flex-col items-start gap-4 self-stretch">
           <div className="flex items-center gap-2 self-stretch ">
             <p className="ty-descriptions text-white/[.32] w-[96px]">Subject</p>
-            <p className="ty-title text-white">
-              {selectedSentEmail?.subject}
-            </p>
+            <p className="ty-title text-white">{selectedSentEmail?.subject}</p>
           </div>
           <div className="flex items-center gap-2 self-stretch flex-wrap ">
             <p className="ty-descriptions text-white/[.32] w-[96px]">

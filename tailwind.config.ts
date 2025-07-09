@@ -186,10 +186,10 @@ const config: Config = {
       addBase({});
       addComponents({
         ".ty-outline": {
-          "@apply text-[8px] font-medium leading-[120%]": {},
+          "@apply text-[8.19px] font-medium leading-[120%]": {},
         },
         ".ty-subtext": {
-          "@apply text-[10px] font-normal leading-[120%]": {},
+          "@apply text-[10.24px] font-normal leading-[120%]": {},
         },
         ".ty-subtitle": {
           "@apply text-[12px] font-semibold leading-[120%]": {},

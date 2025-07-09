@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getTemplates } from "@/lib/query/templates";
 import { cn } from "@/lib/utils";
+import { geist } from "@/public/fonts";
 import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useUserStore } from "@/store/user";
@@ -59,9 +60,16 @@ const Templates = () => {
         <>
           <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
             <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
                 <SidebarTrigger className="" />
-                <p className="ty-subheading ">Brand Email Templates</p>
+                <p
+                  className={cn(
+                    geist.className,
+                    "ty-subheading text-white_v2-100",
+                  )}
+                >
+                  Brand Email Templates
+                </p>
               </div>
               <IconInput
                 startIcon={<Search size={16} />}

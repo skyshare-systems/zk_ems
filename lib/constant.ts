@@ -37,7 +37,7 @@ export type companies =
   | "Skyshare Labs"
   | "InnovatEd Business Solutions"
   | "New Company"
-  | "Company 6";
+  | "Company 1";
 
 export type rules =
   | "cta_button"
@@ -116,9 +116,19 @@ export const emailTemplates: EmailTemplate[] = [
     templateId: "cmcu5hufj000suxnm8twe1asd",
   },
   {
-    company: "Company 6",
+    company: "Company 1",
     template: KPCFAI01Template,
-    templateId: "cmcu5hufj000suxnm8twe1a2d",
+    templateId: "cmcu5hufj000ruxnmpvbj7vz6",
+  },
+  {
+    company: "Company 1",
+    template: KPCFAI01Template,
+    templateId: "cmcu5hufk0012uxnm97knwnd3",
+  },
+  {
+    company: "Company 1",
+    template: KPCFAI01Template,
+    templateId: "cmcu5hufj000puxnmwe7vueya",
   },
 ];
 

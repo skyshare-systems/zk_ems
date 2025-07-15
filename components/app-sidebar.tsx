@@ -186,21 +186,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link
                 onClick={reset}
                 href={`/dashboard?t=address-book`}
-                className="pointer-events-none"
+                // className="pointer-events-none"
               >
                 <SidebarMenuButton
                   tooltip={"Address Book"}
                   className={cn(
                     geist.className,
                     "hover:text-black ty-descriptions text-[#7f8082]",
-                    tab === "address-book" && "bg-gold text-black",
+                    tab === "address-book" && "text-white",
                   )}
                 >
                   <AddressBookIcon />
                   <span>Address Book</span>
-                  <div className="rounded-full flex px-2 py-1 bg-white/[.05] ty-subtext">
+
+                  {tab === "address-book" && <EllipseIndicator color="white" />}
+
+                  {/* <div className="rounded-full flex px-2 py-1 bg-white/[.05] ty-subtext">
                     Coming soon!
-                  </div>
+                  </div> */}
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

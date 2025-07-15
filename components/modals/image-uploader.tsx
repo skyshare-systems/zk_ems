@@ -188,7 +188,7 @@ const ImageUploader = () => {
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               className={cn(
-                "w-full flex flex-col gap-1 items-center justify-center text-center  transition-colors  min-h-[212px] border border-gray_v2-16 bg-gray_v2-4 py-[6px] ",
+                "w-full flex flex-col gap-1 items-center justify-center text-center  transition-colors min-h-[212px] border border-gray_v2-16 bg-gray_v2-4 py-[6px] ",
                 dragOver
                   ? "border-[#18365A] bg-[#18365A]/50"
                   : "border-[#f2f2f329] bg-[#f2f2f30A]",

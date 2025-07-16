@@ -2,6 +2,10 @@
 
 import { useSentEmailStore } from "@/store/sent-email";
 import { SentEmailContent } from "./sent-email-content";
+import EditIcon from "./icons/edit";
+import { cn } from "@/lib/utils";
+import { geist } from "@/public/fonts";
+import ForwardIcon from "./icons/forward";
 
 const SentEmailRenderer = () => {
   const { selectedSentEmail } = useSentEmailStore();
@@ -47,6 +51,28 @@ const SentEmailRenderer = () => {
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
           <SentEmailContent />
+        </div>
+
+        <div className="flex justify-end items-center gap-3 w-full">
+          <button
+            className={cn(
+              geist.className,
+              "flex items-center gap-2 py-2 px-3 ty-descriptions text-white_v2-100 bg-white_v2-4 rounded ease-out duration-300 hover:bg-white_v2-100 hover:text-black_v2-100",
+            )}
+          >
+            Edit
+            <EditIcon />
+          </button>
+
+          <button
+            className={cn(
+              geist.className,
+              "flex items-center gap-2 py-2 px-3 ty-descriptions text-gold_v2-100 bg-gold_v2-4 rounded ease-out duration-300 hover:bg-gold_v2-100 hover:text-black_v2-100",
+            )}
+          >
+            Forward
+            <ForwardIcon />
+          </button>
         </div>
       </div>
     </div>

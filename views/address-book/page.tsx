@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { geist } from "@/public/fonts";
 import { useAddressBook } from "@/store/address-book-tab";
 import React from "react";
+import AddRecipient from "./add-recipient";
+import CreateGroup from "./create-group";
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
@@ -14,8 +17,7 @@ const AddressBookSection = () => {
         <h4 className={cn(geist.className, "ty-subheading text-white-100")}>
           Address Book
         </h4>
-
-        <div className="flex flex-wrap items-center gap-3 w-full">
+        <div className="flex flex-row justify-between items-center gap-3 w-full">
           <div className="flex flex-row  items-start justify-start">
             {tabs.map((data, index) => {
               return (
@@ -33,7 +35,12 @@ const AddressBookSection = () => {
               );
             })}
           </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <AddRecipient />
+            <CreateGroup />
+          </div>
         </div>
+        {/* table */}
       </div>
     </div>
   );

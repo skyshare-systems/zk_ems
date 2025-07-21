@@ -5,6 +5,7 @@ import { useAddressBook } from "@/store/address-book-tab";
 import React from "react";
 import AddRecipient from "./add-recipient";
 import CreateGroup from "./create-group";
+import UserTable from "./recipient-table";
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
@@ -41,6 +42,8 @@ const AddressBookSection = () => {
           </div>
         </div>
         {/* table */}
+
+        <UserTable />
       </div>
     </div>
   );

@@ -79,7 +79,7 @@ const groupColors: Record<string, string> = {
 
 export default function UserTable() {
   return (
-    <div className="p-6 bg-black text-white rounded-xl">
+    <div className="p-6 bg-gray_v2-4 text-white rounded-xl w-full">
       <Table>
         <TableHeader>
           <TableRow>
@@ -128,12 +128,6 @@ export default function UserTable() {
           ))}
         </TableBody>
       </Table>
-      <div className="flex justify-between items-center text-sm text-muted-foreground mt-4">
-        <div>1–10 of 256</div>
-        <div className="text-green-400">
-          ✓ Edited the recipient successfully.
-        </div>
-      </div>
     </div>
   );
 }

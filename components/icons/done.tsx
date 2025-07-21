@@ -17,7 +17,7 @@ const DoneIcon = ({ className }: IClassName) => {
       <path
         d="M1.91666 6.32959L3.95833 8.37126L10.0833 1.95459"
         stroke="currentColor"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="square"
       />
     </svg>

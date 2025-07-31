@@ -64,7 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const searchParams = useSearchParams();
   const tab = searchParams.get("t");
 
-  const { reset } = useCreateEmailStore();
+  const { reset, setMode } = useCreateEmailStore();
   const { company } = useCompanyStore();
   const { open } = useSidebar();
 
@@ -100,7 +100,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link onClick={reset} href={`/dashboard?t=create-new-email`}>
+              <Link
+                onClick={() => {
+                  reset();
+                  setMode("create");
+                }}
+                href={`/dashboard?t=create-new-email`}
+              >
                 <SidebarMenuButton
                   tooltip={"Create new email"}
                   className={cn(
@@ -123,7 +129,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link onClick={reset} href={`/dashboard?t=sent-emails`}>
+              <Link
+                onClick={() => {
+                  reset();
+                  setMode("forward");
+                }}
+                href={`/dashboard?t=sent-emails`}
+              >
                 <SidebarMenuButton
                   tooltip={"Sent Emails"}
                   className={cn(

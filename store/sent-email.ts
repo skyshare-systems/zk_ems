@@ -1,11 +1,12 @@
 import { SentEmailWithTemplateAndCount } from "@/components/sent-email";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { TemplateWithCompany } from "./create-email";
 
 interface SentEmailStore {
   selectedSentEmail: SentEmailWithTemplateAndCount | null;
   setSelectedSentEmail: (
-    sentEmail: SentEmailWithTemplateAndCount | null
+    sentEmail: SentEmailWithTemplateAndCount | null,
   ) => void;
   reset: () => void;
 }
@@ -22,6 +23,6 @@ export const useSentEmailStore = create<SentEmailStore>()(
     {
       name: "sent-email-storage",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

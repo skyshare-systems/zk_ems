@@ -19,6 +19,7 @@ import { Upload } from "lucide-react";
 import UserRemoveIcon from "./icons/user-remove";
 import CancelIcon from "./icons/cancel";
 import { useModalStore } from "@/store/modal";
+import EmailEditorSentEmail from "./email-editor-sent-email";
 
 interface ValidationError {
   message: string;
@@ -178,7 +179,7 @@ const SentEmailRenderer = () => {
       return;
     }
 
-    const newRecipients = [trimmedEmail, ...recipients];
+    const newRecipients = [...recipients, trimmedEmail];
     const listValidation = validateRecipientsList(newRecipients);
 
     if (!listValidation.isValid) {
@@ -375,7 +376,7 @@ const SentEmailRenderer = () => {
 
   useEffect(() => {
     setSubject(selectedSentEmail?.subject ?? "");
-  }, [selectedSentEmail?.subject]);
+  }, [selectedSentEmail?.subject, setSubject]);
 
   if (!selectedSentEmail) return null;
 
@@ -478,31 +479,12 @@ const SentEmailRenderer = () => {
                 </div>
               </div>
               <div className="flex">
-                {(recipients.length > 0 ||
-                  selectedSentEmail?.recipients?.length > 0) && (
+                {recipients.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {/* Display already-sent recipients */}
-                    {selectedSentEmail?.recipients
-                      .slice(0, 5)
-                      .map((email, index) => (
-                        <div
-                          key={`recipient-sent-${email.emailAddress}-${index}`}
-                          className="flex items-center gap-1 bg-white/[.08] px-2 py-1 rounded-full"
-                        >
-                          <span className="text-white-100 ty-subtext">
-                            {email?.emailAddress}
-                          </span>
-                        </div>
-                      ))}
+                    {/* Display "+X more" if there are more than 5 */}
 
                     {/* Display recipients not yet sent */}
                     {recipients.slice(0, 5).map((email, index) => {
-                      const isAlreadySent = selectedSentEmail?.recipients?.some(
-                        (r) =>
-                          r.emailAddress.trim().toLowerCase() ===
-                          email.trim().toLowerCase(),
-                      );
-
                       return (
                         <div
                           key={`recipient-${email}-${index}`}
@@ -513,12 +495,8 @@ const SentEmailRenderer = () => {
                           </span>
                           <button
                             onClick={() => removeRecipient(index)}
-                            disabled={isAlreadySent}
                             className={cn(
-                              "text-[10.24px] ease-out duration-300",
-                              isAlreadySent
-                                ? "opacity-0 cursor-default"
-                                : "text-white_v2-50 hover:text-white_v2-100",
+                              "text-[10.24px] ease-out duration-300 text-white_v2-50 hover:text-white_v2-100",
                             )}
                             aria-label={`Remove ${email}`}
                           >
@@ -528,7 +506,6 @@ const SentEmailRenderer = () => {
                       );
                     })}
 
-                    {/* Display "+X more" if there are more than 5 */}
                     {recipients.length > 5 && (
                       <div className="flex items-center gap-2 bg-white/[.08] px-2 py-1 rounded">
                         <span className="text-white/[.8] text-[10.24px]">
@@ -564,8 +541,8 @@ const SentEmailRenderer = () => {
         </div>
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
-          <EmailEditor
-            isPreview={false}
+          <EmailEditorSentEmail
+            isPreview={true}
             isGeneratingPreview={isGeneratingPreview}
             isErrorGeneratingPreview={isGeneratingPreviewError}
             error={generatingPreviewError}

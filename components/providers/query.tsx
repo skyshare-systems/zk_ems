@@ -15,7 +15,7 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
 );
 
 export function QueryProvider({ children }: PropsWithChildren) {
-  const [showDevtools, setShowDevtools] = React.useState(false);
+  const [showDevtools, setShowDevtools] = React.useState(true);
 
   React.useEffect(() => {
     // @ts-expect-error window is defined

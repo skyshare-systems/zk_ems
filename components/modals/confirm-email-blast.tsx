@@ -5,10 +5,15 @@ import { Modal } from "../modal";
 import { useModalStore } from "@/store/modal";
 import { Button } from "../ui/button";
 import axios from "axios";
-import { useCreateEmailStore } from "@/store/create-email";
+import { TemplateWithCompany, useCreateEmailStore } from "@/store/create-email";
 import { marked } from "marked";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   sendEmail,
   SendEmailProps,
@@ -19,9 +24,12 @@ import useProps from "@/hooks/useProps";
 import { getAnalytics } from "@/lib/query/analytics";
 import RocketIcon from "../icons/rocket";
 import RocketRight from "../icons/rocket-right";
+import { useSentEmailStore } from "@/store/sent-email";
 
 const ConfirmEmailBlast = () => {
   const { isOpen, onClose } = useModalStore();
+  const { selectedSentEmail } = useSentEmailStore();
+
   const {
     selectedTemplate,
     subject,
@@ -30,8 +38,12 @@ const ConfirmEmailBlast = () => {
     reset,
     attachments,
     alignment,
+    isPreview,
+    mode,
   } = useCreateEmailStore();
   const { propsBuilder } = useProps();
+
+  const queryClient = useQueryClient();
 
   const { user } = useUserStore();
 
@@ -54,7 +66,11 @@ const ConfirmEmailBlast = () => {
       });
 
       await getAnalytics({
-        params: `?companyId=${selectedTemplate?.company?.id}`,
+        params: `?companyId=${mode === "create" ? selectedTemplate?.company?.id : selectedSentEmail?.companyId}`,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["sent-emails"],
       });
     },
     onError: (error: string) => {
@@ -80,20 +96,42 @@ const ConfirmEmailBlast = () => {
   if (!isOpen) return null;
 
   function send() {
-    if (!selectedTemplate || recipients.length === 0) {
-      toast.error("Please select at least one recipient.");
-      return;
-    }
+    switch (mode) {
+      case "create": {
+        if (!selectedTemplate || recipients.length === 0) {
+          toast.error("Please select at least one recipient.");
+          return;
+        }
 
-    sendNow({
-      subject,
-      selectedTemplate,
-      recipients,
-      body,
-      alignment,
-      attachments,
-      ...propsBuilder(),
-    });
+        sendNow({
+          subject,
+          selectedTemplate,
+          recipients,
+          body,
+          alignment,
+          attachments,
+          ...propsBuilder(),
+        });
+      }
+      case "forward": {
+        if (recipients.length === 0) {
+          toast.error("Please select at least one recipient.");
+          return;
+        }
+
+        sendNow({
+          subject,
+          selectedTemplate: selectedSentEmail?.template as TemplateWithCompany,
+          recipients,
+          body: selectedSentEmail?.body as string,
+          alignment,
+          attachments,
+          mode: "forward",
+          selectedSentEmailId: selectedSentEmail?.id,
+          ...propsBuilder(),
+        });
+      }
+    }
   }
 
   return (
@@ -125,6 +163,14 @@ const ConfirmEmailBlast = () => {
           <p className="ty-title text-black text-center">
             {isPending ? "Sending..." : "Send now"}
           </p>
+        </Button>
+        <Button
+          disabled={isPending}
+          onClick={onClose}
+          variant={"default"}
+          className="bg-gold"
+        >
+          Close
         </Button>
       </div>
     </div>

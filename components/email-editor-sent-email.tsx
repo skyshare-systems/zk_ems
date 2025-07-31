@@ -34,7 +34,7 @@ const sectionComponents: Record<SectionType, JSX.Element> = {
   programs: <OurProgramsEditor />,
 };
 
-const EmailEditor = ({
+const EmailEditorSentEmail = ({
   isPreview,
   isGeneratingPreview,
   isErrorGeneratingPreview,
@@ -90,7 +90,7 @@ const EmailEditor = ({
 
   return (
     <div className="flex flex-col self-stretch h-full gap-6 p-4 bg-white rounded-2xl grow">
-      {!isPreview ? (
+      {isPreview ? (
         <>
           {isGeneratingPreview ? (
             <div className="flex flex-col items-center justify-center w-full gap-4 grow">
@@ -182,4 +182,4 @@ const EmailEditor = ({
   );
 };
 
-export default EmailEditor;
+export default EmailEditorSentEmail;

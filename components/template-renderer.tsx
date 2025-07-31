@@ -56,12 +56,13 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     setPreview,
     articles,
     reset,
+    isPreview,
+    setIsPreview,
   } = useCreateEmailStore();
   const { onOpen: openResetFieldsModal } = useConfirmResetStore();
   const { propsBuilder } = useProps();
 
   const [recipientInput, setRecipientInput] = useState<string>("");
-  const [isPreview, setIsPreview] = useState<boolean>(false);
   const [isProcessingCSV, setIsProcessingCSV] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

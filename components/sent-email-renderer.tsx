@@ -565,7 +565,7 @@ const SentEmailRenderer = () => {
 
         <div className="flex flex-col w-full grow bg-white/[.04] rounded-2xl border border-dashed border-gold overflow-hidden h-full">
           <EmailEditor
-            isPreview={isPreview}
+            isPreview={false}
             isGeneratingPreview={isGeneratingPreview}
             isErrorGeneratingPreview={isGeneratingPreviewError}
             error={generatingPreviewError}

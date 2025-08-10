@@ -9,10 +9,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-// import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import DotHorizontalIcon from "@/components/ui/dot-horizontal";
+import { useState } from "react";
 
 const users = [
   {
@@ -78,8 +92,23 @@ const groupColors: Record<string, string> = {
 };
 
 export default function UserTable() {
+  const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
+    null,
+  );
+  const [actionType, setActionType] = useState<"edit" | "delete" | null>(null);
+
+  const handleAction = (user: (typeof users)[0], type: "edit" | "delete") => {
+    setSelectedUser(user);
+    setActionType(type);
+  };
+
+  const closeDialog = () => {
+    setSelectedUser(null);
+    setActionType(null);
+  };
+
   return (
-    <div className="p-6 bg-gray_v2-4 text-white rounded-xl w-full">
+    <div className="p-6 bg-white-4 text-white rounded-xl w-full">
       <Table>
         <TableHeader>
           <TableRow>
@@ -119,15 +148,66 @@ export default function UserTable() {
                 ))}
               </TableCell>
               <TableCell>
-                <Button variant="ghost" size="icon">
-                  <DotHorizontalIcon />
-                  {/* <DotsHorizontalIcon className="w-5 h-5 text-white" /> */}
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <DotHorizontalIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-44">
+                    <DropdownMenuItem
+                      onClick={() => handleAction(user, "edit")}
+                      className="text-yellow-400 cursor-pointer"
+                    >
+                      ✏️ Edit Recipient
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleAction(user, "delete")}
+                      className="text-red-500 cursor-pointer"
+                    >
+                      🗑️ Delete Recipient
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      {/* Modal */}
+      <Dialog open={!!selectedUser && !!actionType} onOpenChange={closeDialog}>
+        {actionType === "delete" ? (
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Recipient</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete ${selectedUser?.name}?
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="py-2">
+              <p className="text-red-500">
+                This action is irreversible. Please confirm.
+              </p>
+            </div>
+
+            <DialogFooter>
+              <Button variant="secondary" onClick={closeDialog}>
+                Cancel
+              </Button>
+              <Button
+                variant={actionType === "delete" ? "destructive" : "default"}
+                onClick={closeDialog}
+              >
+                {actionType === "delete" ? "Delete" : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        ) : (
+          ""
+        )}
+      </Dialog>
     </div>
   );
 }

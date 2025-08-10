@@ -17,7 +17,7 @@ const AddRecipientModal = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-0 flex justify-center items-center bg-black_v2-32 backdrop-blur w-full h-full">
+    <div className="fixed top-0 left-0 flex justify-center items-center bg-black_v2-32 backdrop-blur w-full h-full z-[3]">
       <div className="flex flex-col items-start justify-start p-8 gap-4 max-w-[500px] w-full grow rounded-lg border border-white_v2-16 bg-black_v2-100">
         <div className="flex flex-col gap-2 w-full">
           <div className="flex justify-between items-start w-full">

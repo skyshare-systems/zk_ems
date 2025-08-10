@@ -6,6 +6,9 @@ import React from "react";
 import AddRecipient from "./add-recipient";
 import CreateGroup from "./create-group";
 import UserTable from "./recipient-table";
+import SearchbarIcon from "@/components/icons/searchbar";
+import { Input } from "@/components/ui/input";
+import GroupTable from "./group-table";
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
@@ -37,13 +40,29 @@ const AddressBookSection = () => {
             })}
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            <div
+              className={cn(
+                "flex items-center gap-2 py-3 px-4 border border-white_v2-16 bg-white_v2-4 rounded-lg self-stretch",
+              )}
+            >
+              <SearchbarIcon />
+              <input
+                className={cn(
+                  geist.className,
+                  "outline-0 bg-transparent ty-descriptions placeholder:text-white_v2-32",
+                )}
+                placeholder="Search"
+              />
+            </div>
             <AddRecipient />
+
             <CreateGroup />
           </div>
         </div>
         {/* table */}
 
-        <UserTable />
+        {tab === "recipients" && <UserTable />}
+        {tab === "groups" && <GroupTable />}
       </div>
     </div>
   );

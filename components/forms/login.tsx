@@ -53,6 +53,7 @@ const LoginForm = () => {
       toast.error(error, {
         style: {
           background: "#e41414",
+          color: "#fff",
         },
       });
     },

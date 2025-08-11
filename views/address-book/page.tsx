@@ -1,28 +1,48 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { geist } from "@/public/fonts";
 import { useAddressBook } from "@/store/address-book-tab";
-import React from "react";
+import React, { useState } from "react";
 import AddRecipient from "./add-recipient";
 import CreateGroup from "./create-group";
 import UserTable from "./recipient-table";
 import SearchbarIcon from "@/components/icons/searchbar";
 import { Input } from "@/components/ui/input";
 import GroupTable from "./group-table";
+import { useDebounce } from "react-use";
+import { Prisma } from "@prisma/client";
+
+
+
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
 
   const { tab, setTab } = useAddressBook((state) => state);
 
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const [, cancel] = useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+    1500,
+    [search],
+  );
+
   return (
-    <div className="flex justify-center items-center p-8">
-      <div className="flex flex-col gap-6 items-start justify-start w-full">
+    <div className="flex items-center justify-center p-8">
+      <div className="flex flex-col items-start justify-start w-full gap-6">
         <h4 className={cn(geist.className, "ty-subheading text-white-100")}>
           Address Book
         </h4>
-        <div className="flex flex-row justify-between items-center gap-3 w-full">
-          <div className="flex flex-row  items-start justify-start">
+        <div className="flex flex-row items-center justify-between w-full gap-3">
+          <div className="flex flex-row items-start justify-start">
             {tabs.map((data, index) => {
               return (
                 <button
@@ -61,7 +81,9 @@ const AddressBookSection = () => {
         </div>
         {/* table */}
 
-        {tab === "recipients" && <UserTable />}
+        {tab === "recipients" && (
+          <UserTable limit={limit} page={page} search={debouncedSearch} />
+        )}
         {tab === "groups" && <GroupTable />}
       </div>
     </div>

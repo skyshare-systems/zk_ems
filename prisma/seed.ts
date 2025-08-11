@@ -1,129 +1,147 @@
 import { PrismaClient, Role, TokenType } from "@prisma/client";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  await prisma.$connect();
+const range = (n: number) => Array.from({ length: n });
 
-  // Clean the database
+async function clearDatabase() {
   await prisma.$transaction([
     prisma.token.deleteMany(),
+    prisma.addressBookRecipient.deleteMany(),
+    prisma.addressBookGroup.deleteMany(),
     prisma.recipient.deleteMany(),
     prisma.sentEmail.deleteMany(),
     prisma.template.deleteMany(),
     prisma.userCompany.deleteMany(),
     prisma.company.deleteMany(),
     prisma.user.deleteMany(),
-  ]); 
-  // Create 10 users
+  ]);
+}
+
+async function seedUsers() {
+  const superadmin = await prisma.user.create({
+    data: {
+      emailAddress: "superadmin@zk.com",
+      username: "superadmin",
+      password: await hash("Dyq7yOdd#Vh038C5", 10),
+      firstName: "Super",
+      lastName: "Admin",
+      image: "https://randomuser.me/api/portraits/men/1.jpg",
+      role: Role.ADMIN,
+      isActivated: true,
+      lastLogin: new Date(),
+    },
+  });
+
   const users = await Promise.all(
-    Array.from({ length: 10 }).map(async (_, index) => {
-      return prisma.user.create({
+    range(10).map(async (_, i) =>
+      prisma.user.create({
         data: {
-          emailAddress: `user${index + 1}@example.com`,
-          username: `user${index + 1}`,
+          emailAddress: `user${i + 1}@example.com`,
+          username: `user${i + 1}`,
           password: await hash("a", 10),
-          firstName: `FirstName${index + 1}`,
-          lastName: `LastName${index + 1}`,
+          firstName: `FirstName${i + 1}`,
+          lastName: `LastName${i + 1}`,
           image: `https://randomuser.me/api/portraits/${
-            index % 2 ? "men" : "women"
-          }/${index + 1}.jpg`,
-          role: index === 0 ? Role.ADMIN : Role.USER,
+            i % 2 ? "men" : "women"
+          }/${i + 1}.jpg`,
+          role: Role.USER,
           isActivated: true,
           lastLogin: new Date(),
         },
-      });
-    })
+      })
+    )
   );
 
-  // Create 5 companies
+  return [superadmin, ...users];
+}
+
+async function seedCompanies(users: any[]) {
   const companies = await Promise.all(
-    Array.from({ length: 5 }).map((_, index) => {
-      return prisma.company.create({
+    range(5).map((_, i) =>
+      prisma.company.create({
         data: {
-          name: `Company ${index + 1}`,
-          description: `Description for company ${index + 1}`,
-          image: `https://picsum.photos/200/200?random=${index + 1}`,
+          name: `Company ${i + 1}`,
+          description: `Description for company ${i + 1}`,
+          image: `https://picsum.photos/200/200?random=${i + 1}`,
           smtpCredential: {
             create: {
-              host: 'smtp.example.com',
+              host: "smtp.example.com",
               port: 587,
-              username: `smtpuser${index + 1}`,
-              password: `smtppassword${index + 1}`,
-              from: `smtpuser${index + 1}`,
-            }   
+              username: `smtpuser${i + 1}`,
+              password: `smtppassword${i + 1}`,
+              from: `smtpuser${i + 1}@example.com`,
+            },
+          },
+          users: {
+            create: users.slice(0, 2).map((u) => ({
+              userId: u.id,
+            })),
           },
         },
-      });
-    })
-  );
-
-  // Create user-company relationships (each user belongs to 2 companies)
-  await Promise.all(
-    users.flatMap((user) =>
-      companies.slice(0, 2).map((company) =>
-        prisma.userCompany.create({
-          data: {
-            userId: user.id,
-            companyId: company.id,
-          },
-        })
-      )
+      })
     )
   );
+  return companies;
+}
 
-  // Create 3 templates per company
+async function seedTemplates(companies: any[]) {
   const templates = await Promise.all(
     companies.flatMap((company) =>
-      Array.from({ length: 3 }).map((_, index) =>
+      range(3).map((_, i) =>
         prisma.template.create({
           data: {
-            name: `Template ${index + 1} - ${company.name}`,
-            description: `Description for template ${index + 1}`,
-            header: `Header ${index + 1}`,
-            footer: `Footer ${index + 1}`,
-            tags: [`tag${index + 1}`, "email", company.name.toLowerCase()],
+            name: `Template ${i + 1} - ${company.name}`,
+            description: `Description for template ${i + 1}`,
+            header: `Header ${i + 1}`,
+            footer: `Footer ${i + 1}`,
+            tags: [`tag${i + 1}`, "email", company.name.toLowerCase()],
             companyId: company.id,
           },
         })
       )
     )
   );
+  return templates;
+}
 
-  // Create 2 sent emails per template
+async function seedSentEmails(templates: any[]) {
   const sentEmails = await Promise.all(
     templates.flatMap((template) =>
-      Array.from({ length: 2 }).map(() =>
+      range(2).map(() =>
         prisma.sentEmail.create({
           data: {
             header: `Email header based on template: ${template.name}`,
             body: `Email body based on template: ${template.name}`,
             footer: `Email footer based on template: ${template.name}`,
+            subject: `Email subject based on template: ${template.name}`,
             templateId: template.id,
             companyId: template.companyId,
-            subject: `Email subject based on template: ${template.name}`,
           },
         })
       )
     )
   );
+  return sentEmails;
+}
 
-  // Create 3 recipients per sent email
+async function seedRecipients(sentEmails: any[]) {
   await Promise.all(
-    sentEmails.flatMap((sentEmail, emailIndex) =>
-      Array.from({ length: 3 }).map((_, index) =>
+    sentEmails.flatMap((sentEmail, idx) =>
+      range(3).map((_, i) =>
         prisma.recipient.create({
           data: {
-            emailAddress: `recipient${emailIndex * 3 + index + 1}@example.com`,
+            emailAddress: `recipient${idx * 3 + i + 1}@example.com`,
             sentEmailId: sentEmail.id,
           },
         })
       )
     )
   );
+}
 
-  // Create tokens for each user (access and refresh)
+async function seedTokens(users: any[]) {
   await Promise.all(
     users.flatMap((user) =>
       [TokenType.ACCESS, TokenType.REFRESH].map((type) =>
@@ -131,14 +149,81 @@ async function main() {
           data: {
             token: `${type}_${Math.random().toString(36).substring(7)}`,
             type,
-            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             blacklisted: false,
             userId: user.id,
           },
         })
       )
     )
-  ); 
+  );
+}
+
+// NEW: Seed AddressBookGroups per company
+async function seedAddressBookGroups(companies: any[]) {
+  const groups = await Promise.all(
+    companies.flatMap((company) =>
+      range(2).map((_, i) =>
+        prisma.addressBookGroup.create({
+          data: {
+            name: `Group ${i + 1} - ${company.name}`,
+            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            tag: `group${i + 1}`,
+            companyId: company.id,
+          },
+        })
+      )
+    )
+  );
+  return groups;
+}
+
+// NEW: Seed AddressBookRecipients linked to companies and add them to groups
+async function seedAddressBookRecipients(
+  companies: any[],
+  groups: any[]
+) {
+  const recipients = await Promise.all(
+    companies.flatMap((company, companyIdx) =>
+      range(5).map((_, i) =>
+        prisma.addressBookRecipient.create({
+          data: {
+            emailAddress: `addressbook${companyIdx * 5 + i + 1}@example.com`,
+            name: `AddressBook Recipient ${companyIdx * 5 + i + 1}`,
+            photoUrl: `https://randomuser.me/api/portraits/${
+              i % 2 ? "men" : "women"
+            }/${i + 10}.jpg`,
+            companyId: company.id,
+            groups: {
+              connect: [
+                groups[companyIdx * 2], // connect to first group of this company
+                groups[companyIdx * 2 + 1], // connect to second group of this company
+              ].filter(Boolean), // just in case
+            },
+          },
+        })
+      )
+    )
+  );
+  return recipients;
+}
+
+async function main() {
+  await prisma.$connect();
+  await clearDatabase();
+
+  const users = await seedUsers();
+  const companies = await seedCompanies(users);
+  const templates = await seedTemplates(companies);
+  const sentEmails = await seedSentEmails(templates);
+
+  await seedRecipients(sentEmails);
+  await seedTokens(users);
+
+  const addressBookGroups = await seedAddressBookGroups(companies);
+  await seedAddressBookRecipients(companies, addressBookGroups);
+
+  console.log("✅ Database seeded successfully");
 }
 
 main()

@@ -35,77 +35,41 @@ import CancelIcon from "@/components/icons/cancel";
 import DoneIcon from "@/components/icons/done";
 import AddPhoto from "./add-photo";
 import { Input } from "@/components/ui/input";
+import { useQuery } from "@tanstack/react-query";
+import { getAddressBookRecipients } from "@/lib/query/address-book-recipients";
+import { useCompanyStore } from "@/store/company";
+import { AddressBookRecipientWithGroupAndCompany } from "@/store/address-book-recipients";
 
-const users = [
-  {
-    name: "Skyshare Labs Edit 2",
-    email: "newemail@labs.com",
-    groups: ["members", "admins", "stakeholders"],
-    avatar: "/avatar/skyshare.png",
-  },
-  {
-    name: "Liam Sullivan",
-    email: "liam02@cloudventures.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-  {
-    name: "Ethan Hernandez",
-    email: "ethan123@techinnovators.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-  {
-    name: "Noah Garcia",
-    email: "noahgarcia@futuretech.com",
-    groups: ["members"],
-  },
-  {
-    name: "Oliver Martinez",
-    email: "oliver121@nextgenapps.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-  {
-    name: "Lucas Lopez",
-    email: "lucas44@creativesolutions.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-  {
-    name: "Mason Gonzalez",
-    email: "mason1111@digitaldreams.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-  {
-    name: "Aiden Wilson",
-    email: "aiden23@innovatech.com",
-    groups: ["members", "team"],
-  },
-  {
-    name: "James Anderson",
-    email: "jamesanderson@smartapps.com",
-    groups: ["members"],
-  },
-  {
-    name: "Elijah Thomas",
-    email: "elijah_thomas@techpioneers.com",
-    groups: ["members", "team", "crew", "squad"],
-  },
-];
+interface RecipientTableProps {
+  search: string;
+  page: number;
+  limit: number;
+}
 
-const groupColors: Record<string, string> = {
-  members: "bg-yellow-700",
-  team: "bg-gray-700",
-  crew: "bg-gray-700",
-  squad: "bg-gray-700",
-  admins: "bg-blue-700",
-  stakeholders: "bg-sky-600",
-};
-
-export default function UserTable() {
-  const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
-    null,
-  );
+export default function RecipientTable({
+  search,
+  page,
+  limit,
+}: RecipientTableProps) {
+  const { company } = useCompanyStore();
+  const [selectedUser, setSelectedUser] =
+    useState<AddressBookRecipientWithGroupAndCompany | null>(null);
   const [actionType, setActionType] = useState<"edit" | "delete" | null>(null);
 
-  const handleAction = (user: (typeof users)[0], type: "edit" | "delete") => {
+  const { data: recipients } = useQuery({
+    queryFn: () =>
+      getAddressBookRecipients({
+        params:
+          `companyId=${company?.id}` +
+          (search ? `&title=${search}` : "" + `&page=${page}&limit=${limit}`),
+      }),
+    queryKey: ["address-book-recipients"],
+  });
+
+  const handleAction = (
+    user: AddressBookRecipientWithGroupAndCompany,
+    type: "edit" | "delete",
+  ) => {
     setSelectedUser(user);
     setActionType(type);
   };
@@ -116,7 +80,7 @@ export default function UserTable() {
   };
 
   return (
-    <div className="p-6 bg-white_v2-4 text-white rounded-xl w-full">
+    <div className="w-full p-6 text-white bg-white_v2-4 rounded-xl">
       <Table>
         <TableHeader>
           <TableRow>
@@ -127,65 +91,66 @@ export default function UserTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user, i) => (
-            <TableRow key={i}>
-              <TableCell className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  {user.avatar ? (
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                  ) : (
-                    <AvatarFallback>
-                      {user.name
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <span>{user.name}</span>
-              </TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell className="space-x-1">
-                {user.groups.map((g, idx) => (
-                  <Badge
-                    key={idx}
-                    className={`text-white ${groupColors[g] || "bg-gray-700"}`}
-                  >
-                    @{g}
-                  </Badge>
-                ))}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <DotHorizontalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem
-                      onClick={() => handleAction(user, "edit")}
-                      className={cn(
-                        geist.className,
-                        "text-gold_v2-100 ty-descriptions cursor-pointer",
-                      )}
+          {recipients &&
+            recipients.data.map((user, i) => (
+              <TableRow key={i}>
+                <TableCell className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8">
+                    {user.photoUrl ? (
+                      <AvatarImage src={user.photoUrl} alt={user.name} />
+                    ) : (
+                      <AvatarFallback>
+                        {user.name
+                          .split(" ")
+                          .map((word) => word[0])
+                          .join("")}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <span>{user.name}</span>
+                </TableCell>
+                <TableCell>{user.emailAddress}</TableCell>
+                <TableCell className="space-x-1">
+                  {user.groups.map((group, idx) => (
+                    <Badge
+                      key={idx}
+                      className={`text-white ${group.color || "bg-gray-700"}`}
                     >
-                      <EditIcon /> Edit Recipient
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleAction(user, "delete")}
-                      className={cn(
-                        geist.className,
-                        "text-red-500 ty-descriptions cursor-pointer",
-                      )}
-                    >
-                      <DeleteIcon /> Delete Recipient
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+                      @{group.name}
+                    </Badge>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <DotHorizontalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuItem
+                        onClick={() => handleAction(user, "edit")}
+                        className={cn(
+                          geist.className,
+                          "text-gold_v2-100 ty-descriptions cursor-pointer",
+                        )}
+                      >
+                        <EditIcon /> Edit Recipient
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleAction(user, "delete")}
+                        className={cn(
+                          geist.className,
+                          "text-red-500 ty-descriptions cursor-pointer",
+                        )}
+                      >
+                        <DeleteIcon /> Delete Recipient
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
 
@@ -282,7 +247,7 @@ export default function UserTable() {
         ) : (
           // Edit Modal
           <DialogContent className="flex flex-col gap-4 max-w-[500px]">
-            <DialogHeader className="flex flex-col gap-2 items-start justify-start">
+            <DialogHeader className="flex flex-col items-start justify-start gap-2">
               <DialogTitle
                 className={cn(inter.className, "text-white_v2-100 ty-h6")}
               >
@@ -298,7 +263,7 @@ export default function UserTable() {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex items-center gap-2 w-full">
+            <div className="flex items-center w-full gap-2">
               <h2
                 className={cn(
                   geist.className,
@@ -310,11 +275,11 @@ export default function UserTable() {
 
               <Input
                 placeholder="Enter your recipient’s name here.."
-                className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
+                className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
               />
             </div>
 
-            <div className="flex items-center gap-2 w-full">
+            <div className="flex items-center w-full gap-2">
               <h2
                 className={cn(
                   geist.className,
@@ -326,13 +291,13 @@ export default function UserTable() {
 
               <Input
                 placeholder="Enter your recipient’s email here.."
-                className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
+                className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
               />
             </div>
 
             <AddPhoto />
 
-            <div className="flex items-center gap-2 w-full grow">
+            <div className="flex items-center w-full gap-2 grow">
               <h2
                 className={cn(
                   geist.className,
@@ -341,11 +306,11 @@ export default function UserTable() {
               >
                 Group
               </h2>
-              <div className="flex flex-col gap-2 w-full">
+              <div className="flex flex-col w-full gap-2">
                 <div className="flex items-center gap-2">
                   <Input
                     placeholder="Add to one or more existing groups"
-                    className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
+                    className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
                   />
                   <button
                     //   onClick={handleAddRecipient}

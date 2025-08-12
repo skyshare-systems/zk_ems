@@ -14,9 +14,6 @@ import GroupTable from "./group-table";
 import { useDebounce } from "react-use";
 import { Prisma } from "@prisma/client";
 
-
-
-
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
 

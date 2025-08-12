@@ -4,7 +4,11 @@ export type AddressBookRecipientWithGroupAndCompany = Prisma.AddressBookRecipien
   include: { groups: true; company: true };
 }>;
 
-interface CreateAddressBookRecipientState {
- 
-}
 
+export interface CreateRecipientRequest {
+  emailAddress: string;
+  name: string;
+  photoUrl?: string;
+  companyId: string;
+  groupIds?: string[];
+}

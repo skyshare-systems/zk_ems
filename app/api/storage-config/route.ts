@@ -71,6 +71,7 @@ export const PATCH = authorize(async (request: AuthenticatedRequest) => {
       createApiResponse("SMTP credentials updated", updateStorageConfig),
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(createErrorMessage(error), { status: 500 });
   }
 });

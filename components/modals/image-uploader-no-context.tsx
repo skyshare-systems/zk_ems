@@ -87,6 +87,7 @@ const ImageUploader = ({ onUploadComplete }: Props) => {
   return (
     <>
       <Button
+      type="button"
         className={cn(
           colorizeButton(company.name),
           "shadow-none  px-3 py-2 hover:bg-opacity-90",

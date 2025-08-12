@@ -114,7 +114,10 @@ export default function RecipientTable({
                   {user.groups.map((group, idx) => (
                     <Badge
                       key={idx}
-                      className={`text-white ${group.color || "bg-gray-700"}`}
+                      style={{
+                        backgroundColor: group.color || "bg-gray-700",
+                      }}
+                      className={`text-white`}
                     >
                       @{group.name}
                     </Badge>

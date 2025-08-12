@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { createErrorResponse, Meta, createApiResponse } from "@/lib/utils";
+import { CreateRecipientRequest } from "@/store/address-book-recipients";
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
@@ -77,38 +78,23 @@ export async function GET(request: NextRequest) {
   }
 }
 
-
-interface CreateRecipientRequest {
-  emailAddress: string;
-  name: string;
-  photoUrl?: string;
-  companyId: string;
-  groupIds?: string[];
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const {
-      emailAddress,
-      name,
-      photoUrl,
-      companyId,
-      groupIds,
-    }= body as CreateRecipientRequest;
+    const { emailAddress, name, photoUrl, companyId, groupIds } =
+      body as CreateRecipientRequest;
 
     if (!companyId) {
-      return NextResponse.json(
-        createErrorResponse("companyId is required"),
-        { status: 400 }
-      );
+      return NextResponse.json(createErrorResponse("companyId is required"), {
+        status: 400,
+      });
     }
 
     if (!emailAddress) {
       return NextResponse.json(
         createErrorResponse("emailAddress is required"),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -121,7 +107,7 @@ export async function POST(request: NextRequest) {
     if (!companyExists) {
       return NextResponse.json(
         createErrorResponse(`Company with id '${companyId}' does not exist.`),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -136,9 +122,9 @@ export async function POST(request: NextRequest) {
     if (existingRecipient) {
       return NextResponse.json(
         createErrorResponse(
-          `Recipient with email '${emailAddress}' already exists for this company.`
+          `Recipient with email '${emailAddress}' already exists for this company.`,
         ),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -154,13 +140,15 @@ export async function POST(request: NextRequest) {
 
       const existingGroupIds = existingGroups.map((g) => g.id);
 
-      const invalidGroupIds = groupIds.filter((id) => !existingGroupIds.includes(id));
+      const invalidGroupIds = groupIds.filter(
+        (id) => !existingGroupIds.includes(id),
+      );
       if (invalidGroupIds.length > 0) {
         return NextResponse.json(
           createErrorResponse(
-            `Invalid groupIds: ${invalidGroupIds.join(", ")}. They do not exist or don't belong to the company.`
+            `Invalid groupIds: ${invalidGroupIds.join(", ")}. They do not exist or don't belong to the company.`,
           ),
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -171,23 +159,27 @@ export async function POST(request: NextRequest) {
         name,
         photoUrl,
         companyId,
-        groups: groupIds && groupIds.length > 0
-          ? {
-              connect: groupIds.map((id) => ({ id })),
-            }
-          : undefined,
+        groups:
+          groupIds && groupIds.length > 0
+            ? {
+                connect: groupIds.map((id) => ({ id })),
+              }
+            : undefined,
       },
     });
 
     return NextResponse.json(
-      createApiResponse("Address book recipient created successfully", newRecipient),
-      { status: 201 }
+      createApiResponse(
+        "Address book recipient created successfully",
+        newRecipient,
+      ),
+      { status: 201 },
     );
   } catch (error) {
     console.error("Error creating address book recipient:", error);
     return NextResponse.json(
       createErrorResponse("Failed to create address book recipient"),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

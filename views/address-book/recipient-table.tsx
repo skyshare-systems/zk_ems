@@ -63,7 +63,7 @@ export default function RecipientTable({
           `companyId=${company?.id}` +
           (search ? `&title=${search}` : "" + `&page=${page}&limit=${limit}`),
       }),
-    queryKey: ["address-book-recipients"],
+    queryKey: ["address-book-recipients", company?.id],
   });
 
   const handleAction = (
@@ -115,9 +115,9 @@ export default function RecipientTable({
                     <Badge
                       key={idx}
                       style={{
-                        backgroundColor: group.color || "bg-gray-700",
+                        color: group.color,
                       }}
-                      className={`text-white`}
+                      className={`text-white bg-transparent`}
                     >
                       @{group.name}
                     </Badge>

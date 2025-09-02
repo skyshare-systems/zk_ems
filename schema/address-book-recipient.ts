@@ -6,4 +6,3 @@ export const addRecipientSchema = z.object({
   photoUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   groupIds: z.array(z.string()).default([]),
 });
-

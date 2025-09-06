@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createErrorResponse, Meta, createApiResponse } from "@/lib/utils";
 import { CreateRecipientRequest } from "@/store/address-book-recipients";
 import { NextRequest, NextResponse } from "next/server";
+
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);

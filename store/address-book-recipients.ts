@@ -1,9 +1,9 @@
 import { Prisma } from "@prisma/client";
 
-export type AddressBookRecipientWithGroupAndCompany = Prisma.AddressBookRecipientGetPayload<{
-  include: { groups: true; company: true };
-}>;
-
+export type AddressBookRecipientWithGroupAndCompany =
+  Prisma.AddressBookRecipientGetPayload<{
+    include: { groups: true; company: true };
+  }>;
 
 export interface CreateRecipientRequest {
   emailAddress: string;

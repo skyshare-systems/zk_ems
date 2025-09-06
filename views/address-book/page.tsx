@@ -9,10 +9,8 @@ import AddRecipient from "./add-recipient";
 import CreateGroup from "./create-group";
 import UserTable from "./recipient-table";
 import SearchbarIcon from "@/components/icons/searchbar";
-import { Input } from "@/components/ui/input";
 import GroupTable from "./group-table";
 import { useDebounce } from "react-use";
-import { Prisma } from "@prisma/client";
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
@@ -56,7 +54,7 @@ const AddressBookSection = () => {
               );
             })}
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-row items-center gap-3">
             <div
               className={cn(
                 "flex items-center gap-2 py-3 px-4 border border-white_v2-16 bg-white_v2-4 rounded-lg self-stretch",

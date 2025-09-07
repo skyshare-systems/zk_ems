@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     if (!companyId) {
       return NextResponse.json(
         createErrorResponse("companyId query parameter is required"),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (page < 1 || limit < 1) {
       return NextResponse.json(
         createErrorResponse("page and limit must be positive integers"),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     const groups = await prisma.addressBookGroup.findMany({
       where,
       include: {
-        recipients: true, 
+        recipients: true,
         // company: true,
       },
       orderBy: { createdAt: "desc" },
@@ -60,13 +60,17 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(
-      createApiResponse("Address book groups fetched successfully", groups, meta)
+      createApiResponse(
+        "Address book groups fetched successfully",
+        groups,
+        meta,
+      ),
     );
   } catch (error) {
     console.error("Error fetching address book groups:", error);
     return NextResponse.json(
       createErrorResponse("Failed to fetch address book groups"),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

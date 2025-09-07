@@ -24,22 +24,22 @@ const AddressBookIcon = ({ className }: IClassName) => {
           d="M2.91675 3.87793H1.16675M2.91675 7.37793H1.16675M2.91675 10.8779H1.16675"
           stroke="currentColor"
           strokeWidth="0.875"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M10.2083 4.46094H7.875M9.04167 6.79427H7.875"
           stroke="currentColor"
           strokeWidth="0.875"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M5.25 13.2116V1.54492"
           stroke="currentColor"
           strokeWidth="0.875"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
     </svg>

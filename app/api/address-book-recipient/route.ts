@@ -11,26 +11,16 @@ export async function GET(request: NextRequest) {
     if (!companyId) {
       return NextResponse.json(
         createErrorResponse("companyId query parameter is required"),
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    const page = parseInt(url.searchParams.get("page") || "1", 10);
-    const limit = parseInt(url.searchParams.get("limit") || "10", 10);
-
-    if (page < 1 || limit < 1) {
-      return NextResponse.json(
-        createErrorResponse("page and limit must be positive integers"),
-        { status: 400 },
-      );
-    }
-
+    // pagination
+    const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+    const limit = Math.max(1, parseInt(url.searchParams.get("limit") || "10", 10));
     const search = url.searchParams.get("search")?.trim();
 
-    // Build the where condition with search support
-    const where: any = {
-      companyId,
-    };
+    const where: any = { companyId };
 
     if (search) {
       where.OR = [
@@ -39,18 +29,21 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    const totalCount = await prisma.addressBookRecipient.count({ where });
-
-    const recipients = await prisma.addressBookRecipient.findMany({
-      where,
-      include: {
-        groups: true,
-        company: true,
-      },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const [totalCount, recipients] = await Promise.all([
+      prisma.addressBookRecipient.count({ where }),
+      prisma.addressBookRecipient.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          emailAddress: true,
+          photoUrl: true,
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
 
     const totalPage = Math.ceil(totalCount / limit);
     const remaining = totalCount - page * limit;
@@ -59,22 +52,18 @@ export async function GET(request: NextRequest) {
     const meta: Meta = {
       page,
       totalPage,
-      remaining: remaining > 0 ? remaining : 0,
+      remaining: Math.max(0, remaining),
       hasNextPage,
     };
 
     return NextResponse.json(
-      createApiResponse(
-        "Address book recipients fetched successfully",
-        recipients,
-        meta,
-      ),
+      createApiResponse("Recipients fetched successfully", recipients, meta)
     );
   } catch (error) {
     console.error("Error fetching address book recipients:", error);
     return NextResponse.json(
-      createErrorResponse("Failed to fetch address book recipients"),
-      { status: 500 },
+      createErrorResponse("Failed to fetch recipients"),
+      { status: 500 }
     );
   }
 }
@@ -82,7 +71,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     const { emailAddress, name, photoUrl, companyId, groupIds } =
       body as CreateRecipientRequest;
 
@@ -91,65 +79,53 @@ export async function POST(request: NextRequest) {
         status: 400,
       });
     }
-
     if (!emailAddress) {
       return NextResponse.json(
         createErrorResponse("emailAddress is required"),
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    // Check if company exists
+    // check company
     const companyExists = await prisma.company.findUnique({
       where: { id: companyId },
       select: { id: true },
     });
-
     if (!companyExists) {
       return NextResponse.json(
         createErrorResponse(`Company with id '${companyId}' does not exist.`),
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    // Check if recipient email already exists for this company
+    // check duplicate email
     const existingRecipient = await prisma.addressBookRecipient.findFirst({
-      where: {
-        emailAddress,
-        companyId,
-      },
+      where: { emailAddress, companyId },
     });
-
     if (existingRecipient) {
       return NextResponse.json(
         createErrorResponse(
-          `Recipient with email '${emailAddress}' already exists for this company.`,
+          `Recipient with email '${emailAddress}' already exists for this company.`
         ),
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    // If groupIds provided, check if all exist and belong to company
-    if (groupIds && groupIds.length > 0) {
+    // validate groupIds
+    if (groupIds?.length) {
       const existingGroups = await prisma.addressBookGroup.findMany({
-        where: {
-          id: { in: groupIds },
-          companyId,
-        },
+        where: { id: { in: groupIds }, companyId },
         select: { id: true },
       });
-
       const existingGroupIds = existingGroups.map((g) => g.id);
+      const invalidGroupIds = groupIds.filter((id) => !existingGroupIds.includes(id));
 
-      const invalidGroupIds = groupIds.filter(
-        (id) => !existingGroupIds.includes(id),
-      );
       if (invalidGroupIds.length > 0) {
         return NextResponse.json(
           createErrorResponse(
-            `Invalid groupIds: ${invalidGroupIds.join(", ")}. They do not exist or don't belong to the company.`,
+            `Invalid groupIds: ${invalidGroupIds.join(", ")}. They do not exist or don't belong to the company.`
           ),
-          { status: 400 },
+          { status: 400 }
         );
       }
     }
@@ -160,27 +136,27 @@ export async function POST(request: NextRequest) {
         name,
         photoUrl,
         companyId,
-        groups:
-          groupIds && groupIds.length > 0
-            ? {
-                connect: groupIds.map((id) => ({ id })),
-              }
-            : undefined,
+        groups: groupIds?.length
+          ? { connect: groupIds.map((id) => ({ id })) }
+          : undefined,
+      },
+      select: {
+        id: true,
+        name: true,
+        emailAddress: true,
+        photoUrl: true,
       },
     });
 
     return NextResponse.json(
-      createApiResponse(
-        "Address book recipient created successfully",
-        newRecipient,
-      ),
-      { status: 201 },
+      createApiResponse("Recipient created successfully", newRecipient),
+      { status: 201 }
     );
   } catch (error) {
     console.error("Error creating address book recipient:", error);
     return NextResponse.json(
-      createErrorResponse("Failed to create address book recipient"),
-      { status: 500 },
+      createErrorResponse("Failed to create recipient"),
+      { status: 500 }
     );
   }
 }

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createApiResponse, createErrorResponse } from "@/lib/utils"; // You may need to create these helper functions if they don't exist
+import { createApiResponse, createErrorResponse } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 
+/**
+ * GET groups
+ */
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
@@ -26,11 +29,7 @@ export async function GET(request: NextRequest) {
 
     const search = url.searchParams.get("search")?.trim();
 
-    // Build the where condition with search support
-    const where: any = {
-      companyId,
-    };
-
+    const where: any = { companyId };
     if (search) {
       where.name = { contains: search, mode: "insensitive" };
     }
@@ -39,10 +38,7 @@ export async function GET(request: NextRequest) {
 
     const groups = await prisma.addressBookGroup.findMany({
       where,
-      include: {
-        recipients: true,
-        // company: true,
-      },
+      include: { recipients: true },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit,
@@ -72,5 +68,125 @@ export async function GET(request: NextRequest) {
       createErrorResponse("Failed to fetch address book groups"),
       { status: 500 },
     );
+  }
+}
+
+/**
+ * CREATE group (with recipients support)
+ */
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { name, tag, color, companyId, recipientIds } = body;
+
+    if (!name || !tag || !color || !companyId) {
+      return NextResponse.json(
+        createErrorResponse("name, tag, color, and companyId are required"),
+        { status: 400 },
+      );
+    }
+
+    const group = await prisma.addressBookGroup.create({
+      data: {
+        name,
+        tag,
+        color,
+        companyId,
+        recipients: recipientIds
+          ? {
+              connect: recipientIds.map((id: string) => ({ id })),
+            }
+          : undefined,
+      },
+      include: { recipients: true },
+    });
+
+    return NextResponse.json(
+      createApiResponse("Group created successfully", group),
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error creating group:", error);
+    return NextResponse.json(createErrorResponse("Failed to create group"), {
+      status: 500,
+    });
+  }
+}
+
+/**
+ * UPDATE group (supports recipients)
+ */
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, name, tag, color, connectIds, disconnectIds, setIds } = body;
+
+    if (!id) {
+      return NextResponse.json(createErrorResponse("Group id is required"), {
+        status: 400,
+      });
+    }
+
+    const updatedGroup = await prisma.addressBookGroup.update({
+      where: { id },
+      data: {
+        ...(name && { name }),
+        ...(tag && { tag }),
+        ...(color && { color }),
+        ...(connectIds && {
+          recipients: {
+            connect: connectIds.map((rId: string) => ({ id: rId })),
+          },
+        }),
+        ...(disconnectIds && {
+          recipients: {
+            disconnect: disconnectIds.map((rId: string) => ({ id: rId })),
+          },
+        }),
+        ...(setIds && {
+          recipients: {
+            set: setIds.map((rId: string) => ({ id: rId })),
+          },
+        }),
+      },
+      include: { recipients: true },
+    });
+
+    return NextResponse.json(
+      createApiResponse("Group updated successfully", updatedGroup),
+    );
+  } catch (error) {
+    console.error("Error updating group:", error);
+    return NextResponse.json(createErrorResponse("Failed to update group"), {
+      status: 500,
+    });
+  }
+}
+
+/**
+ *  DELETE group
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(createErrorResponse("Group id is required"), {
+        status: 400,
+      });
+    }
+
+    await prisma.addressBookGroup.delete({ where: { id } });
+
+    return NextResponse.json(
+      createApiResponse("Group deleted successfully", null),
+    );
+  } catch (error) {
+    console.error("Error deleting group:", error);
+    return NextResponse.json(createErrorResponse("Failed to delete group"), {
+      status: 500,
+    });
   }
 }

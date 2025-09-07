@@ -13,3 +13,11 @@ export interface CreateRecipientRequest {
   companyId: string;
   groupIds?: string[];
 }
+
+export interface CreateAddressBookGroup {
+  name: string;
+  companyId: string;
+  tag?: string;
+  color?: string;
+  recipientIds?: string[];
+}

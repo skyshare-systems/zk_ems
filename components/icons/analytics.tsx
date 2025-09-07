@@ -23,34 +23,34 @@ const AnalyticsIcon = ({ className }: IClassName) => {
         d="M1.45825 6.12793H12.5416"
         stroke="currentColor"
         strokeWidth="0.875"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         d="M4.08325 4.37793H4.08849"
         stroke="currentColor"
         strokeWidth="1.16667"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M6.4165 4.37793H6.42175"
         stroke="currentColor"
         strokeWidth="1.16667"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M9.91659 10.7946C9.91659 9.18378 8.61074 7.87793 6.99992 7.87793C5.38909 7.87793 4.08325 9.18378 4.08325 10.7946"
         stroke="currentColor"
         strokeWidth="0.875"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
       <path
         d="M7.41235 9.79883L6.5874 10.6238"
         stroke="currentColor"
         strokeWidth="0.875"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

@@ -29,6 +29,9 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { geist, inter } from "@/public/fonts";
 import EditGroup from "./edit-group";
+import { useQuery } from "@tanstack/react-query";
+import { getAddressBookGroup } from "@/lib/query/address-book-groups";
+import { useCompanyStore } from "@/store/company";
 
 type Recipient = {
   name: string;
@@ -64,10 +67,18 @@ const groupData: Group[] = [
   },
 ];
 
-export default function GroupTable() {
+interface GroupTableProps {
+  search: string;
+  page: number;
+  limit: number;
+}
+
+export default function GroupTable({ search, page, limit }: GroupTableProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {},
   );
+  const { company } = useCompanyStore();
+
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [actionType, setActionType] = useState<"edit" | "delete" | null>(null);
 
@@ -85,6 +96,16 @@ export default function GroupTable() {
     setActionType(null);
   };
 
+  const { data: groups } = useQuery({
+    queryFn: () =>
+      getAddressBookGroup({
+        params:
+          `companyId=${company?.id}` +
+          (search ? `&title=${search}` : "" + `&page=${page}&limit=${limit}`),
+      }),
+    queryKey: ["address-book-groups", company?.id],
+  });
+
   return (
     <div className="p-6 bg-white_v2-4 text-white rounded-xl w-full">
       <Table>
@@ -97,7 +118,7 @@ export default function GroupTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {groupData.map((group) => {
+          {groups?.data?.map((group) => {
             const isExpanded = expandedGroups[group.tag];
             const visibleRecipients = isExpanded
               ? group.recipients
@@ -106,8 +127,12 @@ export default function GroupTable() {
             return (
               <TableRow key={group.tag}>
                 <TableCell>
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {group.tag}
+                  <span
+                    style={{
+                      color: group.color,
+                    }}
+                  >
+                    @{group.name}
                   </span>
                 </TableCell>
                 <TableCell className="font-medium">{group.name}</TableCell>
@@ -119,7 +144,7 @@ export default function GroupTable() {
                         className="flex items-center gap-1 bg-muted rounded-full px-2 py-1"
                       >
                         <Avatar className="w-5 h-5">
-                          <AvatarImage src={r.avatarUrl || ""} alt={r.name} />
+                          <AvatarImage src={r.photoUrl || ""} alt={r.name} />
                           <AvatarFallback>
                             {r.name
                               .split(" ")
@@ -216,9 +241,9 @@ export default function GroupTable() {
                   <path
                     d="M11.5833 3.07959L3.41663 11.2463M3.41663 3.07959L11.5833 11.2463"
                     stroke="currentColor"
-                    stroke-width="0.875"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="0.875"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 Cancel
@@ -240,26 +265,26 @@ export default function GroupTable() {
                   <path
                     d="M11.375 3.37158L11.0135 9.21956C10.9211 10.7136 10.875 11.4607 10.5005 11.9979C10.3153 12.2634 10.0769 12.4875 9.80041 12.6559C9.24122 12.9966 8.49275 12.9966 6.99574 12.9966C5.49682 12.9966 4.74734 12.9966 4.18778 12.6553C3.91113 12.4866 3.67267 12.262 3.48756 11.996C3.11318 11.4581 3.06801 10.71 2.97769 9.21378L2.625 3.37158"
                     stroke="currentColor"
-                    stroke-width="0.75"
-                    stroke-linecap="round"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M1.75 3.37126H12.25M9.36582 3.37126L8.96764 2.54977C8.7031 2.00407 8.5708 1.73123 8.34266 1.56106C8.29208 1.52331 8.23848 1.48974 8.18242 1.46066C7.92978 1.32959 7.62656 1.32959 7.02012 1.32959C6.39847 1.32959 6.08767 1.32959 5.83081 1.46616C5.77389 1.49643 5.71957 1.53136 5.66842 1.57061C5.43762 1.74766 5.3087 2.03049 5.05086 2.59616L4.69754 3.37126"
                     stroke="currentColor"
-                    stroke-width="0.75"
-                    stroke-linecap="round"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M5.54163 9.78809V6.28809"
                     stroke="currentColor"
-                    stroke-width="0.75"
-                    stroke-linecap="round"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M8.45837 9.78809V6.28809"
                     stroke="currentColor"
-                    stroke-width="0.75"
-                    stroke-linecap="round"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
                   />
                 </svg>
                 {actionType === "delete" ? "Delete" : "Save Changes"}

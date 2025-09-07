@@ -127,8 +127,8 @@ const CreateGroupModal = () => {
                         <path
                           d="M1.25 9.16284L4.75 12.6628L15.25 1.66284"
                           stroke="#000205"
-                          stroke-width="1.5"
-                          stroke-linecap="square"
+                          strokeWidth="1.5"
+                          strokeLinecap="square"
                         />
                       </svg>
                     )}

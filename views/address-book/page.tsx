@@ -79,7 +79,9 @@ const AddressBookSection = () => {
         {tab === "recipients" && (
           <UserTable limit={limit} page={page} search={debouncedSearch} />
         )}
-        {tab === "groups" && <GroupTable />}
+        {tab === "groups" && (
+          <GroupTable limit={limit} page={page} search={debouncedSearch} />
+        )}
       </div>
     </div>
   );

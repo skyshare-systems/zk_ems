@@ -18,8 +18,8 @@ const ChevronDownIcon = ({ className }: IClassName) => {
       <path
         d="M1.49976 0.913114L4.99978 4.41309L8.49976 0.913086"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-miterlimit="16"
+        strokeWidth="1.5"
+        strokeMiterlimit="16"
       />
     </svg>
   );

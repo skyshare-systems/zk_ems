@@ -18,7 +18,7 @@ const DoneIcon = ({ className }: IClassName) => {
         d="M1.91666 6.32959L3.95833 8.37126L10.0833 1.95459"
         stroke="currentColor"
         strokeWidth="1.5"
-        stroke-linecap="square"
+        strokeLinecap="square"
       />
     </svg>
   );

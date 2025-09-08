@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
-
+import { Company, Prisma } from "@prisma/client";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 
 export type AddressBookGroupWithRecipients = Prisma.AddressBookGroupGetPayload<{
@@ -21,3 +22,22 @@ export interface CreateAddressBookGroup {
   color?: string;
   recipientIds?: string[];
 }
+
+
+interface AddressBookGroupStore {
+  group: AddressBookGroupWithRecipients | null;
+  setGroup: (group: AddressBookGroupWithRecipients | null) => void;
+}
+
+export const useAddressBookGroupStore = create<AddressBookGroupStore>()(
+  persist(
+    (set) => ({
+      group: null,
+      setGroup: (group) => set({ group }),
+    }),
+    {
+      name: "address-book-group-store",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

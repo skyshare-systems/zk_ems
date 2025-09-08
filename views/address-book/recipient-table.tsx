@@ -59,9 +59,12 @@ export default function RecipientTable({
   const { data: recipients } = useQuery({
     queryFn: () =>
       getAddressBookRecipients({
-        params:
-          `companyId=${company?.id}` +
-          (search ? `&title=${search}` : "" + `&page=${page}&limit=${limit}`),
+        params: {
+          companyId: company?.id || "",
+          limit,
+          offset: (page - 1) * limit,
+          search,
+        },
       }),
     queryKey: ["address-book-recipients", company?.id],
   });
@@ -111,7 +114,7 @@ export default function RecipientTable({
                 </TableCell>
                 <TableCell>{user.emailAddress}</TableCell>
                 <TableCell className="space-x-1">
-                  {user.groups.map((group, idx) => (
+                  {user.groups?.map((group, idx) => (
                     <Badge
                       key={idx}
                       style={{

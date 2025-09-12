@@ -19,9 +19,9 @@ CREATE TABLE "public"."User" (
     "isActivated" BOOLEAN NOT NULL DEFAULT false,
     "lastLogin" TIMESTAMP(3),
     "lastLogout" TIMESTAMP(3),
-    "emailAddress" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "emailAddress" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -42,8 +42,6 @@ CREATE TABLE "public"."Company" (
 CREATE TABLE "public"."UserCompany" (
     "userId" TEXT NOT NULL,
     "companyId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "UserCompany_pkey" PRIMARY KEY ("userId","companyId")
 );
@@ -56,9 +54,9 @@ CREATE TABLE "public"."Template" (
     "header" TEXT NOT NULL,
     "footer" TEXT NOT NULL,
     "tags" TEXT[],
-    "companyId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "companyId" TEXT NOT NULL,
 
     CONSTRAINT "Template_pkey" PRIMARY KEY ("id")
 );
@@ -66,6 +64,7 @@ CREATE TABLE "public"."Template" (
 -- CreateTable
 CREATE TABLE "public"."SentEmail" (
     "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "templateId" TEXT NOT NULL,
     "companyId" TEXT NOT NULL,
     "body" TEXT NOT NULL,
@@ -73,8 +72,6 @@ CREATE TABLE "public"."SentEmail" (
     "header" TEXT NOT NULL,
     "subject" TEXT NOT NULL,
     "attachments" TEXT[],
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "SentEmail_pkey" PRIMARY KEY ("id")
 );
@@ -82,36 +79,39 @@ CREATE TABLE "public"."SentEmail" (
 -- CreateTable
 CREATE TABLE "public"."Recipient" (
     "id" TEXT NOT NULL,
-    "sentEmailId" TEXT NOT NULL,
-    "emailAddress" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "sentEmailId" TEXT NOT NULL,
+    "emailAddress" TEXT NOT NULL,
+    "photoUrl" TEXT,
 
     CONSTRAINT "Recipient_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."Group" (
+CREATE TABLE "public"."AddressBookRecipient" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "tag" TEXT NOT NULL,
-    "tagColor" TEXT NOT NULL,
-    "description" TEXT,
-    "companyId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "emailAddress" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "photoUrl" TEXT,
+    "companyId" TEXT NOT NULL,
 
-    CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "AddressBookRecipient_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."RecipientGroup" (
-    "recipientId" TEXT NOT NULL,
-    "groupId" TEXT NOT NULL,
+CREATE TABLE "public"."AddressBookGroup" (
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "tag" TEXT NOT NULL,
+    "color" TEXT NOT NULL,
+    "companyId" TEXT NOT NULL,
 
-    CONSTRAINT "RecipientGroup_pkey" PRIMARY KEY ("recipientId","groupId")
+    CONSTRAINT "AddressBookGroup_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -134,10 +134,10 @@ CREATE TABLE "public"."SmtpCredential" (
     "port" INTEGER NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "from" TEXT NOT NULL,
-    "companyId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "from" TEXT NOT NULL,
+    "companyId" TEXT NOT NULL,
 
     CONSTRAINT "SmtpCredential_pkey" PRIMARY KEY ("id")
 );
@@ -150,9 +150,9 @@ CREATE TABLE "public"."StorageConfig" (
     "bucketName" TEXT,
     "accessKeyId" TEXT,
     "secretAccessKey" TEXT,
-    "companyId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "companyId" TEXT NOT NULL,
 
     CONSTRAINT "StorageConfig_pkey" PRIMARY KEY ("id")
 );
@@ -168,6 +168,14 @@ CREATE TABLE "public"."Transactions" (
     CONSTRAINT "Transactions_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."_GroupMembers" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_GroupMembers_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "public"."User"("username");
 
@@ -175,34 +183,28 @@ CREATE UNIQUE INDEX "User_username_key" ON "public"."User"("username");
 CREATE UNIQUE INDEX "User_emailAddress_key" ON "public"."User"("emailAddress");
 
 -- CreateIndex
-CREATE INDEX "User_username_idx" ON "public"."User"("username");
-
--- CreateIndex
-CREATE INDEX "User_emailAddress_idx" ON "public"."User"("emailAddress");
+CREATE INDEX "User_createdAt_idx" ON "public"."User"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Company_name_key" ON "public"."Company"("name");
 
 -- CreateIndex
-CREATE INDEX "Company_name_idx" ON "public"."Company"("name");
-
--- CreateIndex
-CREATE INDEX "UserCompany_companyId_idx" ON "public"."UserCompany"("companyId");
-
--- CreateIndex
-CREATE INDEX "UserCompany_userId_idx" ON "public"."UserCompany"("userId");
+CREATE INDEX "Company_createdAt_idx" ON "public"."Company"("createdAt");
 
 -- CreateIndex
 CREATE INDEX "Template_companyId_idx" ON "public"."Template"("companyId");
 
 -- CreateIndex
-CREATE INDEX "Template_name_idx" ON "public"."Template"("name");
+CREATE INDEX "Template_createdAt_idx" ON "public"."Template"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "SentEmail_companyId_idx" ON "public"."SentEmail"("companyId");
 
 -- CreateIndex
 CREATE INDEX "SentEmail_templateId_idx" ON "public"."SentEmail"("templateId");
 
 -- CreateIndex
-CREATE INDEX "SentEmail_companyId_idx" ON "public"."SentEmail"("companyId");
+CREATE INDEX "SentEmail_createdAt_idx" ON "public"."SentEmail"("createdAt");
 
 -- CreateIndex
 CREATE INDEX "Recipient_sentEmailId_idx" ON "public"."Recipient"("sentEmailId");
@@ -211,19 +213,28 @@ CREATE INDEX "Recipient_sentEmailId_idx" ON "public"."Recipient"("sentEmailId");
 CREATE INDEX "Recipient_emailAddress_idx" ON "public"."Recipient"("emailAddress");
 
 -- CreateIndex
-CREATE INDEX "Group_companyId_idx" ON "public"."Group"("companyId");
+CREATE INDEX "Recipient_createdAt_idx" ON "public"."Recipient"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "Group_name_idx" ON "public"."Group"("name");
+CREATE INDEX "AddressBookRecipient_companyId_idx" ON "public"."AddressBookRecipient"("companyId");
 
 -- CreateIndex
-CREATE INDEX "Group_tag_idx" ON "public"."Group"("tag");
+CREATE INDEX "AddressBookRecipient_emailAddress_idx" ON "public"."AddressBookRecipient"("emailAddress");
 
 -- CreateIndex
-CREATE INDEX "RecipientGroup_recipientId_idx" ON "public"."RecipientGroup"("recipientId");
+CREATE INDEX "AddressBookRecipient_name_idx" ON "public"."AddressBookRecipient"("name");
 
 -- CreateIndex
-CREATE INDEX "RecipientGroup_groupId_idx" ON "public"."RecipientGroup"("groupId");
+CREATE INDEX "AddressBookRecipient_createdAt_idx" ON "public"."AddressBookRecipient"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "AddressBookGroup_companyId_idx" ON "public"."AddressBookGroup"("companyId");
+
+-- CreateIndex
+CREATE INDEX "AddressBookGroup_name_idx" ON "public"."AddressBookGroup"("name");
+
+-- CreateIndex
+CREATE INDEX "AddressBookGroup_createdAt_idx" ON "public"."AddressBookGroup"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Token_token_key" ON "public"."Token"("token");
@@ -232,22 +243,25 @@ CREATE UNIQUE INDEX "Token_token_key" ON "public"."Token"("token");
 CREATE INDEX "Token_userId_idx" ON "public"."Token"("userId");
 
 -- CreateIndex
-CREATE INDEX "Token_token_idx" ON "public"."Token"("token");
+CREATE INDEX "Token_createdAt_idx" ON "public"."Token"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "SmtpCredential_companyId_key" ON "public"."SmtpCredential"("companyId");
 
 -- CreateIndex
-CREATE INDEX "SmtpCredential_companyId_idx" ON "public"."SmtpCredential"("companyId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "StorageConfig_companyId_key" ON "public"."StorageConfig"("companyId");
 
 -- CreateIndex
-CREATE INDEX "StorageConfig_companyId_idx" ON "public"."StorageConfig"("companyId");
+CREATE INDEX "Transactions_userId_idx" ON "public"."Transactions"("userId");
 
 -- CreateIndex
-CREATE INDEX "Transactions_userId_idx" ON "public"."Transactions"("userId");
+CREATE INDEX "Transactions_action_idx" ON "public"."Transactions"("action");
+
+-- CreateIndex
+CREATE INDEX "Transactions_createdAt_idx" ON "public"."Transactions"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "_GroupMembers_B_index" ON "public"."_GroupMembers"("B");
 
 -- AddForeignKey
 ALTER TABLE "public"."UserCompany" ADD CONSTRAINT "UserCompany_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -268,13 +282,10 @@ ALTER TABLE "public"."SentEmail" ADD CONSTRAINT "SentEmail_templateId_fkey" FORE
 ALTER TABLE "public"."Recipient" ADD CONSTRAINT "Recipient_sentEmailId_fkey" FOREIGN KEY ("sentEmailId") REFERENCES "public"."SentEmail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Group" ADD CONSTRAINT "Group_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."AddressBookRecipient" ADD CONSTRAINT "AddressBookRecipient_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."RecipientGroup" ADD CONSTRAINT "RecipientGroup_recipientId_fkey" FOREIGN KEY ("recipientId") REFERENCES "public"."Recipient"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."RecipientGroup" ADD CONSTRAINT "RecipientGroup_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "public"."Group"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."AddressBookGroup" ADD CONSTRAINT "AddressBookGroup_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -287,3 +298,9 @@ ALTER TABLE "public"."StorageConfig" ADD CONSTRAINT "StorageConfig_companyId_fke
 
 -- AddForeignKey
 ALTER TABLE "public"."Transactions" ADD CONSTRAINT "Transactions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."_GroupMembers" ADD CONSTRAINT "_GroupMembers_A_fkey" FOREIGN KEY ("A") REFERENCES "public"."AddressBookGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."_GroupMembers" ADD CONSTRAINT "_GroupMembers_B_fkey" FOREIGN KEY ("B") REFERENCES "public"."AddressBookRecipient"("id") ON DELETE CASCADE ON UPDATE CASCADE;

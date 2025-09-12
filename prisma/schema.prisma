@@ -18,41 +18,45 @@ model User {
   isActivated  Boolean        @default(false)
   lastLogin    DateTime?
   lastLogout   DateTime?
+  emailAddress String         @unique
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  emailAddress String         @unique
   tokens       Token[]
   transactions Transactions[]
   companies    UserCompany[]
 
-  @@index([createdAt])
+  @@index([emailAddress])
+  @@index([username])
 }
 
 model Company {
-  id                    String                 @id @default(cuid())
-  name                  String                 @unique
-  image                 String
-  description           String
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  sentEmails            SentEmail[]
-  smtpCredential        SmtpCredential?
-  storageConfig         StorageConfig?
-  templates             Template[]
-  users                 UserCompany[]
-  addressBookGroups     AddressBookGroup[]
-  addressBookRecipients AddressBookRecipient[]
+  id             String          @id @default(cuid())
+  name           String          @unique
+  image          String
+  description    String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  Group          Group[]
+  sentEmails     SentEmail[]
+  smtpCredential SmtpCredential?
+  storageConfig  StorageConfig?
+  templates      Template[]
+  users          UserCompany[]
 
-  @@index([createdAt])
+  @@index([name])
 }
 
 model UserCompany {
   userId    String
   companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, companyId])
+  @@index([companyId])
+  @@index([userId])
 }
 
 model Template {
@@ -62,19 +66,18 @@ model Template {
   header      String
   footer      String
   tags        String[]
+  companyId   String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  companyId   String
   sentEmails  SentEmail[]
   company     Company     @relation(fields: [companyId], references: [id])
 
   @@index([companyId])
-  @@index([createdAt])
+  @@index([name])
 }
 
 model SentEmail {
   id          String      @id @default(cuid())
-  createdAt   DateTime    @default(now())
   templateId  String
   companyId   String
   body        String
@@ -82,60 +85,27 @@ model SentEmail {
   header      String
   subject     String
   attachments String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
   recipients  Recipient[]
   company     Company     @relation(fields: [companyId], references: [id])
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   @@index([companyId])
   @@index([templateId])
-  @@index([createdAt])
 }
 
 model Recipient {
-  id           String    @id @default(cuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  sentEmailId  String
-  emailAddress String
-  photoUrl     String?
-  sentEmail    SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
+  id             String           @id @default(cuid())
+  sentEmailId    String
+  emailAddress   String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  sentEmail      SentEmail        @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
+  RecipientGroup RecipientGroup[]
 
   @@index([sentEmailId])
   @@index([emailAddress])
-  @@index([createdAt])
-}
-
-model AddressBookRecipient {
-  id           String             @id @default(cuid())
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-  emailAddress String
-  name         String
-  photoUrl     String?
-  companyId    String
-  company      Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  groups       AddressBookGroup[] @relation("GroupMembers")
-
-  @@index([companyId])
-  @@index([emailAddress])
-  @@index([name])
-  @@index([createdAt])
-}
-
-model AddressBookGroup {
-  id         String                 @id @default(cuid())
-  createdAt  DateTime               @default(now())
-  updatedAt  DateTime               @updatedAt
-  name       String
-  tag        String
-  color      String
-  companyId  String
-  company    Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  recipients AddressBookRecipient[] @relation("GroupMembers")
-
-  @@index([companyId])
-  @@index([name])
-  @@index([createdAt])
 }
 
 model Token {
@@ -149,7 +119,7 @@ model Token {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([createdAt])
+  @@index([token])
 }
 
 model SmtpCredential {
@@ -158,11 +128,13 @@ model SmtpCredential {
   port      Int
   username  String
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   from      String
   companyId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
 }
 
 model StorageConfig {
@@ -172,10 +144,12 @@ model StorageConfig {
   bucketName      String?
   accessKeyId     String?
   secretAccessKey String?
+  companyId       String   @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  companyId       String   @unique
   company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
 }
 
 model Transactions {
@@ -187,8 +161,36 @@ model Transactions {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
-  @@index([action])
-  @@index([createdAt])
+}
+
+model Group {
+  id             String           @id
+  name           String
+  tag            String
+  tagColor       String
+  description    String?
+  companyId      String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  Company        Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  RecipientGroup RecipientGroup[]
+
+  @@index([companyId])
+  @@index([name])
+  @@index([tag])
+}
+
+model RecipientGroup {
+  recipientId String
+  groupId     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  Group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  Recipient   Recipient @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@id([recipientId, groupId])
+  @@index([groupId])
+  @@index([recipientId])
 }
 
 enum Role {

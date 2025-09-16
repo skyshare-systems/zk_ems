@@ -19,3 +19,35 @@ export const createAddressBookRecipient = async (
   }
 
 };
+
+export const updateAddressBookRecipient = async ({
+  recipientId,
+  companyId,
+  data,
+}: {
+  recipientId: string;
+  companyId: string;
+  data: any;
+}) => {
+  const response = await api.patch(`/address-book-recipient`, {
+    companyId,
+    ...data,
+    
+  }, {
+    params: { recipientId },
+  });
+  return response.data;
+};
+
+export const deleteAddressBookRecipient = async ({
+  recipientId,
+  companyId,
+}: {
+  recipientId: string;
+  companyId: string;
+}) => {
+  const response = await api.delete(`/address-book-recipient`, {
+    params: { companyId, recipientId },
+  });
+  return response.data;
+};

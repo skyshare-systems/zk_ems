@@ -26,19 +26,47 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import DotHorizontalIcon from "@/components/ui/dot-horizontal";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EditIcon from "@/components/icons/edit-icon";
 import { cn } from "@/lib/utils";
 import { geist, inter } from "@/public/fonts";
 import DeleteIcon from "@/components/icons/delete";
 import CancelIcon from "@/components/icons/cancel";
 import DoneIcon from "@/components/icons/done";
-import AddPhoto from "./add-photo";
 import { Input } from "@/components/ui/input";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAddressBookRecipients } from "@/lib/query/address-book-recipients";
 import { useCompanyStore } from "@/store/company";
 import { AddressBookRecipientWithGroupAndCompany } from "@/store/address-book-recipients";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { toast } from "sonner";
+
+import {
+  deleteAddressBookRecipient,
+  updateAddressBookRecipient,
+} from "@/lib/mutation/address-book/recipient/address-book-recipient";
+
+import { getAddressBookGroup } from "@/lib/query/address-book-groups";
+import { MultiSelect } from "@/components/multi-select";
+import ImageUploader from "@/components/modals/image-uploader-no-context";
+import Image from "next/image";
+
+const editRecipientSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  emailAddress: z.string().email("Invalid email address"),
+  photoUrl: z.string().optional().or(z.literal("")),
+  groupIds: z.array(z.string()).default([]),
+});
 
 interface RecipientTableProps {
   search: string;
@@ -46,17 +74,35 @@ interface RecipientTableProps {
   limit: number;
 }
 
+type ActionType = "edit" | "delete" | null;
+
+const initialsOf = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("")
+    .slice(0, 2);
+
 export default function RecipientTable({
   search,
   page,
   limit,
 }: RecipientTableProps) {
   const { company } = useCompanyStore();
-  const [selectedUser, setSelectedUser] =
-    useState<AddressBookRecipientWithGroupAndCompany | null>(null);
-  const [actionType, setActionType] = useState<"edit" | "delete" | null>(null);
+  const queryClient = useQueryClient();
 
-  const { data: recipients } = useQuery({
+  const recipientsKey = useMemo(
+    () => ["address-book-recipients", company?.id, page, limit, search],
+    [company?.id, page, limit, search],
+  );
+
+  const {
+    data: recipientsResp,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: recipientsKey,
     queryFn: () =>
       getAddressBookRecipients({
         params: {
@@ -66,12 +112,83 @@ export default function RecipientTable({
           search,
         },
       }),
-    queryKey: ["address-book-recipients", company?.id],
+    enabled: !!company?.id,
+  });
+
+  const { data: groupsResp } = useQuery({
+    queryKey: ["address-book-groups", company?.id],
+    queryFn: () =>
+      getAddressBookGroup({
+        params: `companyId=${company?.id}&limit=1000`,
+      }),
+    enabled: !!company?.id,
+  });
+
+  const recipients = recipientsResp?.data ?? [];
+  const allGroups = groupsResp?.data ?? [];
+
+  const [selectedUser, setSelectedUser] =
+    useState<AddressBookRecipientWithGroupAndCompany | null>(null);
+  const [actionType, setActionType] = useState<ActionType>(null);
+
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [groupBadges, setGroupBadges] = useState<string[]>([]);
+
+  const form = useForm<z.infer<typeof editRecipientSchema>>({
+    resolver: zodResolver(editRecipientSchema),
+    defaultValues: {
+      name: "",
+      emailAddress: "",
+      photoUrl: "",
+      groupIds: [],
+    },
+  });
+
+  useEffect(() => {
+    if (actionType === "edit" && selectedUser) {
+      const initialIds = selectedUser.groups?.map((g) => g.id) ?? [];
+      setGroupBadges(initialIds);
+      setSelectedValues([]);
+      form.reset({
+        name: selectedUser.name || "",
+        emailAddress: selectedUser.emailAddress || "",
+        photoUrl: selectedUser.photoUrl || "",
+        groupIds: initialIds,
+      });
+    }
+  }, [actionType, selectedUser]);
+
+  const updateMutation = useMutation({
+    mutationFn: updateAddressBookRecipient, 
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: recipientsKey });
+      toast.success("Recipient updated successfully", { duration: 1200 });
+      closeDialog();
+    },
+    onError: (error: any) => {
+      toast.error(
+        `Failed to update recipient: ${error?.message ?? "Unknown error"}`,
+      );
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteAddressBookRecipient, 
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: recipientsKey });
+      toast.success("Recipient deleted", { duration: 1200 });
+      closeDialog();
+    },
+    onError: (error: any) => {
+      toast.error(
+        `Failed to delete recipient: ${error?.message ?? "Unknown error"}`,
+      );
+    },
   });
 
   const handleAction = (
     user: AddressBookRecipientWithGroupAndCompany,
-    type: "edit" | "delete",
+    type: Exclude<ActionType, null>,
   ) => {
     setSelectedUser(user);
     setActionType(type);
@@ -80,8 +197,59 @@ export default function RecipientTable({
   const closeDialog = () => {
     setSelectedUser(null);
     setActionType(null);
+    setSelectedValues([]);
+    setGroupBadges([]);
+    form.reset();
   };
 
+  const handleGroupChange = (ids: string[]) => {
+    setSelectedValues(ids);
+  };
+
+  const handleAddGroups = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    if (selectedValues.length === 0) return;
+
+    const merged = Array.from(new Set([...groupBadges, ...selectedValues]));
+    setGroupBadges(merged);
+    setSelectedValues([]);
+    form.setValue("groupIds", merged, { shouldDirty: true });
+  };
+
+  const handleRemoveGroup = (groupId: string) => {
+    const filtered = groupBadges.filter((id) => id !== groupId);
+    setGroupBadges(filtered);
+    form.setValue("groupIds", filtered, { shouldDirty: true });
+  };
+
+  const handlePhotoUpload = (url: string) => {
+    form.setValue("photoUrl", url, { shouldDirty: true });
+  };
+
+  const onSubmit = (values: z.infer<typeof editRecipientSchema>) => {
+    if (!selectedUser || !company?.id) return;
+
+    updateMutation.mutate({
+      recipientId: selectedUser.id,
+      companyId: company.id,
+      data: {
+        name: values.name,
+        emailAddress: values.emailAddress,
+        photoUrl: values.photoUrl,
+        groupIds: groupBadges,
+      },
+    });
+  };
+
+  const onConfirmDelete = () => {
+    if (!selectedUser || !company?.id) return;
+    deleteMutation.mutate({
+      recipientId: selectedUser.id,
+      companyId: company.id,
+    });
+  };
+
+  /* ------------------------------- render ------------------------------ */
   return (
     <div className="w-full p-6 text-white bg-white_v2-4 rounded-xl">
       <Table>
@@ -93,10 +261,35 @@ export default function RecipientTable({
             <TableHead className="text-white">Action</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {recipients &&
-            recipients.data.map((user, i) => (
-              <TableRow key={i}>
+          {isLoading ? (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                className="py-8 text-center text-white_v2-50"
+              >
+                Loading…
+              </TableCell>
+            </TableRow>
+          ) : isError ? (
+            <TableRow>
+              <TableCell colSpan={4} className="py-8 text-center text-red-400">
+                Failed to load recipients.
+              </TableCell>
+            </TableRow>
+          ) : (recipients?.length ?? 0) === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                className="py-8 text-center text-white_v2-50"
+              >
+                No recipients found{search ? ` for “${search}”` : ""}.
+              </TableCell>
+            </TableRow>
+          ) : (
+            recipients.map((user: AddressBookRecipientWithGroupAndCompany) => (
+              <TableRow key={user.id}>
                 <TableCell className="flex items-center gap-2">
                   <Avatar className="w-8 h-8">
                     {user.photoUrl ? (
@@ -114,13 +307,11 @@ export default function RecipientTable({
                 </TableCell>
                 <TableCell>{user.emailAddress}</TableCell>
                 <TableCell className="space-x-1">
-                  {user.groups?.map((group, idx) => (
+                  {user.groups?.map((group) => (
                     <Badge
-                      key={idx}
-                      style={{
-                        color: group.color,
-                      }}
-                      className={`text-white bg-transparent`}
+                      key={group.id}
+                      style={{ color: group.color }}
+                      className="text-white bg-transparent"
                     >
                       @{group.name}
                     </Badge>
@@ -156,7 +347,8 @@ export default function RecipientTable({
                   </DropdownMenu>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          )}
         </TableBody>
       </Table>
 
@@ -185,73 +377,30 @@ export default function RecipientTable({
             <DialogFooter className="w-full">
               <button
                 onClick={closeDialog}
+                disabled={deleteMutation.isPending}
                 className={cn(
                   geist.className,
-                  "w-full rounded-lg bg-white_v2-4 ty-descriptions py-2 px-3 flex items-center justify-center gap-2 hover:bg-white_v2-100 hover:text-black_v2-100 ease-out duration-300",
+                  "w-full rounded-lg bg-white_v2-4 ty-descriptions py-2 px-3 flex items-center justify-center gap-2 hover:bg-white_v2-100 hover:text-black_v2-100 ease-out duration-300 disabled:opacity-50",
                 )}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 15 15"
-                  fill="none"
-                >
-                  <path
-                    d="M11.5833 3.07959L3.41663 11.2463M3.41663 3.07959L11.5833 11.2463"
-                    stroke="currentColor"
-                    strokeWidth="0.875"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <CancelIcon />
                 Cancel
               </button>
               <button
-                onClick={closeDialog}
+                onClick={onConfirmDelete}
+                disabled={deleteMutation.isPending}
                 className={cn(
                   geist.className,
-                  "w-full rounded-lg bg-[#741B1B] ty-descriptions py-3 px-3 flex items-center justify-center gap-2 hover:text-white_v2-100 ease-out duration-300 hover:opacity-50",
+                  "w-full rounded-lg bg-[#741B1B] ty-descriptions py-3 px-3 flex items-center justify-center gap-2 hover:text-white_v2-100 ease-out duration-300 hover:opacity-50 disabled:opacity-50",
                 )}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="15"
-                  viewBox="0 0 14 15"
-                  fill="none"
-                >
-                  <path
-                    d="M11.375 3.37158L11.0135 9.21956C10.9211 10.7136 10.875 11.4607 10.5005 11.9979C10.3153 12.2634 10.0769 12.4875 9.80041 12.6559C9.24122 12.9966 8.49275 12.9966 6.99574 12.9966C5.49682 12.9966 4.74734 12.9966 4.18778 12.6553C3.91113 12.4866 3.67267 12.262 3.48756 11.996C3.11318 11.4581 3.06801 10.71 2.97769 9.21378L2.625 3.37158"
-                    stroke="currentColor"
-                    strokeWidth="0.75"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M1.75 3.37126H12.25M9.36582 3.37126L8.96764 2.54977C8.7031 2.00407 8.5708 1.73123 8.34266 1.56106C8.29208 1.52331 8.23848 1.48974 8.18242 1.46066C7.92978 1.32959 7.62656 1.32959 7.02012 1.32959C6.39847 1.32959 6.08767 1.32959 5.83081 1.46616C5.77389 1.49643 5.71957 1.53136 5.66842 1.57061C5.43762 1.74766 5.3087 2.03049 5.05086 2.59616L4.69754 3.37126"
-                    stroke="currentColor"
-                    strokeWidth="0.75"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M5.54163 9.78809V6.28809"
-                    stroke="currentColor"
-                    strokeWidth="0.75"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M8.45837 9.78809V6.28809"
-                    stroke="currentColor"
-                    strokeWidth="0.75"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {actionType === "delete" ? "Delete" : "Save Changes"}
+                <DeleteIcon />
+                {deleteMutation.isPending ? "Deleting..." : "Delete"}
               </button>
             </DialogFooter>
           </DialogContent>
         ) : (
-          // Edit Modal
+          // Edit Modal (follows your Add form UX)
           <DialogContent className="flex flex-col gap-4 max-w-[500px]">
             <DialogHeader className="flex flex-col items-start justify-start gap-2">
               <DialogTitle
@@ -265,84 +414,203 @@ export default function RecipientTable({
                   "ty-descriptions text-white_v2-50",
                 )}
               >
-                Edit this contact’s name, email, photo or group assignment.
+                Edit this contact&apos;s name, email, photo or group assignment.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex items-center w-full gap-2">
-              <h2
-                className={cn(
-                  geist.className,
-                  "min-w-[96px] ty-descriptions text-white_v2-32",
-                )}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-2"
               >
-                Name
-              </h2>
+                {/* Name */}
+                <FormField
+                  name="name"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <div className="flex items-center gap-2 w-full">
+                        <h2
+                          className={cn(
+                            geist.className,
+                            "min-w-[96px] ty-descriptions text-white_v2-32",
+                          )}
+                        >
+                          Name
+                        </h2>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your recipient’s name here.."
+                            className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-              <Input
-                placeholder="Enter your recipient’s name here.."
-                className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
-              />
-            </div>
+                {/* Email */}
+                <FormField
+                  name="emailAddress"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <div className="flex items-center gap-2 w-full">
+                        <h2
+                          className={cn(
+                            geist.className,
+                            "min-w-[96px] ty-descriptions text-white_v2-32",
+                          )}
+                        >
+                          Email
+                        </h2>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your recipient’s email here.."
+                            className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-            <div className="flex items-center w-full gap-2">
-              <h2
-                className={cn(
-                  geist.className,
-                  "min-w-[96px] ty-descriptions text-white_v2-32",
-                )}
-              >
-                Email
-              </h2>
+                {/* Photo (ImageUploader + preview) */}
+                <div className="flex items-center gap-2 w-full grow">
+                  <div className="flex items-center gap-2 w-full grow">
+                    <h2
+                      className={cn(
+                        geist.className,
+                        "min-w-[96px] ty-descriptions text-white_v2-32",
+                      )}
+                    >
+                      Photo
+                    </h2>
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="flex items-center gap-2">
+                        <ImageUploader onUploadComplete={handlePhotoUpload} />
+                      </div>
+                      {form.watch("photoUrl") && (
+                        <Image
+                          width={200}
+                          height={200}
+                          src={form.watch("photoUrl") || ""}
+                          alt="Uploaded Photo"
+                          className="rounded-lg border border-white_v2-8 bg-white_v2-8"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
 
-              <Input
-                placeholder="Enter your recipient’s email here.."
-                className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
-              />
-            </div>
+                {/* Groups (MultiSelect + Add) */}
+                <FormField
+                  name="groupIds"
+                  control={form.control}
+                  render={() => (
+                    <FormItem className="w-full">
+                      <div className="flex items-center gap-2 w-full">
+                        <h2
+                          className={cn(
+                            geist.className,
+                            "min-w-[96px] ty-descriptions text-white_v2-32",
+                          )}
+                        >
+                          Group
+                        </h2>
 
-            <AddPhoto />
+                        <div className="flex gap-2 w-full">
+                          <MultiSelect
+                            options={allGroups
+                              .filter((g: any) => !groupBadges.includes(g.id))
+                              .map((g: any) => ({
+                                value: g.id,
+                                label: g.name,
+                              }))}
+                            onValueChange={handleGroupChange}
+                            value={selectedValues}
+                          />
+                          <button
+                            disabled={
+                              selectedValues.length === 0 ||
+                              updateMutation.isPending
+                            }
+                            onClick={handleAddGroups}
+                            className={cn(
+                              geist.className,
+                              "bg-gold_v2-100 disabled:bg-gold_v2-50 text-black_v2-100 flex items-center gap-2 rounded-lg py-2 px-4 self-stretch ty-descriptions",
+                            )}
+                          >
+                            <h1> + </h1>Add
+                          </button>
+                        </div>
+                      </div>
 
-            <div className="flex items-center w-full gap-2 grow">
-              <h2
-                className={cn(
-                  geist.className,
-                  "min-w-[96px] ty-descriptions text-white_v2-32",
-                )}
-              >
-                Group
-              </h2>
-              <div className="flex flex-col w-full gap-2">
-                <div className="flex items-center gap-2">
-                  <Input
-                    placeholder="Add to one or more existing groups"
-                    className="p-3 border rounded-lg border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow"
-                  />
+                      {/* Selected group badges */}
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {groupBadges.map((groupId) => {
+                          const group = allGroups.find(
+                            (g: any) => g.id === groupId,
+                          );
+                          if (!group) return null;
+                          return (
+                            <Badge
+                              key={group.id}
+                              className="flex items-center gap-2 bg-transparent px-3 py-1 rounded-full border"
+                              style={{
+                                borderColor: group.color,
+                                color: group.color,
+                              }}
+                            >
+                              <span>@{group.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveGroup(group.id)}
+                                className="text-white_v2-100"
+                              >
+                                x
+                              </button>
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Footer */}
+                <div className="flex justify-end gap-2 w-full pt-2">
                   <button
-                    //   onClick={handleAddRecipient}
+                    type="button"
+                    onClick={closeDialog}
                     className={cn(
                       geist.className,
-                      "bg-gold_v2-100 text-black_v2-100 flex items-center gap-2 rounded-lg py-2 px-4 self-stretch ty-descriptions",
+                      "w-fit rounded-lg bg-white_v2-4 ty-descriptions py-2 px-3 flex items-center justify-center gap-2 hover:bg-white_v2-100 hover:text-black_v2-100 ease-out duration-300",
                     )}
                   >
-                    <h1> + </h1>Add
+                    <CancelIcon />
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={updateMutation.isPending}
+                    className={cn(
+                      geist.className,
+                      "bg-gold_v2-100 text-black_v2-100 flex items-center gap-2 rounded-lg py-3 px-4 ty-descriptions disabled:opacity-50",
+                    )}
+                  >
+                    <DoneIcon />
+                    {updateMutation.isPending ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
-              </div>
-            </div>
-
-            <DialogFooter className="w-full">
-              <button
-                onClick={closeDialog}
-                className={cn(
-                  geist.className,
-                  "bg-gold_v2-100 text-black_v2-100 flex items-center gap-2 rounded-lg py-3 px-4 ty-descriptions",
-                )}
-              >
-                <DoneIcon />
-                Done
-              </button>
-            </DialogFooter>
+              </form>
+            </Form>
           </DialogContent>
         )}
       </Dialog>

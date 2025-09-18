@@ -1,31 +1,28 @@
-import { ApiResponse } from "@/types/http";
-import api from "../axios";
-import { getErrorMessage } from "../utils";
-import { AddressBookRecipient } from "@prisma/client";
-import { AddressBookRecipientWithGroupAndCompany } from "@/store/address-book-recipients";
+import axios from "axios";
 
-
-
-interface Params {
-  params: {
-    companyId: string | undefined;
-    limit: number;
-    offset: number;
-    search: string | undefined;
-  };
+interface AddressBookRecipientParams {
+  companyId: string;
+  limit: number;
+  offset: number;
+  search?: string;
+  groupIds?: string[]; // allow multiple
 }
 
-export const getAddressBookRecipients = async ({ params }: Params) => {
-  try {
-    const response = await api.get<ApiResponse<AddressBookRecipientWithGroupAndCompany[]>>(
-      "/address-book-recipient",
-      {
-        params
-      }
-    );
+export async function getAddressBookRecipients({
+  companyId,
+  limit,
+  offset,
+  search,
+  groupIds,
+}: AddressBookRecipientParams) {
+  const params = {
+    companyId,
+    limit,
+    offset,
+    search,
+    groupIds: groupIds?.length ? groupIds.join(",") : undefined, // normalize array → comma-separated
+  };
 
-    return response.data;
-  } catch (error) {
-    throw getErrorMessage(error);
-  }
-};
+  const res = await axios.get("/api/address-book-recipient", { params });
+  return res.data;
+}

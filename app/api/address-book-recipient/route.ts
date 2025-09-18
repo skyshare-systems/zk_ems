@@ -3,6 +3,7 @@ import { createErrorResponse, Meta, createApiResponse } from "@/lib/utils";
 import { CreateRecipientRequest } from "@/store/address-book-recipients";
 import { NextRequest, NextResponse } from "next/server";
 
+
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
@@ -20,6 +21,9 @@ export async function GET(request: NextRequest) {
     const limit = Math.max(1, parseInt(url.searchParams.get("limit") || "10", 10));
     const search = url.searchParams.get("search")?.trim();
 
+    // multiple groupIds (comma-separated in query string)
+    const groupIds = url.searchParams.get("groupIds")?.split(",").filter(Boolean) || [];
+
     const where: any = { companyId };
 
     if (search) {
@@ -27,6 +31,14 @@ export async function GET(request: NextRequest) {
         { emailAddress: { contains: search, mode: "insensitive" } },
         { name: { contains: search, mode: "insensitive" } },
       ];
+    }
+
+    if (groupIds.length > 0) {
+      where.groups = {
+        some: {
+          id: { in: groupIds },
+        },
+      };
     }
 
     const [totalCount, recipients] = await Promise.all([
@@ -38,7 +50,12 @@ export async function GET(request: NextRequest) {
           name: true,
           emailAddress: true,
           photoUrl: true,
-          groups: true,
+          groups: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,

@@ -72,6 +72,7 @@ interface RecipientTableProps {
   search: string;
   page: number;
   limit: number;
+  groupFilter?: string[]; // Changed to array for multiple group filtering
 }
 
 type ActionType = "edit" | "delete" | null;
@@ -88,13 +89,21 @@ export default function RecipientTable({
   search,
   page,
   limit,
+  groupFilter = [], // Default to empty array for multiple group filtering
 }: RecipientTableProps) {
   const { company } = useCompanyStore();
   const queryClient = useQueryClient();
 
   const recipientsKey = useMemo(
-    () => ["address-book-recipients", company?.id, page, limit, search],
-    [company?.id, page, limit, search],
+    () => [
+      "address-book-recipients",
+      company?.id,
+      page,
+      limit,
+      search,
+      groupFilter,
+    ],
+    [company?.id, page, limit, search, groupFilter],
   );
 
   const {
@@ -105,12 +114,11 @@ export default function RecipientTable({
     queryKey: recipientsKey,
     queryFn: () =>
       getAddressBookRecipients({
-        params: {
-          companyId: company?.id || "",
-          limit,
-          offset: (page - 1) * limit,
-          search,
-        },
+        companyId: company?.id || "",
+        limit,
+        offset: (page - 1) * limit,
+        search,
+        groupIds: groupFilter, // always an array
       }),
     enabled: !!company?.id,
   });
@@ -159,7 +167,7 @@ export default function RecipientTable({
   }, [actionType, selectedUser]);
 
   const updateMutation = useMutation({
-    mutationFn: updateAddressBookRecipient, 
+    mutationFn: updateAddressBookRecipient,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recipientsKey });
       toast.success("Recipient updated successfully", { duration: 1200 });
@@ -173,7 +181,7 @@ export default function RecipientTable({
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteAddressBookRecipient, 
+    mutationFn: deleteAddressBookRecipient,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recipientsKey });
       toast.success("Recipient deleted", { duration: 1200 });
@@ -249,6 +257,24 @@ export default function RecipientTable({
     });
   };
 
+  // Get filter info for display
+  const getFilterDisplayText = () => {
+    if (!search && (!groupFilter || groupFilter.length === 0)) return "";
+
+    let parts = [];
+    if (search) parts.push(`"${search}"`);
+    if (groupFilter && groupFilter.length > 0) {
+      const groupNames = groupFilter
+        .map((id) => allGroups.find((g: any) => g.id === id))
+        .filter(Boolean)
+        .map((g) => `@${g?.name}`)
+        .join(", ");
+      parts.push(`in groups: ${groupNames}`);
+    }
+
+    return parts.length > 0 ? ` for ${parts.join(" ")}` : "";
+  };
+
   /* ------------------------------- render ------------------------------ */
   return (
     <div className="w-full p-6 text-white bg-white_v2-4 rounded-xl">
@@ -284,7 +310,7 @@ export default function RecipientTable({
                 colSpan={4}
                 className="py-8 text-center text-white_v2-50"
               >
-                No recipients found{search ? ` for “${search}”` : ""}.
+                No recipients found{getFilterDisplayText()}.
               </TableCell>
             </TableRow>
           ) : (
@@ -440,7 +466,7 @@ export default function RecipientTable({
                         </h2>
                         <FormControl>
                           <Input
-                            placeholder="Enter your recipient’s name here.."
+                            placeholder="Enter your recipient's name here.."
                             className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
                             {...field}
                           />
@@ -468,7 +494,7 @@ export default function RecipientTable({
                         </h2>
                         <FormControl>
                           <Input
-                            placeholder="Enter your recipient’s email here.."
+                            placeholder="Enter your recipient's email here.."
                             className="rounded-lg border border-white_v2-8 bg-white_v2-8 placeholder:text-white_v2-32 text-white_v2-100 grow p-3"
                             {...field}
                           />

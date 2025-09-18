@@ -100,12 +100,10 @@ export default function EditGroup({ actionType, onClose }: IEditGroup) {
     queryKey: ["address-book-recipients", company?.id, debouncedSearchQuery],
     queryFn: () =>
       getAddressBookRecipients({
-        params: {
-          companyId: company?.id,
-          search: debouncedSearchQuery,
-          limit: 50, // Reduced limit for API efficiency
-          offset: 0,
-        },
+        companyId: company?.id || "",
+        search: debouncedSearchQuery,
+        limit: 50, // Reduced limit for API efficiency
+        offset: 0,
       }),
     enabled: !!company?.id,
     staleTime: 30000, // Cache results for 30 seconds

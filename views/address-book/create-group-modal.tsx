@@ -80,12 +80,10 @@ export default function CreateGroupModal() {
     queryKey: ["address-book-recipients", company?.id, debouncedSearch, page],
     queryFn: async () =>
       getAddressBookRecipients({
-        params: {
-          companyId: company?.id,
-          limit: 20,
-          offset: (page - 1) * 20,
-          search: debouncedSearch,
-        },
+        companyId: company?.id || "",
+        limit: 20,
+        offset: (page - 1) * 20,
+        search: debouncedSearch,
       }),
     enabled: !!company?.id,
     staleTime: 1000 * 60 * 5,

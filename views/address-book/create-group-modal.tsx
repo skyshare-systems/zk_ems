@@ -25,7 +25,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { createAddressBookGroup } from "@/lib/mutation/address-book-group/address-book-group";
-import { cn } from "@/lib/utils";
+import { cn, shortenText } from "@/lib/utils";
 import { geist, inter } from "@/public/fonts";
 import { useModalCreateGroup } from "@/store/modal-create-group";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,6 +38,7 @@ import { useCompanyStore } from "@/store/company";
 import { getAddressBookRecipients } from "@/lib/query/address-book-recipients";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(1, "Group name is required"),
@@ -176,7 +177,7 @@ export default function CreateGroupModal() {
               name="name"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
-                  <FormLabel className="min-w-[96px] text-white_v2-32">
+                  <FormLabel className="min-w-[96px] text-white_v2-32 ty-descriptions">
                     Group Name
                   </FormLabel>
                   <FormControl>
@@ -197,7 +198,7 @@ export default function CreateGroupModal() {
               name="tag"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
-                  <FormLabel className="min-w-[96px] text-white_v2-32">
+                  <FormLabel className="min-w-[96px] text-white_v2-32 ty-descriptions">
                     Group Tag
                   </FormLabel>
                   <FormControl>
@@ -230,9 +231,9 @@ export default function CreateGroupModal() {
               control={form.control}
               name="color"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white_v2-32">
-                    Group Color
+                <FormItem className="flex items-center gap-2">
+                  <FormLabel className="text-white_v2-32 min-w-[96px] ty-descriptions">
+                    Tag Color
                   </FormLabel>
                   <div className="flex flex-col gap-2 items-start">
                     {/* color text input */}
@@ -242,7 +243,7 @@ export default function CreateGroupModal() {
                       {...field}
                       value={field.value}
                       placeholder="#F4C430"
-                      className="rounded-lg border border-white_v2-8 bg-white_v2-8 text-white_v2-100 p-3"
+                      className="rounded-lg border border-white_v2-8 bg-white_v2-8 text-white_v2-100 p-3 hidden"
                     />
 
                     {/* presets */}
@@ -310,80 +311,122 @@ export default function CreateGroupModal() {
               control={form.control}
               name="recipientIds"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white_v2-32">Recipients</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between text-white_v2-100"
-                        >
-                          Add recipients
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0 w-full max-w-sm">
-                        <Command>
-                          <CommandInput
-                            placeholder="Search recipients..."
-                            value={search}
-                            onValueChange={(val) => {
-                              setSearch(val);
-                              setPage(1);
-                            }}
-                          />
-                          <CommandEmpty>No recipient found.</CommandEmpty>
-                          <CommandGroup>
-                            {allRecipients.map((r: any) => (
-                              <CommandItem
-                                key={r.id}
-                                onSelect={() => {
-                                  if (!field.value.includes(r.id)) {
-                                    field.onChange([...field.value, r.id]);
-                                  }
-                                }}
-                              >
-                                <div className="flex items-center gap-3">
-                                  <img
-                                    src={r.photoUrl || "/default-avatar.png"}
-                                    alt={r.name}
-                                    className="w-8 h-8 rounded-full object-cover"
-                                  />
-                                  <div className="flex flex-col">
-                                    <span className="font-medium text-white_v2-100">
-                                      {r.name}
-                                    </span>
-                                    <span className="text-xs text-white_v2-50">
-                                      {r.emailAddress}
-                                    </span>
+                <FormItem className="flex flex-col items-end  gap-2 w-full">
+                  <div className="flex items-center gap-2 w-full">
+                    <FormLabel className="text-white_v2-32 ty-descriptions min-w-[96px]">
+                      Recipients
+                    </FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="w-full text-left text-white_v2-100 bg-white_v2-8 border border-white_v2-8 p-3 rounded-lg text-white_v2-32 ty-descriptions hover:border-white_v2-100 ease-out">
+                            Add a recipient here..
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-full max-w-sm">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search recipients..."
+                              value={search}
+                              onValueChange={(val) => {
+                                setSearch(val);
+                                setPage(1);
+                              }}
+                            />
+                            <CommandEmpty>No recipient found.</CommandEmpty>
+                            <CommandGroup>
+                              {allRecipients.map((r: any) => (
+                                <CommandItem
+                                  key={r.id}
+                                  onSelect={() => {
+                                    if (!field.value.includes(r.id)) {
+                                      field.onChange([...field.value, r.id]);
+                                    }
+                                  }}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    {r?.photoUrl ? (
+                                      <img
+                                        src={r.photoUrl}
+                                        alt={r.name}
+                                        className="w-8 h-8 rounded-full object-cover"
+                                      />
+                                    ) : (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="15"
+                                        viewBox="0 0 16 15"
+                                        fill="none"
+                                        className="min-w-[32px] min-h-[32px]"
+                                      >
+                                        <path
+                                          d="M8 0.496094C11.958 0.496094 15.167 3.70505 15.167 7.66309C15.167 11.6211 11.958 14.8301 8 14.8301C4.04196 14.8301 0.833008 11.6211 0.833008 7.66309C0.833008 3.70505 4.04196 0.496094 8 0.496094ZM8 9.16309C6.56944 9.16309 5.26976 9.72416 4.32031 10.6357C4.22221 10.7299 4.16708 10.8601 4.16699 10.9961C4.16699 11.1322 4.22211 11.2631 4.32031 11.3574C5.26975 12.2689 6.56951 12.8301 8 12.8301C9.43049 12.8301 10.7303 12.2689 11.6797 11.3574C11.7779 11.2631 11.833 11.1322 11.833 10.9961C11.8329 10.8601 11.7778 10.7299 11.6797 10.6357C10.7302 9.72416 9.43056 9.16309 8 9.16309ZM7.99414 3.83008C6.79709 3.83019 5.82537 4.79903 5.8252 5.99609C5.8252 7.19331 6.79698 8.16297 7.99414 8.16309C9.1914 8.16309 10.1631 7.19338 10.1631 5.99609C10.1629 4.79896 9.19129 3.83008 7.99414 3.83008Z"
+                                          fill="#F3BC30"
+                                        />
+                                      </svg>
+                                    )}
+
+                                    <div className="flex flex-col">
+                                      <span className="font-medium text-white_v2-100">
+                                        {r.name}
+                                      </span>
+                                      <span className="text-xs text-white_v2-50">
+                                        {r.emailAddress}
+                                      </span>
+                                    </div>
                                   </div>
-                                </div>
-                              </CommandItem>
-                            ))}
-                            {data?.meta?.hasNextPage && (
-                              <CommandItem
-                                disabled={isFetching}
-                                onSelect={() => setPage((p) => p + 1)}
-                              >
-                                {isFetching ? "Loading..." : "Load more…"}
-                              </CommandItem>
-                            )}
-                          </CommandGroup>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
+                                </CommandItem>
+                              ))}
+                              {data?.meta?.hasNextPage && (
+                                <CommandItem
+                                  disabled={isFetching}
+                                  onSelect={() => setPage((p) => p + 1)}
+                                >
+                                  {isFetching ? "Loading..." : "Load more…"}
+                                </CommandItem>
+                              )}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+
                   {/* Selected badges */}
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="flex flex-wrap justify-end gap-2 mt-2 max-w-[330px]">
                     {field.value.map((id) => {
                       const r = allRecipients.find((rec) => rec.id === id);
                       return (
                         <span
                           key={id}
-                          className="px-2 py-1 rounded-full bg-white_v2-16 text-white_v2-100 text-sm flex items-center gap-1"
+                          className="px-2 py-1 rounded-full bg-white_v2-8 text-white_v2-100 ty-subtext flex items-center gap-1"
                         >
-                          {r?.name || id}
+                          {r?.photoUrl ? (
+                            <Image
+                              src={r?.photoUrl}
+                              alt={r?.name}
+                              height={24}
+                              width={24}
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="15"
+                              viewBox="0 0 16 15"
+                              fill="none"
+                            >
+                              <path
+                                d="M8 0.496094C11.958 0.496094 15.167 3.70505 15.167 7.66309C15.167 11.6211 11.958 14.8301 8 14.8301C4.04196 14.8301 0.833008 11.6211 0.833008 7.66309C0.833008 3.70505 4.04196 0.496094 8 0.496094ZM8 9.16309C6.56944 9.16309 5.26976 9.72416 4.32031 10.6357C4.22221 10.7299 4.16708 10.8601 4.16699 10.9961C4.16699 11.1322 4.22211 11.2631 4.32031 11.3574C5.26975 12.2689 6.56951 12.8301 8 12.8301C9.43049 12.8301 10.7303 12.2689 11.6797 11.3574C11.7779 11.2631 11.833 11.1322 11.833 10.9961C11.8329 10.8601 11.7778 10.7299 11.6797 10.6357C10.7302 9.72416 9.43056 9.16309 8 9.16309ZM7.99414 3.83008C6.79709 3.83019 5.82537 4.79903 5.8252 5.99609C5.8252 7.19331 6.79698 8.16297 7.99414 8.16309C9.1914 8.16309 10.1631 7.19338 10.1631 5.99609C10.1629 4.79896 9.19129 3.83008 7.99414 3.83008Z"
+                                fill="#F3BC30"
+                              />
+                            </svg>
+                          )}
+                          {shortenText(r?.name || id, 17)}
+                          {/* {r?.name || id} */}
                           <button
                             type="button"
                             onClick={() =>
@@ -392,13 +435,12 @@ export default function CreateGroupModal() {
                               )
                             }
                           >
-                            ×
+                            <CancelIcon />
                           </button>
                         </span>
                       );
                     })}
                   </div>
-                  <FormMessage />
                 </FormItem>
               )}
             />

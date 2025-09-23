@@ -18,7 +18,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import AddPhoto from "./add-photo";
 import ImageUploader from "@/components/modals/image-uploader-no-context";
 import Image from "next/image";
 import { getAddressBookGroup } from "@/lib/query/address-book-groups";
@@ -138,7 +137,10 @@ const AddRecipientModal = () => {
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-2 items-center w-full"
+          >
             {/* Name Input */}
             <FormField
               name="name"
@@ -206,9 +208,12 @@ const AddRecipientModal = () => {
                 >
                   Photo
                 </h2>
-                <div className="flex flex-col gap-2 w-full">
-                  <div className="flex items-center gap-2">
-                    <ImageUploader onUploadComplete={handlePhotoUpload} />
+                <div className="flex flex-col gap-2 w-full bg-white rounded-lg ease-out duration-200 hover:opacity-50">
+                  <div className="flex items-center gap-2 grow">
+                    <ImageUploader
+                      onUploadComplete={handlePhotoUpload}
+                      className="text-black grow"
+                    />
                   </div>
                   {form.watch("photoUrl") && (
                     <Image
@@ -233,7 +238,7 @@ const AddRecipientModal = () => {
               >
                 Group
               </h2>
-              <div className="flex gap-2 w-full">
+              <div className="flex gap-2 items-start w-full">
                 <MultiSelect
                   options={filteredOptions.map((group) => ({
                     value: group.id,
@@ -247,7 +252,7 @@ const AddRecipientModal = () => {
                   onClick={handleAddGroups}
                   className={cn(
                     geist.className,
-                    "bg-gold_v2-100 disabled:bg-gold_v2-50 text-black_v2-100 flex items-center gap-2 rounded-lg py-2 px-4 self-stretch ty-descriptions",
+                    "bg-gold_v2-100 disabled:bg-gold_v2-50 text-black_v2-100 flex items-center gap-2 rounded-lg py-3 px-4 ty-descriptions",
                   )}
                 >
                   <h1> + </h1>Add
@@ -260,19 +265,24 @@ const AddRecipientModal = () => {
               {groupBadges.map((groupId) => {
                 const group = groups?.data.find((g) => g.id === groupId);
                 return group ? (
-                  <Badge
+                  <div
                     key={group.id}
-                    className="flex items-center gap-2 bg-transparent px-3 py-1 rounded-full border"
-                    style={{ borderColor: group.color, color: group.color }}
+                    className={cn(
+                      geist.className,
+                      "flex items-center gap-2 rounded-full bg-white_v2-4 ty-subtext py-1 px-2 cursor-pointer hover:bg-white_v2-8 ease-out duration-300",
+                    )}
+                    style={{
+                      color: group.color,
+                    }}
                   >
                     <span>{group.name}</span>
                     <button
                       className="text-white_v2-100"
                       onClick={() => handleRemoveGroup(group.id)}
                     >
-                      x
+                      <CancelIcon />
                     </button>
-                  </Badge>
+                  </div>
                 ) : null;
               })}
             </div>

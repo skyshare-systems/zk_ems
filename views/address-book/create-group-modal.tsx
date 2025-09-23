@@ -44,15 +44,21 @@ const formSchema = z.object({
   name: z.string().min(1, "Group name is required"),
   tag: z.string().min(1, "Group tag is required"),
   color: z.string().min(1, "Group color is required"),
-  recipientIds: z.array(z.string()).min(1, "At least one recipient required"),
+  recipientIds: z.array(z.string()).min(1, ""),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
+type Recipient = {
+  id: string;
+  name: string;
+  emailAddress: string;
+  photoUrl?: string;
+};
+
 export default function CreateGroupModal() {
   const queryClient = useQueryClient();
   const { isOpen, onClose } = useModalCreateGroup((store) => store);
-
   const company = useCompanyStore((s) => s.company);
 
   // color presets
@@ -72,9 +78,9 @@ export default function CreateGroupModal() {
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   useDebounce(() => setDebouncedSearch(search), 500, [search]);
 
-  // pagination
+  // pagination & recipients
   const [page, setPage] = React.useState(1);
-  const [allRecipients, setAllRecipients] = React.useState<any[]>([]);
+  const [allRecipients, setAllRecipients] = React.useState<Recipient[]>([]);
 
   // fetch recipients
   const { data, isFetching } = useQuery({
@@ -90,16 +96,31 @@ export default function CreateGroupModal() {
     staleTime: 1000 * 60 * 5,
   });
 
-  // merge pages into allRecipients
+  // de-dupe merge helper
+  const mergeUnique = React.useCallback(
+    (prev: Recipient[], next: Recipient[]) => {
+      const map = new Map<string, Recipient>();
+      for (const r of prev) map.set(r.id, r);
+      for (const r of next) map.set(r.id, r);
+      return Array.from(map.values());
+    },
+    [],
+  );
+
+  // reset list when search changes
+  React.useEffect(() => {
+    setAllRecipients([]);
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // merge pages into allRecipients (deduped)
   React.useEffect(() => {
     if (data?.data) {
-      if (page === 1) {
-        setAllRecipients(data.data);
-      } else {
-        setAllRecipients((prev) => [...prev, ...data.data]);
-      }
+      setAllRecipients((prev) =>
+        page === 1 ? (data.data as Recipient[]) : mergeUnique(prev, data.data),
+      );
     }
-  }, [data, page]);
+  }, [data, page, mergeUnique]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -136,6 +157,20 @@ export default function CreateGroupModal() {
   function onSubmit(values: FormValues) {
     if (!company?.id) return;
     createGroup({ ...values, companyId: company.id });
+  }
+
+  // selected & available recipients
+  const selectedIds = form.watch("recipientIds");
+  const selectedCount = (selectedIds || []).length;
+
+  const availableRecipients = React.useMemo(
+    () => allRecipients.filter((r) => !(selectedIds || []).includes(r.id)),
+    [allRecipients, selectedIds],
+  );
+
+  function addRecipient(id: string) {
+    const next = Array.from(new Set([...(selectedIds || []), id]));
+    form.setValue("recipientIds", next, { shouldValidate: true });
   }
 
   if (!isOpen) return null;
@@ -236,7 +271,7 @@ export default function CreateGroupModal() {
                     Tag Color
                   </FormLabel>
                   <div className="flex flex-col gap-2 items-start">
-                    {/* color text input */}
+                    {/* color text input (hidden but keeps value) */}
                     <Input
                       type="text"
                       readOnly
@@ -311,7 +346,7 @@ export default function CreateGroupModal() {
               control={form.control}
               name="recipientIds"
               render={({ field }) => (
-                <FormItem className="flex flex-col items-end  gap-2 w-full">
+                <FormItem className="flex flex-col items-end gap-2 w-full">
                   <div className="flex items-center gap-2 w-full">
                     <FormLabel className="text-white_v2-32 ty-descriptions min-w-[96px]">
                       Recipients
@@ -328,21 +363,18 @@ export default function CreateGroupModal() {
                             <CommandInput
                               placeholder="Search recipients..."
                               value={search}
-                              onValueChange={(val) => {
-                                setSearch(val);
-                                setPage(1);
-                              }}
+                              onValueChange={(val) => setSearch(val)}
                             />
-                            <CommandEmpty>No recipient found.</CommandEmpty>
+                            <CommandEmpty>
+                              {isFetching
+                                ? "Searching..."
+                                : "No recipient found or all are already selected."}
+                            </CommandEmpty>
                             <CommandGroup>
-                              {allRecipients.map((r: any) => (
+                              {availableRecipients.map((r) => (
                                 <CommandItem
                                   key={r.id}
-                                  onSelect={() => {
-                                    if (!field.value.includes(r.id)) {
-                                      field.onChange([...field.value, r.id]);
-                                    }
-                                  }}
+                                  onSelect={() => addRecipient(r.id)}
                                 >
                                   <div className="flex items-center gap-3">
                                     {r?.photoUrl ? (
@@ -366,7 +398,6 @@ export default function CreateGroupModal() {
                                         />
                                       </svg>
                                     )}
-
                                     <div className="flex flex-col">
                                       <span className="font-medium text-white_v2-100">
                                         {r.name}
@@ -396,7 +427,7 @@ export default function CreateGroupModal() {
 
                   {/* Selected badges */}
                   <div className="flex flex-wrap justify-end gap-2 mt-2 max-w-[330px]">
-                    {field.value.map((id) => {
+                    {(selectedIds || []).map((id: string) => {
                       const r = allRecipients.find((rec) => rec.id === id);
                       return (
                         <span
@@ -406,7 +437,7 @@ export default function CreateGroupModal() {
                           {r?.photoUrl ? (
                             <Image
                               src={r?.photoUrl}
-                              alt={r?.name}
+                              alt={r?.name || id}
                               height={24}
                               width={24}
                               className="rounded-full"
@@ -426,12 +457,15 @@ export default function CreateGroupModal() {
                             </svg>
                           )}
                           {shortenText(r?.name || id, 17)}
-                          {/* {r?.name || id} */}
                           <button
                             type="button"
                             onClick={() =>
-                              field.onChange(
-                                field.value.filter((x) => x !== id),
+                              form.setValue(
+                                "recipientIds",
+                                (selectedIds || []).filter(
+                                  (x: string) => x !== id,
+                                ),
+                                { shouldValidate: true },
                               )
                             }
                           >
@@ -440,6 +474,49 @@ export default function CreateGroupModal() {
                         </span>
                       );
                     })}
+
+                    {/* Clear all (only when multiple selections) */}
+                    {selectedCount > 1 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          form.setValue("recipientIds", [], {
+                            shouldValidate: true,
+                          })
+                        }
+                        aria-label="Clear all recipients"
+                        title="Clear all"
+                        className="flex items-center gap-2 px-2 py-1 border border-[#da0000] rounded-full text-[#da0000] ease-out duration-200 ty-subtext hover:opacity-50"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="17"
+                          viewBox="0 0 16 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M7.33325 9.99642H5.99992C3.42259 9.99642 1.33325 12.0858 1.33325 14.6631H11.9999C11.9999 12.0858 9.91058 9.99642 7.33325 9.99642Z"
+                            stroke="#DA0000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M9.33325 5.32975C9.33325 6.80251 8.13934 7.99642 6.66659 7.99642C5.19383 7.99642 3.99992 6.80251 3.99992 5.32975C3.99992 3.85699 5.19383 2.66309 6.66659 2.66309C8.13934 2.66309 9.33325 3.85699 9.33325 5.32975Z"
+                            stroke="#DA0000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M14.6666 5.99634L12.9999 7.663M12.9999 7.663L11.3333 9.32967M12.9999 7.663L14.6666 9.32967M12.9999 7.663L11.3333 5.99634"
+                            stroke="#DA0000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                        Clear all
+                      </button>
+                    )}
                   </div>
                 </FormItem>
               )}

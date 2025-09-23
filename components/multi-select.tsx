@@ -26,6 +26,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import CancelIcon from "./icons/cancel";
 
 /**
  * Animation types and configurations
@@ -820,10 +821,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
               }}
             >
               {selectedValues.length > 0 ? (
-                <div className="flex justify-between items-center w-full">
+                <div className="flex justify-between items-start w-full">
                   <div
                     className={cn(
-                      "flex items-center gap-1",
+                      "flex items-start gap-1",
                       singleLine
                         ? "overflow-x-auto multiselect-singleline-scroll"
                         : "flex-wrap",
@@ -857,19 +858,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           }),
                         };
                         return (
-                          <Badge
+                          <div
                             key={value}
                             className={cn(
-                              getBadgeAnimationClass(),
-                              multiSelectVariants({ variant }),
-                              customStyle?.gradient &&
-                                "text-white border-transparent",
-                              responsiveSettings.compactMode &&
-                                "text-xs px-1.5 py-0.5",
-                              screenSize === "mobile" &&
-                                "max-w-[120px] truncate",
-                              singleLine && "flex-shrink-0 whitespace-nowrap",
-                              "[&>svg]:pointer-events-auto",
+                              "flex items-center gap-2 text-white ty-subtext px-2",
                             )}
                             style={{
                               ...badgeStyle,
@@ -917,17 +909,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                                 }
                               }}
                               aria-label={`Remove ${option.label} from selection`}
-                              className="ml-2 h-4 w-4 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50"
+                              className="text-white"
                             >
-                              <XCircle
-                                className={cn(
-                                  "h-3 w-3",
-                                  responsiveSettings.compactMode &&
-                                    "h-2.5 w-2.5",
-                                )}
-                              />
+                              <CancelIcon />
                             </div>
-                          </Badge>
+                          </div>
                         );
                       })
                       .filter(Boolean)}
@@ -981,9 +967,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         }
                       }}
                       aria-label={`Clear all ${selectedValues.length} selected options`}
-                      className="flex items-center justify-center h-4 w-4 mx-2 cursor-pointer text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded-sm"
+                      className="flex items-center justify-center mx-2 cursor-pointer text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded-sm"
                     >
-                      <XIcon className="h-4 w-4" />
+                      clear all
                     </div>
                     <Separator
                       orientation="vertical"

@@ -19,13 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CancelIcon from "@/components/icons/cancel";
 import DoneIcon from "@/components/icons/done";
-import { cn } from "@/lib/utils";
+import { cn, shortenText } from "@/lib/utils";
 import { geist, inter } from "@/public/fonts";
 import { updateAddressBookGroup } from "@/lib/mutation/address-book-group/address-book-group";
 import { getAddressBookRecipients } from "@/lib/query/address-book-recipients";
 import { useAddressBookGroupStore } from "@/store/address-book-groups";
 import { useCompanyStore } from "@/store/company";
 import { toast } from "sonner";
+import Image from "next/image";
 
 // Popover + Command
 import {
@@ -314,20 +315,17 @@ export default function EditGroup({ actionType, onClose }: IEditGroup) {
               control={form.control}
               name="recipientIds"
               render={({ field }) => (
-                <FormItem className="flex flex-col w-full gap-2">
-                  <FormLabel>Recipients</FormLabel>
-                  <FormControl>
-                    <div>
+                <FormItem className="flex flex-col items-end gap-2 w-full">
+                  <div className="flex items-center gap-2 w-full">
+                    <FormLabel className="text-white_v2-32 ty-descriptions min-w-[96px]">
+                      Recipients
+                    </FormLabel>
+                    <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="justify-between w-full text-white_v2-100"
-                            disabled={isPending}
-                          >
+                          <button className="w-full text-left text-white_v2-100 bg-white_v2-8 border border-white_v2-8 p-3 rounded-lg text-white_v2-32 ty-descriptions hover:border-white_v2-100 ease-out">
                             Search and add recipients
-                          </Button>
+                          </button>
                         </PopoverTrigger>
                         <PopoverContent className="w-full max-w-sm p-0">
                           <Command shouldFilter={false}>
@@ -402,47 +400,60 @@ export default function EditGroup({ actionType, onClose }: IEditGroup) {
                           </Command>
                         </PopoverContent>
                       </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
 
-                      {/* Selected Recipients Badges */}
-                      {(field.value || []).length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {(field.value || []).map((id) => {
-                            const recipient = selectedRecipientsMap.get(id);
-                            return (
-                              <span
-                                key={id}
-                                className="flex items-center gap-2 px-3 py-1 text-sm rounded-full bg-white_v2-16 text-white_v2-100"
+                  {/* Selected Recipients Badges */}
+                  {(field.value || []).length > 0 && (
+                    <div className="flex flex-wrap justify-end gap-2 mt-2 max-w-[330px]">
+                      {(field.value || []).map((id) => {
+                        const recipient = selectedRecipientsMap.get(id);
+                        return (
+                          <span
+                            key={id}
+                            className="px-2 py-1 rounded-full bg-white_v2-8 text-white_v2-100 ty-subtext flex items-center gap-1"
+                          >
+                            {recipient?.photoUrl ? (
+                              <Image
+                                src={recipient?.photoUrl}
+                                alt={recipient?.name || id}
+                                height={24}
+                                width={24}
+                                className="rounded-full"
+                              />
+                            ) : (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="15"
+                                viewBox="0 0 16 15"
+                                fill="none"
                               >
-                                {recipient?.photoUrl && (
-                                  <img
-                                    src={recipient.photoUrl}
-                                    alt={recipient.name}
-                                    className="object-cover w-4 h-4 rounded-full"
-                                  />
-                                )}
-                                <span>{recipient?.name || id}</span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    field.onChange(
-                                      (field.value || []).filter(
-                                        (x) => x !== id,
-                                      ),
-                                    )
-                                  }
-                                  className="flex items-center justify-center w-4 h-4 ml-1 text-xs rounded-full hover:bg-white_v2-8"
-                                  title="Remove recipient"
-                                >
-                                  ×
-                                </button>
-                              </span>
-                            );
-                          })}
-                        </div>
-                      )}
+                                <path
+                                  d="M8 0.496094C11.958 0.496094 15.167 3.70505 15.167 7.66309C15.167 11.6211 11.958 14.8301 8 14.8301C4.04196 14.8301 0.833008 11.6211 0.833008 7.66309C0.833008 3.70505 4.04196 0.496094 8 0.496094ZM8 9.16309C6.56944 9.16309 5.26976 9.72416 4.32031 10.6357C4.22221 10.7299 4.16708 10.8601 4.16699 10.9961C4.16699 11.1322 4.22211 11.2631 4.32031 11.3574C5.26975 12.2689 6.56951 12.8301 8 12.8301C9.43049 12.8301 10.7303 12.2689 11.6797 11.3574C11.7779 11.2631 11.833 11.1322 11.833 10.9961C11.8329 10.8601 11.7778 10.7299 11.6797 10.6357C10.7302 9.72416 9.43056 9.16309 8 9.16309ZM7.99414 3.83008C6.79709 3.83019 5.82537 4.79903 5.8252 5.99609C5.8252 7.19331 6.79698 8.16297 7.99414 8.16309C9.1914 8.16309 10.1631 7.19338 10.1631 5.99609C10.1629 4.79896 9.19129 3.83008 7.99414 3.83008Z"
+                                  fill="#F3BC30"
+                                />
+                              </svg>
+                            )}
+                            {shortenText(recipient?.name || id, 17)}
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                field.onChange(
+                                  (field.value || []).filter((x) => x !== id),
+                                )
+                              }
+                              title="Remove recipient"
+                            >
+                              <CancelIcon />
+                            </button>
+                          </span>
+                        );
+                      })}
                     </div>
-                  </FormControl>
-                  <FormMessage />
+                  )}
                 </FormItem>
               )}
             />
@@ -454,13 +465,17 @@ export default function EditGroup({ actionType, onClose }: IEditGroup) {
                 variant="ghost"
                 onClick={onClose}
                 disabled={isPending}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 "
               >
                 <CancelIcon /> Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-gold_v2-100"
+              >
                 {isPending ? (
-                  <div className="w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin" />
+                  <div className="w-4 h-4 border-2 border-gold_v2-100 rounded-full border-t-transparent animate-spin" />
                 ) : (
                   <DoneIcon />
                 )}

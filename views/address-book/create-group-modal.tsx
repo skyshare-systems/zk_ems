@@ -365,7 +365,7 @@ export default function CreateGroupModal() {
                               value={search}
                               onValueChange={(val) => setSearch(val)}
                             />
-                            <CommandEmpty>
+                            <CommandEmpty className="ty-descriptions p-4">
                               {isFetching
                                 ? "Searching..."
                                 : "No recipient found or all are already selected."}
@@ -527,7 +527,11 @@ export default function CreateGroupModal() {
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-gold_v2-100"
+              >
                 <DoneIcon /> Done
               </Button>
             </div>

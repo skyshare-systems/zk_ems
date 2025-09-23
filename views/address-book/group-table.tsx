@@ -141,7 +141,7 @@ export default function GroupTable({ search, page, limit }: GroupTableProps) {
                     {visibleRecipients.map((r, idx) => (
                       <div
                         key={`${group.tag}-${r.name}-${idx}`}
-                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-muted"
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-white_v2-4"
                       >
                         <Avatar className="w-5 h-5">
                           <AvatarImage src={r.photoUrl || ""} alt={r.name} />
@@ -153,20 +153,18 @@ export default function GroupTable({ search, page, limit }: GroupTableProps) {
                               .slice(0, 2)}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-xs">{r.name}</span>
+                        <span className="ty-descriptions">{r.name}</span>
                       </div>
                     ))}
                     {group.recipients.length > 3 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-xs"
+                      <button
+                        className="h-6 px-2 ty-descriptions py-1 bg-white_v2-4 rounded-full"
                         onClick={() => toggleExpand(group.tag)}
                       >
                         {isExpanded
                           ? "View less"
                           : `+${group.recipients.length - 3} more`}
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </TableCell>

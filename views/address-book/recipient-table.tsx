@@ -333,13 +333,13 @@ export default function RecipientTable({
                 </TableCell>
                 <TableCell>{user.emailAddress}</TableCell>
                 <TableCell className="space-x-1">
-                  {user.groups?.map((group) => (
+                  {user?.groups?.map((group) => (
                     <Badge
                       key={group.id}
                       style={{ color: group.color }}
                       className="text-white bg-transparent"
                     >
-                      @{group.name}
+                      {group?.name}
                     </Badge>
                   ))}
                 </TableCell>

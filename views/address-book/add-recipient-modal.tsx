@@ -242,7 +242,8 @@ const AddRecipientModal = () => {
                 <MultiSelect
                   options={filteredOptions.map((group) => ({
                     value: group.id,
-                    label: group.name,
+                    label: group.tag,
+                    style: { color: group?.color },
                   }))}
                   onValueChange={handleGroupChange}
                   value={selectedValues}
@@ -261,30 +262,32 @@ const AddRecipientModal = () => {
             </div>
 
             {/* Displaying selected groups as badges */}
-            <div className="flex flex-wrap gap-2 mt-2">
-              {groupBadges.map((groupId) => {
-                const group = groups?.data.find((g) => g.id === groupId);
-                return group ? (
-                  <div
-                    key={group.id}
-                    className={cn(
-                      geist.className,
-                      "flex items-center gap-2 rounded-full bg-white_v2-4 ty-subtext py-1 px-2 cursor-pointer hover:bg-white_v2-8 ease-out duration-300",
-                    )}
-                    style={{
-                      color: group.color,
-                    }}
-                  >
-                    <span>{group.name}</span>
-                    <button
-                      className="text-white_v2-100"
-                      onClick={() => handleRemoveGroup(group.id)}
+            <div className="flex justify-end items-center w-full">
+              <div className="flex flex-wrap justify-start gap-2 mt-2 w-full max-w-[330px]">
+                {groupBadges.map((groupId) => {
+                  const group = groups?.data.find((g) => g.id === groupId);
+                  return group ? (
+                    <div
+                      key={group.id}
+                      className={cn(
+                        geist.className,
+                        "flex items-center gap-2 rounded-full bg-white_v2-4 ty-subtext py-1 px-2 cursor-pointer hover:bg-white_v2-8 ease-out duration-300",
+                      )}
+                      style={{
+                        color: group.color,
+                      }}
                     >
-                      <CancelIcon />
-                    </button>
-                  </div>
-                ) : null;
-              })}
+                      <span>{group.tag}</span>
+                      <button
+                        className="text-white_v2-100"
+                        onClick={() => handleRemoveGroup(group.id)}
+                      >
+                        <CancelIcon />
+                      </button>
+                    </div>
+                  ) : null;
+                })}
+              </div>
             </div>
 
             {/* Submit Button */}

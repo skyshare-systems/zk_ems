@@ -556,6 +556,7 @@ export default function RecipientTable({
                                 .map((g: any) => ({
                                   value: g.id,
                                   label: g.tag,
+                                  style: { color: g?.color },
                                 }))}
                               onValueChange={handleGroupChange}
                               value={selectedValues}

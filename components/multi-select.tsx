@@ -93,7 +93,8 @@ interface MultiSelectOption {
     iconColor?: string;
     /** Gradient background for badge */
     gradient?: string;
-    color: string;
+    /** Text color for option labels and selected chip text */
+    color?: string; // <- made optional & used to color labels
   };
 }
 
@@ -116,167 +117,46 @@ interface MultiSelectProps
       "animationConfig"
     >,
     VariantProps<typeof multiSelectVariants> {
-  /**
-   * An array of option objects or groups to be displayed in the multi-select component.
-   */
   options: MultiSelectOption[] | MultiSelectGroup[];
-  /**
-   * Callback function triggered when the selected values change.
-   * Receives an array of the new selected values.
-   */
   onValueChange: (value: string[]) => void;
-
-  /** The default selected values when the component mounts. */
   defaultValue?: string[];
-
-  /**
-   * Placeholder text to be displayed when no values are selected.
-   * Optional, defaults to "Select options".
-   */
   placeholder?: string;
-
-  /**
-   * Animation duration in seconds for the visual effects (e.g., bouncing badges).
-   * Optional, defaults to 0 (no animation).
-   */
   animation?: number;
-
-  /**
-   * Advanced animation configuration for different component parts.
-   * Optional, allows fine-tuning of various animation effects.
-   */
   animationConfig?: AnimationConfig;
-
-  /**
-   * Maximum number of items to display. Extra selected items will be summarized.
-   * Optional, defaults to 3.
-   */
   maxCount?: number;
-
-  /**
-   * The modality of the popover. When set to true, interaction with outside elements
-   * will be disabled and only popover content will be visible to screen readers.
-   * Optional, defaults to false.
-   */
   modalPopover?: boolean;
-
-  /**
-   * If true, renders the multi-select component as a child of another component.
-   * Optional, defaults to false.
-   */
   asChild?: boolean;
-
-  /**
-   * Additional class names to apply custom styles to the multi-select component.
-   * Optional, can be used to add custom styles.
-   */
   className?: string;
-
-  /**
-   * If true, disables the select all functionality.
-   * Optional, defaults to false.
-   */
   hideSelectAll?: boolean;
-
-  /**
-   * If true, shows search functionality in the popover.
-   * If false, hides the search input completely.
-   * Optional, defaults to true.
-   */
   searchable?: boolean;
-
-  /**
-   * Custom empty state message when no options match search.
-   * Optional, defaults to "No results found."
-   */
   emptyIndicator?: React.ReactNode;
-
-  /**
-   * If true, allows the component to grow and shrink with its content.
-   * If false, uses fixed width behavior.
-   * Optional, defaults to false.
-   */
   autoSize?: boolean;
-
-  /**
-   * If true, shows badges in a single line with horizontal scroll.
-   * If false, badges wrap to multiple lines.
-   * Optional, defaults to false.
-   */
   singleLine?: boolean;
-
-  /**
-   * Custom CSS class for the popover content.
-   * Optional, can be used to customize popover appearance.
-   */
   popoverClassName?: string;
-
-  /**
-   * If true, disables the component completely.
-   * Optional, defaults to false.
-   */
   disabled?: boolean;
-
-  /**
-   * Responsive configuration for different screen sizes.
-   * Allows customizing maxCount and other properties based on viewport.
-   * Can be boolean true for default responsive behavior or an object for custom configuration.
-   */
   responsive?:
     | boolean
     | {
-        /** Configuration for mobile devices (< 640px) */
         mobile?: {
           maxCount?: number;
           hideIcons?: boolean;
           compactMode?: boolean;
         };
-        /** Configuration for tablet devices (640px - 1024px) */
         tablet?: {
           maxCount?: number;
           hideIcons?: boolean;
           compactMode?: boolean;
         };
-        /** Configuration for desktop devices (> 1024px) */
         desktop?: {
           maxCount?: number;
           hideIcons?: boolean;
           compactMode?: boolean;
         };
       };
-
-  /**
-   * Minimum width for the component.
-   * Optional, defaults to auto-sizing based on content.
-   * When set, component will not shrink below this width.
-   */
   minWidth?: string;
-
-  /**
-   * Maximum width for the component.
-   * Optional, defaults to 100% of container.
-   * Component will not exceed container boundaries.
-   */
   maxWidth?: string;
-
-  /**
-   * If true, automatically removes duplicate options based on their value.
-   * Optional, defaults to false (shows warning in dev mode instead).
-   */
   deduplicateOptions?: boolean;
-
-  /**
-   * If true, the component will reset its internal state when defaultValue changes.
-   * Useful for React Hook Form integration and form reset functionality.
-   * Optional, defaults to true.
-   */
   resetOnDefaultValueChange?: boolean;
-
-  /**
-   * If true, automatically closes the popover after selecting an option.
-   * Useful for single-selection-like behavior or mobile UX.
-   * Optional, defaults to false.
-   */
   closeOnSelect?: boolean;
 }
 
@@ -284,25 +164,10 @@ interface MultiSelectProps
  * Imperative methods exposed through ref
  */
 export interface MultiSelectRef {
-  /**
-   * Programmatically reset the component to its default value
-   */
   reset: () => void;
-  /**
-   * Get current selected values
-   */
   getSelectedValues: () => string[];
-  /**
-   * Set selected values programmatically
-   */
   setSelectedValues: (values: string[]) => void;
-  /**
-   * Clear all selected values
-   */
   clear: () => void;
-  /**
-   * Focus the component
-   */
   focus: () => void;
 }
 
@@ -456,30 +321,26 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 
     const getResponsiveSettings = () => {
       if (!responsive) {
-        return {
-          maxCount: maxCount,
-          hideIcons: false,
-          compactMode: false,
-        };
+        return { maxCount: maxCount, hideIcons: false, compactMode: false };
       }
       if (responsive === true) {
-        const defaultResponsive = {
+        const def = {
           mobile: { maxCount: 2, hideIcons: false, compactMode: true },
           tablet: { maxCount: 4, hideIcons: false, compactMode: false },
           desktop: { maxCount: 6, hideIcons: false, compactMode: false },
-        };
-        const currentSettings = defaultResponsive[screenSize];
+        } as const;
+        const current = def[screenSize];
         return {
-          maxCount: currentSettings?.maxCount ?? maxCount,
-          hideIcons: currentSettings?.hideIcons ?? false,
-          compactMode: currentSettings?.compactMode ?? false,
+          maxCount: current?.maxCount ?? maxCount,
+          hideIcons: current?.hideIcons ?? false,
+          compactMode: current?.compactMode ?? false,
         };
       }
-      const currentSettings = responsive[screenSize];
+      const current = responsive[screenSize];
       return {
-        maxCount: currentSettings?.maxCount ?? maxCount,
-        hideIcons: currentSettings?.hideIcons ?? false,
-        compactMode: currentSettings?.compactMode ?? false,
+        maxCount: current?.maxCount ?? maxCount,
+        hideIcons: current?.hideIcons ?? false,
+        compactMode: current?.compactMode ?? false,
       };
     };
 
@@ -572,6 +433,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
     const getOptionByValue = React.useCallback(
       (value: string): MultiSelectOption | undefined => {
         const option = getAllOptions().find((option) => option.value === value);
+        if (option?.style?.color) {
+          // ensure trimmed
+          option.style.color = option.style.color.trim();
+        }
         if (!option && process.env.NODE_ENV === "development") {
           console.warn(
             `MultiSelect: Option with value "${value}" not found in options list`,
@@ -762,6 +627,22 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
         prevSearchValue.current = searchValue;
       }
     }, [selectedValues, isPopoverOpen, searchValue, announce, getAllOptions]);
+
+    /** ---------- Color helpers (NEW) ---------- */
+    const getOptionTextStyle = (
+      opt?: MultiSelectOption,
+    ): React.CSSProperties =>
+      opt?.style?.color ? { color: opt.style.color } : {};
+
+    const mergeBadgeStyle = (
+      base: React.CSSProperties,
+      opt?: MultiSelectOption,
+    ): React.CSSProperties => {
+      const s = opt?.style;
+      if (s?.gradient) return base; // you already set white text when gradient exists
+      if (s?.color) return { ...base, color: s.color };
+      return base;
+    };
 
     return (
       <>
@@ -1058,12 +939,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     >
                       <div
                         className={cn(
-                          "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                          "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
                           selectedValues.length ===
                             getAllOptions().filter((opt) => !opt.disabled)
                               .length
                             ? "bg-primary text-primary-foreground"
-                            : "opacity-50 [&_svg]:invisible",
+                            : "opacity-50 [&_svg]:invisible border-primary",
                         )}
                         aria-hidden="true"
                       >
@@ -1105,22 +986,37 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           >
                             <div
                               className={cn(
-                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
                                 isSelected
-                                  ? "bg-primary text-primary-foreground"
-                                  : "opacity-50 [&_svg]:invisible",
+                                  ? "text-primary-foreground"
+                                  : "opacity-50 [&_svg]:invisible border-primary",
                               )}
                               aria-hidden="true"
+                              style={
+                                isSelected
+                                  ? {
+                                      backgroundColor:
+                                        option.style?.color ?? undefined,
+                                      borderColor:
+                                        option.style?.color ?? undefined,
+                                    }
+                                  : undefined
+                              }
                             >
                               <CheckIcon className="h-4 w-4" />
                             </div>
                             {option.icon && (
                               <option.icon
-                                className="mr-2 h-4 w-4 text-muted-foreground"
+                                className="mr-2 h-4 w-4"
                                 aria-hidden="true"
                               />
                             )}
-                            <span>{option.label}</span>
+                            <span
+                              className={cn(isSelected && "font-medium")}
+                              style={getOptionTextStyle(option)}
+                            >
+                              {option.label}
+                            </span>
                           </CommandItem>
                         );
                       })}
@@ -1128,7 +1024,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   ))
                 ) : (
                   <CommandGroup>
-                    {filteredOptions.map((option) => {
+                    {(filteredOptions as MultiSelectOption[]).map((option) => {
                       const isSelected = selectedValues.includes(option.value);
                       return (
                         <CommandItem
@@ -1148,22 +1044,37 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         >
                           <div
                             className={cn(
-                              "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                              "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
                               isSelected
-                                ? "bg-primary text-primary-foreground"
-                                : "opacity-50 [&_svg]:invisible",
+                                ? "text-primary-foreground"
+                                : "opacity-50 [&_svg]:invisible border-primary",
                             )}
                             aria-hidden="true"
+                            style={
+                              isSelected
+                                ? {
+                                    backgroundColor:
+                                      option.style?.color ?? undefined,
+                                    borderColor:
+                                      option.style?.color ?? undefined,
+                                  }
+                                : undefined
+                            }
                           >
                             <CheckIcon className="h-4 w-4" />
                           </div>
                           {option.icon && (
                             <option.icon
-                              className="mr-2 h-4 w-4 text-muted-foreground"
+                              className="mr-2 h-4 w-4"
                               aria-hidden="true"
                             />
                           )}
-                          <span>{option.label}</span>
+                          <span
+                            className={cn(isSelected && "font-medium")}
+                            style={getOptionTextStyle(option)}
+                          >
+                            {option.label}
+                          </span>
                         </CommandItem>
                       );
                     })}

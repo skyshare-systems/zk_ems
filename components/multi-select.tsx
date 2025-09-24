@@ -93,6 +93,7 @@ interface MultiSelectOption {
     iconColor?: string;
     /** Gradient background for badge */
     gradient?: string;
+    color: string;
   };
 }
 
@@ -821,10 +822,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
               }}
             >
               {selectedValues.length > 0 ? (
-                <div className="flex justify-between items-start w-full">
+                <div className="flex justify-between items-center w-full">
                   <div
                     className={cn(
-                      "flex items-start gap-1",
+                      "flex flex-wrap items-center gap-1",
                       singleLine
                         ? "overflow-x-auto multiselect-singleline-scroll"
                         : "flex-wrap",

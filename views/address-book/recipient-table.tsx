@@ -332,15 +332,15 @@ export default function RecipientTable({
                   <span>{user.name}</span>
                 </TableCell>
                 <TableCell>{user.emailAddress}</TableCell>
-                <TableCell className="space-x-1">
+                <TableCell className="flex flex-wrap items-center gap-1">
                   {user?.groups?.map((group) => (
-                    <Badge
+                    <div
                       key={group.id}
                       style={{ color: group.color }}
-                      className="text-white bg-transparent"
+                      className="rounded border border-gray_v2-16 bg-gray_v2-4 px-2 py-1"
                     >
-                      {group?.name}
-                    </Badge>
+                      @{group?.tag}
+                    </div>
                   ))}
                 </TableCell>
                 <TableCell>
@@ -517,7 +517,7 @@ export default function RecipientTable({
                       Photo
                     </h2>
                     <div className="flex flex-col gap-2 w-full">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 bg-white_v2-100 rounded-lg justify-center min-h-[46px]">
                         <ImageUploader onUploadComplete={handlePhotoUpload} />
                       </div>
                       {form.watch("photoUrl") && (
@@ -539,71 +539,76 @@ export default function RecipientTable({
                   control={form.control}
                   render={() => (
                     <FormItem className="w-full">
-                      <div className="flex items-center gap-2 w-full">
-                        <h2
-                          className={cn(
-                            geist.className,
-                            "min-w-[96px] ty-descriptions text-white_v2-32",
-                          )}
-                        >
-                          Group
-                        </h2>
-
-                        <div className="flex gap-2 w-full">
-                          <MultiSelect
-                            options={allGroups
-                              .filter((g: any) => !groupBadges.includes(g.id))
-                              .map((g: any) => ({
-                                value: g.id,
-                                label: g.name,
-                              }))}
-                            onValueChange={handleGroupChange}
-                            value={selectedValues}
-                          />
-                          <button
-                            disabled={
-                              selectedValues.length === 0 ||
-                              updateMutation.isPending
-                            }
-                            onClick={handleAddGroups}
+                      <div className="flex flex-col gap-2 items-end w-full">
+                        <div className="flex items-center gap-2 w-full">
+                          <h2
                             className={cn(
                               geist.className,
-                              "bg-gold_v2-100 disabled:bg-gold_v2-50 text-black_v2-100 flex items-center gap-2 rounded-lg py-2 px-4 self-stretch ty-descriptions",
+                              "min-w-[96px] ty-descriptions text-white_v2-32",
                             )}
                           >
-                            <h1> + </h1>Add
-                          </button>
+                            Group
+                          </h2>
+                          <div className="flex gap-2 w-full">
+                            <MultiSelect
+                              options={allGroups
+                                .filter((g: any) => !groupBadges.includes(g.id))
+                                .map((g: any) => ({
+                                  value: g.id,
+                                  label: g.tag,
+                                }))}
+                              onValueChange={handleGroupChange}
+                              value={selectedValues}
+                            />
+                            <button
+                              disabled={
+                                selectedValues.length === 0 ||
+                                updateMutation.isPending
+                              }
+                              onClick={handleAddGroups}
+                              className={cn(
+                                geist.className,
+                                "bg-gold_v2-100 disabled:bg-gold_v2-50 text-black_v2-100 flex items-center gap-2 rounded-lg py-2 px-4 self-stretch ty-descriptions",
+                              )}
+                            >
+                              <h1> + </h1>Add
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Selected group badges */}
+                        <div className="flex flex-wrap gap-1 mt-2 max-w-[345px] w-full">
+                          {groupBadges.map((groupId) => {
+                            const group = allGroups.find(
+                              (g: any) => g.id === groupId,
+                            );
+                            if (!group) return null;
+                            return (
+                              <div
+                                key={group.id}
+                                className={cn(
+                                  geist.className,
+                                  "bg-white_v2-4 py-1 px-2 rounded-full ty-descriptions flex items-center gap-1",
+                                )}
+                                style={{
+                                  borderColor: group.color,
+                                  color: group.color,
+                                }}
+                              >
+                                <span>@{group.tag}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveGroup(group.id)}
+                                  className="text-white_v2-100"
+                                >
+                                  <CancelIcon />
+                                </button>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
 
-                      {/* Selected group badges */}
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {groupBadges.map((groupId) => {
-                          const group = allGroups.find(
-                            (g: any) => g.id === groupId,
-                          );
-                          if (!group) return null;
-                          return (
-                            <Badge
-                              key={group.id}
-                              className="flex items-center gap-2 bg-transparent px-3 py-1 rounded-full border"
-                              style={{
-                                borderColor: group.color,
-                                color: group.color,
-                              }}
-                            >
-                              <span>@{group.name}</span>
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveGroup(group.id)}
-                                className="text-white_v2-100"
-                              >
-                                x
-                              </button>
-                            </Badge>
-                          );
-                        })}
-                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

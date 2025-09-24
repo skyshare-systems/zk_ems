@@ -208,7 +208,7 @@ const AddRecipientModal = () => {
                 >
                   Photo
                 </h2>
-                <div className="flex flex-col gap-2 w-full bg-white rounded-lg ease-out duration-200 hover:opacity-50">
+                <div className="flex flex-col gap-2 w-full bg-white rounded-lg ease-out duration-200 hover:opacity-50 min-h-[46px]">
                   <div className="flex items-center gap-2 grow">
                     <ImageUploader
                       onUploadComplete={handlePhotoUpload}

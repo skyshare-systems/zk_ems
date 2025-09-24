@@ -14,7 +14,7 @@ import { useDebounce } from "react-use";
 import { useQuery } from "@tanstack/react-query";
 import { getAddressBookGroup } from "@/lib/query/address-book-groups";
 import { useCompanyStore } from "@/store/company";
-import { MultiSelect } from "@/components/multi-select";
+import { MultiSelect } from "@/components/multi-select-v2";
 
 const AddressBookSection = () => {
   const tabs = ["recipients", "groups"];
@@ -107,11 +107,13 @@ const AddressBookSection = () => {
                 <MultiSelect
                   options={allGroups.map((group: any) => ({
                     value: group.id,
-                    label: `@${group.name}`,
+                    label: `@${group?.tag}`,
+                    style: { color: group?.color },
                   }))}
                   value={selectedGroupId}
                   onValueChange={handleGroupFilterChange}
                   placeholder="Filter by groups..."
+                  className="self-stretch"
                 />
               </div>
             )}

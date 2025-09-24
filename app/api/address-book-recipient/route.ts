@@ -50,12 +50,7 @@ export async function GET(request: NextRequest) {
           name: true,
           emailAddress: true,
           photoUrl: true,
-          groups: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+          groups: true,
         },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,

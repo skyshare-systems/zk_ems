@@ -55,6 +55,8 @@ const CreateNewEmail = () => {
     setTitle(e.target.value);
   }
 
+  if(!company) return null;
+
   return (
     <div className="flex flex-col lg:flex-row">
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
@@ -138,7 +140,7 @@ const CreateNewEmail = () => {
           </p>
 
           {selectedTemplate ? (
-            <TemplateRenderer />
+            <TemplateRenderer companyId={company.id}/>
           ) : (
             <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
               <div className="flex flex-col items-center gap-2">

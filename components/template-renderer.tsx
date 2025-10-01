@@ -3,7 +3,7 @@
 import { generateTemplate } from "@/lib/mutation/template/generateTemplate";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useModalStore } from "@/store/modal";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowDown, ArrowUpRight, RotateCcw, Upload } from "lucide-react";
 import React, {
   ChangeEvent,
@@ -38,10 +38,18 @@ interface ValidationResult {
 
 interface TemplateRendererProps {
   maxRecipientsAllowed?: number;
+  companyId: string; // Required for fetching groups
+}
+
+interface Group {
+  id: string;
+  name: string;
+  tag: string;
 }
 
 const TemplateRenderer: React.FC<TemplateRendererProps> = ({
-  maxRecipientsAllowed = 1000, // Default max recipients
+  maxRecipientsAllowed = 1000,
+  companyId,
 }) => {
   const {
     selectedTemplate,
@@ -64,9 +72,119 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
 
   const [recipientInput, setRecipientInput] = useState<string>("");
   const [isProcessingCSV, setIsProcessingCSV] = useState<boolean>(false);
+  const [showGroupSuggestions, setShowGroupSuggestions] =
+    useState<boolean>(false);
+  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const { onOpen } = useModalStore();
+
+  // Fetch groups for the company
+  const { data: groupsData } = useQuery({
+    queryKey: ["address-book-groups", companyId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/address-book-groups?companyId=${companyId}&limit=100`,
+      );
+      if (!response.ok) throw new Error("Failed to fetch groups");
+      return response.json();
+    },
+    enabled: !!companyId,
+  });
+
+  const groups: Group[] = groupsData?.data || [];
+
+  // Handle input change and filter groups
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRecipientInput(value);
+
+    if (value.startsWith("@") && groups.length > 0) {
+      const searchTerm = value.slice(1).toLowerCase();
+      const filtered = groups.filter(
+        (group) =>
+          group.name.toLowerCase().includes(searchTerm) ||
+          group.tag.toLowerCase().includes(searchTerm),
+      );
+      setFilteredGroups(filtered);
+      setShowGroupSuggestions(filtered.length > 0);
+    } else {
+      setShowGroupSuggestions(false);
+      setFilteredGroups([]);
+    }
+  };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node)
+      ) {
+        setShowGroupSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Fetch group recipients and add them
+  const handleSelectGroup = async (groupId: string, groupName: string) => {
+    try {
+      const response = await fetch(
+        `/api/address-book-groups/recipients?groupId=${groupId}&companyId=${companyId}`,
+      );
+
+      if (!response.ok) {
+        toast.error("Failed to fetch group recipients");
+        return;
+      }
+
+      const result = await response.json();
+      const groupRecipients: string[] = result.data.recipients;
+
+      if (groupRecipients.length === 0) {
+        toast.warning(`Group "${groupName}" has no recipients`);
+        return;
+      }
+
+      // Filter out duplicates
+      const newRecipients = groupRecipients.filter(
+        (email) => !recipients.includes(email),
+      );
+
+      if (newRecipients.length === 0) {
+        toast.info("All recipients from this group are already added");
+        return;
+      }
+
+      const combinedEmails = [...newRecipients, ...recipients];
+      const listValidation = validateRecipientsList(combinedEmails);
+
+      if (!listValidation.isValid) {
+        listValidation.errors.forEach((error) => {
+          if (error.type === "error") {
+            toast.error(error.message);
+          } else {
+            toast.warning(error.message);
+          }
+        });
+        return;
+      }
+
+      setRecipients(combinedEmails);
+      toast.success(
+        `Added ${newRecipients.length} recipient${newRecipients.length === 1 ? "" : "s"} from "${groupName}"`,
+      );
+      setRecipientInput("");
+      setShowGroupSuggestions(false);
+    } catch (error) {
+      console.error("Error fetching group recipients:", error);
+      toast.error("Failed to add group recipients");
+    }
+  };
 
   const validateEmail = (email: string): ValidationResult => {
     const errors: ValidationError[] = [];
@@ -184,7 +302,14 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleAddRecipient();
+      if (showGroupSuggestions && filteredGroups.length > 0) {
+        // Select first group suggestion
+        handleSelectGroup(filteredGroups[0].id, filteredGroups[0].name);
+      } else {
+        handleAddRecipient();
+      }
+    } else if (e.key === "Escape") {
+      setShowGroupSuggestions(false);
     }
   };
 
@@ -213,16 +338,11 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         if (email) {
           const validation = validateEmail(email);
           if (validation.isValid) {
-            // Check if email is already in recipients list
             if (recipients.includes(email)) {
               duplicatesWithExisting.push(email);
-            }
-            // Check if email is already found in current CSV
-            else if (validEmails.includes(email)) {
+            } else if (validEmails.includes(email)) {
               duplicatesInFile.push(email);
-            }
-            // Only add if it's not a duplicate
-            else {
+            } else {
               validEmails.push(email);
             }
           } else {
@@ -301,7 +421,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
           return;
         }
 
-        // Only add non-duplicate emails
         const combinedEmails = [...validEmails, ...recipients];
 
         const listValidation = validateRecipientsList(combinedEmails);
@@ -366,7 +485,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
 
   useEffect(() => {
     setAttachments([]);
-  }, [setAttachments]);
+  }, []); // Remove setAttachments from dependency array
 
   const {
     mutate,
@@ -419,21 +538,51 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
             <div className="flex flex-col 2xl:flex-row items-center gap-2 self-stretch">
               <p className="ty-descriptions text-white/[.32]  2xl:w-[100px]">
                 Recipients
-                {/* ({recipients.length}/{maxRecipientsAllowed}) */}
               </p>
-              <div className="flex flex-col 2xl:flex-row gap-2 w-full items-center">
-                <Input
-                  value={recipientInput}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setRecipientInput(e.target.value)
-                  }
-                  onKeyDown={handleKeyPress}
-                  placeholder="Enter email address"
-                  className="bg-white/[.08] flex-1 w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32] p-3"
-                />
+              <div className="flex flex-col 2xl:flex-row gap-2 w-full items-center relative">
+                <div className="relative w-full flex-1">
+                  <Input
+                    value={recipientInput}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyPress}
+                    placeholder="Enter email or type @ to search groups"
+                    className="bg-white/[.08] w-full ty-descriptions placeholder:ty-descriptions placeholder:text-white/[.32] p-3"
+                  />
+
+                  {/* Group Suggestions Dropdown */}
+                  {showGroupSuggestions && (
+                    <div
+                      ref={suggestionsRef}
+                      className="absolute z-50 w-full mt-1 bg-[#26282A] border border-white/[.16] rounded-lg max-h-60 overflow-y-auto"
+                    >
+                      {filteredGroups.map((group) => (
+                        <button
+                          key={group.id}
+                          onClick={() =>
+                            handleSelectGroup(group.id, group.name)
+                          }
+                          className="w-full text-left px-4 py-3 hover:bg-white/[.08] transition-colors duration-200 border-b border-white/[.08] last:border-b-0"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-gold_v2-100 font-semibold">
+                              @{group.tag}
+                            </span>
+                            <span className="text-white/[.8]">-</span>
+                            <span className="text-white/[.64]">
+                              {group.name}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <Button
                   disabled={
-                    !recipientInput || !validateEmail(recipientInput).isValid
+                    !recipientInput ||
+                    recipientInput.startsWith("@") ||
+                    !validateEmail(recipientInput).isValid
                   }
                   onClick={handleAddRecipient}
                   className={cn(
@@ -555,10 +704,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 window.scrollTo(0, document.body.scrollHeight);
               }}
               className={cn(
-                // buttonVariants({
-                //   size: "sm",
-                // }),
-                // colorizeButton(selectedTemplate.company.name),
                 geist.className,
                 "w-full lg:w-fit z-50 p-0 rounded-none border-b border-b-white_v2-100 flex items-center gap-1 bg-transparent text-white_v2-100 opacity-60 hover:opacity-100 hover:bg-transparent duration-300 ease-out ty-descriptions",
               )}
@@ -572,15 +717,10 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
                 openResetFieldsModal();
               }}
               className={cn(
-                // buttonVariants({
-                //   size: "sm",
-                //   variant: "destructive",
-                // }),
                 geist.className,
                 "w-full lg:w-fit p-0 z-50 rounded-none border-b border-b-white_v2-100 bg-transparent text-white_v2-100 opacity-60 hover:opacity-100 hover:bg-transparent duration-300 ease-out ty-descriptions",
               )}
             >
-              {/* <RotateCcw color="white" size={12} /> */}
               <EraserIcon />
               Clear
             </Button>

@@ -191,6 +191,11 @@ model Transactions {
   @@index([createdAt])
 }
 
+model TestTable {
+  id String @id @default(cuid())
+  action String
+}
+
 enum Role {
   USER
   ADMIN
@@ -209,3 +214,4 @@ enum Action {
   LOG_OUT
   UPDATE_CONFIG
 }
+

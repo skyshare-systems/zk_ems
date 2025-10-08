@@ -80,7 +80,6 @@ const EmailEditor = ({
     isSectionOrderUpdated,
   );
 
-
   return (
     <div className="flex flex-col self-stretch h-full gap-6 p-4 bg-white rounded-2xl grow">
       {isPreview ? (

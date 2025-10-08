@@ -2,7 +2,11 @@ import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import { NextResponse } from "next/server";
 import { render } from "@react-email/render";
 import SkyshareLabsJPLTemplate from "@/emails/skyshare/jpl/jpl";
-import { createApiResponse, createErrorMessage, getTemplateLookup } from "@/lib/utils";
+import {
+  createApiResponse,
+  createErrorMessage,
+  getTemplateLookup,
+} from "@/lib/utils";
 import React from "react";
 import { emailTemplates } from "@/lib/constant";
 import { HttpStatusCode } from "axios";
@@ -13,14 +17,11 @@ export interface GenerateTemplateRequest {
   templateId: string;
 }
 
-
 // POST handler
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
     const { body, templateId, ...props } =
       (await request.json()) as GenerateTemplateRequest;
-
-      
 
     const htmlTemplate = await getTemplateLookup(templateId, {
       body,
@@ -36,7 +37,9 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     );
   } catch (error) {
-    console.log({error})
-    return NextResponse.json(createErrorMessage(error), { status: HttpStatusCode.BadRequest });
+    console.log({ error });
+    return NextResponse.json(createErrorMessage(error), {
+      status: HttpStatusCode.BadRequest,
+    });
   }
 });

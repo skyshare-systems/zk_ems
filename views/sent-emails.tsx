@@ -1,5 +1,6 @@
 import ContainerMain from "@/components/container-main";
 import ContainerSidebar from "@/components/container-sidebar";
+import TimeScheduleIcon from "@/components/icons/time-schedule";
 import LayoutContainer from "@/components/layout-container";
 import SentEmail from "@/components/sent-email";
 import SentEmailRenderer from "@/components/sent-email-renderer";
@@ -10,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getSentEmails } from "@/lib/query/sent-emails";
+import { cn } from "@/lib/utils";
+import { geist } from "@/public/fonts";
 import { useCompanyStore } from "@/store/company";
 import { useCreateEmailStore } from "@/store/create-email";
 import { useSentEmailStore } from "@/store/sent-email";
@@ -45,21 +48,41 @@ const SentEmails = () => {
       setDebouncedTitle(title);
     },
     1500,
-    [title]
+    [title],
   );
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
 
+  const isoString = selectedSentEmail?.createdAt?.toString() ?? "";
+
+  const date = new Date(isoString);
+
+  // Format options
+  const options: Intl.DateTimeFormatOptions = {
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC", // or your local time zone if needed
+  };
+
+  const formatted = date.toLocaleString("en-US", options);
+
   return (
     <div className="flex flex-col lg:flex-row">
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
         <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             <SidebarTrigger className="" />
 
-            <p className="ty-subheading">Sent Emails</p>
+            <p
+              className={cn(geist.className, "ty-subheading text-white_v2-100")}
+            >
+              Sent Emails
+            </p>
           </div>
           <IconInput
             startIcon={<Search size={16} />}
@@ -133,9 +156,29 @@ const SentEmails = () => {
       </LayoutContainer>
       <LayoutContainer classnames="relative p-2 lg:p-8 lg:pl-0 mb-24">
         <ContainerMain>
-          <p className="ty-subtitle self-stretch text-white/50">
-            Email Preview
-          </p>
+          <div className="flex justify-between items-center gap-2 w-full">
+            <p
+              className={cn(
+                geist.className,
+                "ty-subtitle self-stretch text-white/50",
+              )}
+            >
+              Email Preview
+            </p>
+            {formatted !== "Invalid Date" && (
+              <div className="flex items-center gap-2">
+                <TimeScheduleIcon className="text-white_v2-50" />
+                <p
+                  className={cn(
+                    geist.className,
+                    "ty-subtitle self-stretch text-white/50",
+                  )}
+                >
+                  {formatted}
+                </p>
+              </div>
+            )}
+          </div>
 
           {selectedSentEmail ? (
             <SentEmailRenderer />

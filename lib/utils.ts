@@ -220,7 +220,6 @@ export function formatDateRanges(dates: Input): string {
 }
 
 export const colorizeButton = (companyName: string) => {
-
   const colorMap: Record<string, string> = {
     "InnovatEd Business Academy": "bg-[#09316F] hover:bg-opacity-90",
     "YourSkin School Of Integrated Aesthetics":
@@ -250,7 +249,7 @@ export const isRatingFieldVisible = (companyName: companies): boolean => {
     "KPC Tax & Accounting Services",
     "KPC Importation Services",
     "KPC Payment Assistance",
-    "KPC Finance & Accounting Institute"
+    "KPC Finance & Accounting Institute",
   ];
 
   return allowedCompanies.includes(companyName);
@@ -278,17 +277,25 @@ export const isDatesOfTravelFieldVisible = (
   return allowedCompanies.includes(companyName);
 };
 export const isArticleDateFieldVisible = (companyName: companies): boolean => {
-  const allowedCompanies: companies[] = ["InnovatEd Business Academy", "InnovatEd Business Solutions"];
+  const allowedCompanies: companies[] = [
+    "InnovatEd Business Academy",
+    "InnovatEd Business Solutions",
+  ];
 
   return allowedCompanies.includes(companyName);
 };
 
-
 export const isArticlePhotoFieldHidden = (companyName: companies): boolean => {
   const hiddenCompanies: companies[] = [
     "KPC Importation Services",
-    "KPC Finance & Accounting Institute"
-  ]
+    "KPC Finance & Accounting Institute",
+  ];
 
   return !hiddenCompanies.includes(companyName);
+};
+
+export function shortenText(text: string, maxLength: number): string {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "...";
 }

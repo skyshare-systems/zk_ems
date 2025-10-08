@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { createApiResponse } from "@/lib/utils";
 import { loginSchema } from "@/schema/login";
 import { Prisma, User } from "@prisma/client";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

@@ -24,20 +24,26 @@ model User {
   tokens       Token[]
   transactions Transactions[]
   companies    UserCompany[]
+
+  @@index([createdAt])
 }
 
 model Company {
-  id             String          @id @default(cuid())
-  name           String          @unique
-  image          String
-  description    String
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  sentEmails     SentEmail[]
-  smtpCredential SmtpCredential?
-  storageConfig  StorageConfig?
-  templates      Template[]
-  users          UserCompany[]
+  id                    String                 @id @default(cuid())
+  name                  String                 @unique
+  image                 String
+  description           String
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  sentEmails            SentEmail[]
+  smtpCredential        SmtpCredential?
+  storageConfig         StorageConfig?
+  templates             Template[]
+  users                 UserCompany[]
+  addressBookGroups     AddressBookGroup[]
+  addressBookRecipients AddressBookRecipient[]
+
+  @@index([createdAt])
 }
 
 model UserCompany {
@@ -45,8 +51,6 @@ model UserCompany {
   companyId String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // createdAt DateTime @default(now())
-  // updatedAt DateTime @updatedAt
 
   @@id([userId, companyId])
 }
@@ -63,6 +67,9 @@ model Template {
   companyId   String
   sentEmails  SentEmail[]
   company     Company     @relation(fields: [companyId], references: [id])
+
+  @@index([companyId])
+  @@index([createdAt])
 }
 
 model SentEmail {
@@ -78,6 +85,10 @@ model SentEmail {
   recipients  Recipient[]
   company     Company     @relation(fields: [companyId], references: [id])
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([templateId])
+  @@index([createdAt])
 }
 
 model Recipient {
@@ -86,7 +97,45 @@ model Recipient {
   updatedAt    DateTime  @updatedAt
   sentEmailId  String
   emailAddress String
+  photoUrl     String?
   sentEmail    SentEmail @relation(fields: [sentEmailId], references: [id], onDelete: Cascade)
+
+  @@index([sentEmailId])
+  @@index([emailAddress])
+  @@index([createdAt])
+}
+
+model AddressBookRecipient {
+  id           String             @id @default(cuid())
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  emailAddress String
+  name         String
+  photoUrl     String?
+  companyId    String
+  company      Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  groups       AddressBookGroup[] @relation("GroupMembers")
+
+  @@index([companyId])
+  @@index([emailAddress])
+  @@index([name])
+  @@index([createdAt])
+}
+
+model AddressBookGroup {
+  id         String                 @id @default(cuid())
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+  name       String
+  tag        String
+  color      String
+  companyId  String
+  company    Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  recipients AddressBookRecipient[] @relation("GroupMembers")
+
+  @@index([companyId])
+  @@index([name])
+  @@index([createdAt])
 }
 
 model Token {
@@ -98,6 +147,9 @@ model Token {
   createdAt   DateTime  @default(now())
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model SmtpCredential {
@@ -133,6 +185,10 @@ model Transactions {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }
 
 enum Role {

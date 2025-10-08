@@ -2,7 +2,7 @@ import { companies } from "@/lib/constant";
 
 export const chunkArray = <T>(array: T[], size: number) => {
   return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
-    array.slice(index * size, index * size + size)
+    array.slice(index * size, index * size + size),
   );
 };
 
@@ -96,12 +96,14 @@ export const defaultSectionOrders: Record<
     "posts",
     "programs",
   ],
+  "New Company": [],
+  "Company 1": [],
 };
 
 export const getDefaultOrder = (
   sectionOrder: SectionType[],
   companyName: companies,
-  isSectionOrderUpdated: boolean
+  isSectionOrderUpdated: boolean,
 ) => {
   const defaultOrder =
     defaultSectionOrders[companyName] || defaultSectionOrders["default"];

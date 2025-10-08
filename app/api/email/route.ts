@@ -1,14 +1,13 @@
+import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 import prisma from "@/lib/prisma";
 import {
   createApiResponse,
-  createErrorMessage,
   getTemplateLookup,
   updateFontHtml,
 } from "@/lib/utils";
-import { NextRequest, NextResponse } from "next/server";
+import { Mode, TemplateWithCompany } from "@/store/create-email";
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import juice from "juice";
-import { AuthenticatedRequest, authorize } from "@/lib/auth.middleware";
 
 // Type definitions for better type safety
 interface EmailRequest {
@@ -17,6 +16,8 @@ interface EmailRequest {
   body: string;
   recipients: string[];
   alignment: "left" | "center" | "right";
+  mode: Mode;
+  selectedSentEmailId: string;
   props: Record<string, any>;
 }
 
@@ -33,14 +34,24 @@ const getTransporter = (smtp: {
       user: smtp.username,
       pass: smtp.password,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 };
 
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
-    const { subject, templateId, body, recipients, alignment, ...props } =
-      (await request.json()) as EmailRequest;
-
+    const {
+      subject,
+      templateId,
+      body,
+      recipients,
+      alignment,
+      mode,
+      selectedSentEmailId,
+      ...props
+    } = (await request.json()) as EmailRequest;
 
     // Input validation
     if (
@@ -66,6 +77,21 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
         company: { select: { name: true } },
       },
     });
+
+    const sentEmailTemplate = await prisma.sentEmail.findUnique({
+      where: {
+        id: selectedSentEmailId,
+      },
+    });
+
+    if (!sentEmailTemplate && mode !== "forward") {
+      return NextResponse.json(
+        createApiResponse("Sent email not found", null),
+        {
+          status: 404,
+        },
+      );
+    }
 
     if (!template) {
       return NextResponse.json(createApiResponse("Template not found", null), {
@@ -95,11 +121,14 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     const transporter = getTransporter(smtp);
 
     // Store sent email details
-    const sentEmail = await prisma.sentEmail.create({
+    await prisma.sentEmail.create({
       data: {
         subject,
         header: template.header,
-        body: updatedHtml,
+        body:
+          mode === "forward" && sentEmailTemplate
+            ? sentEmailTemplate?.body
+            : updatedHtml,
         footer: template.footer,
         templateId,
         companyId: template.companyId,
@@ -115,19 +144,21 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       from: smtp.from, // Use SMTP username as sender
       to: [...recipients],
       subject,
-      html: updatedHtml,
-      
+      html:
+        mode === "forward" && sentEmailTemplate
+          ? sentEmailTemplate?.body
+          : updatedHtml,
     });
 
     if (emailResult.rejected.length > 0) {
       console.error("Failed to send emails to:", emailResult.rejected);
     }
 
-
     return NextResponse.json(
       createApiResponse("Email sent successfully", null),
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json({
       error,
     });

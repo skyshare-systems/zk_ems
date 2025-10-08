@@ -1,10 +1,4 @@
-
-version: '3.8'
-
 services:
-  # node-app:
-  #   container_name: node-app-dev
-  #   command: yarn dev -L
   db:
     image: postgres:latest
     restart: always
@@ -12,8 +6,14 @@ services:
       POSTGRES_DB: zk_ems
       POSTGRES_USER: zk_ems
       POSTGRES_PASSWORD: zk_ems
+      # optional: PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - '5432:5432'
+      - "5433:5432"   # use 5433 on host to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zk_ems -d zk_ems"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

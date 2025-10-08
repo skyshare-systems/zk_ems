@@ -2,6 +2,7 @@
 
 import ContainerMain from "@/components/container-main";
 import ContainerSidebar from "@/components/container-sidebar";
+import BadgeAlertIcon from "@/components/icons/badge-alert";
 import LayoutContainer from "@/components/layout-container";
 import TemplateRenderer from "@/components/template-renderer";
 import TemplateSelection from "@/components/template-selection";
@@ -54,11 +55,13 @@ const CreateNewEmail = () => {
     setTitle(e.target.value);
   }
 
+  if(!company) return null;
+
   return (
     <div className="flex flex-col lg:flex-row">
       <LayoutContainer classnames="lg:sticky w-fit h-screen p-0 top-0 left-0 pb-28 w-full lg:w-fit ">
         <ContainerSidebar classname="p-2 lg:p-8 w-full relative">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             <SidebarTrigger className=" sm:static" />
 
             <p className="ty-subheading">Create new email</p>
@@ -137,11 +140,11 @@ const CreateNewEmail = () => {
           </p>
 
           {selectedTemplate ? (
-            <TemplateRenderer />
+            <TemplateRenderer companyId={company.id}/>
           ) : (
             <div className="flex p-4 flex-col justify-center items-center gap-4 flex-1 self-stretch rounded-2xl">
               <div className="flex flex-col items-center gap-2">
-                <BadgeAlert size={48} />
+                <BadgeAlertIcon />
                 <p className="ty-subheading">Select a template first!</p>
               </div>
 

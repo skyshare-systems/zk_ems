@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import { SidebarTrigger } from "./ui/sidebar";
+import AddressBookSection from "@/views/address-book/page";
 
 const CreateNewEmail = dynamic(() => import("@/views/create-new-email"), {
   ssr: false,
@@ -27,7 +28,7 @@ const TabRenderer = () => {
       case "analytics":
         return <div>analytics</div>;
       case "address-book":
-        return <div>address-book</div>;
+        return <AddressBookSection />;
       default:
         return <div>Create New Email 2</div>;
     }

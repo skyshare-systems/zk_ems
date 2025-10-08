@@ -13,9 +13,10 @@ import slugify from "slugify";
 
 type Props = {
   onUploadComplete: (url: string) => void;
+  className?: string;
 };
 
-const ImageUploader = ({ onUploadComplete }: Props) => {
+const ImageUploader = ({ onUploadComplete, className }: Props) => {
   const { company } = useCompanyStore();
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -87,14 +88,16 @@ const ImageUploader = ({ onUploadComplete }: Props) => {
   return (
     <>
       <Button
+        type="button"
         className={cn(
           colorizeButton(company.name),
-          "shadow-none  px-3 py-2 hover:bg-opacity-90",
+          `${className !== "" ? className : "text-white"}`,
+          "shadow-none  px-3 py-2 hover:bg-opacity-90 bg-transparent",
         )}
         onClick={() => setOpenImageDialog(true)}
       >
-        <ImageIcon size={20} color="white" />
-        <p className="text-white">Upload Photo</p>
+        <ImageIcon size={20} />
+        <p>Upload Photo</p>
       </Button>
 
       <Dialog

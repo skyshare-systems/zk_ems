@@ -72,7 +72,7 @@ interface CreateEmailState {
   body: string;
   subject: string;
   recipients: string[];
-  selectedTemplate: TemplateWithCompany | null;
+  selectedTemplate: TemplateWithCompany | TemplateWithCompany | null;
   userTemplates: Template[];
   alignment: "left" | "center" | "right";
   attachments: File[];
@@ -88,16 +88,22 @@ interface CreateEmailState {
   sectionOrder: SectionType[];
   isSectionOrderUpdated: boolean;
   isRearranging: boolean;
+  isPreview: boolean;
+  mode: Mode;
 
   // availableSections: SectionType[];
 }
+
+export type Mode = "create" | "forward";
 
 interface CreateEmailActions {
   setEditorData: (data: { blocks: any[] }) => void;
   setBody: (body: string) => void;
   setSubject: (subject: string) => void;
   setRecipients: (recipients: string[]) => void;
-  setSelectedTemplate: (template: TemplateWithCompany | null) => void;
+  setSelectedTemplate: (
+    template: TemplateWithCompany | TemplateWithCompany | null,
+  ) => void;
   getUserTemplates: () => Promise<void>;
   setAlignment: (alignment: "left" | "center" | "right") => void;
   setAttachments: (file: File[]) => void;
@@ -112,6 +118,8 @@ interface CreateEmailActions {
   setPrograms: (programs: Program[]) => void;
   setSectionOrder: (sectionOrder: SectionType[]) => void;
   setIsRearranging: (isRearranging: boolean) => void;
+  setIsPreview: (isPreview: boolean) => void;
+  setMode: (mode: Mode) => void;
   // setAvailableSections: (availableSections: SectionType[]) => void;
   reset: () => void;
   resetSectionOrder: () => void;
@@ -139,7 +147,7 @@ const initialState: CreateEmailState = {
   products: [],
   services: [],
   posts: [],
-  programs:[],
+  programs: [],
   sectionOrder: [
     "fromThePeople",
     "articles",
@@ -151,6 +159,8 @@ const initialState: CreateEmailState = {
   ],
   isSectionOrderUpdated: false,
   isRearranging: false,
+  isPreview: false,
+  mode: "create",
   // availableSections: [
   //   "fromThePeople",
   //   "articles",
@@ -191,7 +201,9 @@ export const useCreateEmailStore = create<
         const response = await api("/templates");
         set({ userTemplates: response.data });
       },
+      setMode: (mode) => set({ mode }),
       setAlignment: (alignment) => set({ alignment }),
+      setIsPreview: (isPreview) => set({ isPreview }),
       reset: () => set(initialState),
       resetSectionOrder: () =>
         set({

@@ -16,9 +16,21 @@ interface EmailRequest {
   body: string;
   recipients: string[];
   alignment: "left" | "center" | "right";
-  mode: Mode;
-  selectedSentEmailId: string;
-  props: Record<string, any>;
+  mode?: Mode;
+  selectedSentEmail?: string | null; // Changed from selectedSentEmailId
+  props?: Record<string, any>;
+  // Add other properties from your payload
+  attachments?: any[];
+  cta?: { link: string; text: string };
+  fromThePeople?: any[];
+  articles?: any[];
+  upcomingPrograms?: any[];
+  products?: any[];
+  services?: any[];
+  posts?: any[];
+  sectionOrder?: string[];
+  isSectionOrderUpdated?: boolean;
+  programs?: any[];
 }
 
 const getTransporter = (smtp: {
@@ -26,6 +38,7 @@ const getTransporter = (smtp: {
   port: number;
   username: string;
   password: string;
+  from: string;
 }) => {
   return nodemailer.createTransport({
     host: smtp.host,
@@ -42,16 +55,18 @@ const getTransporter = (smtp: {
 
 export const POST = authorize(async (request: AuthenticatedRequest) => {
   try {
+    const requestData = (await request.json()) as EmailRequest;
+    
     const {
       subject,
       templateId,
       body,
       recipients,
       alignment,
-      mode,
-      selectedSentEmailId,
+      mode = "normal", // Default mode if not provided
+      selectedSentEmail, // Changed from selectedSentEmailId
       ...props
-    } = (await request.json()) as EmailRequest;
+    } = requestData;
 
     // Input validation
     if (
@@ -78,33 +93,43 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     });
 
-    const sentEmailTemplate = await prisma.sentEmail.findUnique({
-      where: {
-        id: selectedSentEmailId,
-      },
-    });
-
-    if (!sentEmailTemplate && mode !== "forward") {
-      return NextResponse.json(
-        createApiResponse("Sent email not found", null),
-        {
-          status: 404,
-        },
-      );
-    }
-
     if (!template) {
       return NextResponse.json(createApiResponse("Template not found", null), {
         status: 404,
       });
     }
 
-    const htmlTemplate = await getTemplateLookup(templateId, {
-      body,
-      ...props,
-    });
+    // Only fetch sent email template if mode is forward and selectedSentEmail is provided
+    let sentEmailTemplate = null;
+    if (mode === "forward" && selectedSentEmail) {
+      sentEmailTemplate = await prisma.sentEmail.findUnique({
+        where: {
+          id: selectedSentEmail,
+        },
+      });
 
-    const updatedHtml = updateFontHtml(htmlTemplate);
+      if (!sentEmailTemplate) {
+        return NextResponse.json(
+          createApiResponse("Sent email not found", null),
+          {
+            status: 404,
+          },
+        );
+      }
+    }
+
+    // Generate email content
+    let emailContent: string;
+    
+    if (mode === "forward" && sentEmailTemplate) {
+      emailContent = sentEmailTemplate.body;
+    } else {
+      const htmlTemplate = await getTemplateLookup(templateId, {
+        body,
+        ...props,
+      });
+      emailContent = updateFontHtml(htmlTemplate);
+    }
 
     // Fetch SMTP credentials
     const smtp = await prisma.smtpCredential.findFirst({
@@ -117,18 +142,15 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       });
     }
 
-    // Send email inside a database transaction
+    // Create transporter
     const transporter = getTransporter(smtp);
 
-    // Store sent email details
-    await prisma.sentEmail.create({
+    // Store sent email details in database transaction
+    const sentEmail = await prisma.sentEmail.create({
       data: {
         subject,
         header: template.header,
-        body:
-          mode === "forward" && sentEmailTemplate
-            ? sentEmailTemplate?.body
-            : updatedHtml,
+        body: emailContent,
         footer: template.footer,
         templateId,
         companyId: template.companyId,
@@ -140,27 +162,36 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
       },
     });
 
+    // Send email
     const emailResult = await transporter.sendMail({
-      from: smtp.from, // Use SMTP username as sender
-      to: [...recipients],
+      from: smtp.from,
+      to: recipients,
       subject,
-      html:
-        mode === "forward" && sentEmailTemplate
-          ? sentEmailTemplate?.body
-          : updatedHtml,
+      html: emailContent,
     });
 
     if (emailResult.rejected.length > 0) {
       console.error("Failed to send emails to:", emailResult.rejected);
+      return NextResponse.json(
+        createApiResponse("Some emails failed to send", {
+          rejected: emailResult.rejected,
+          accepted: emailResult.accepted,
+        }),
+        { status: 207 }, // Multi-status
+      );
     }
 
     return NextResponse.json(
-      createApiResponse("Email sent successfully", null),
+      createApiResponse("Email sent successfully", {
+        sentEmailId: sentEmail.id,
+        messageId: emailResult.messageId,
+      }),
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({
-      error,
-    });
+    console.error("Email sending error:", error);
+    return NextResponse.json(
+      createApiResponse("Failed to send email", null),
+      { status: 500 }
+    );
   }
 });

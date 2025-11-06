@@ -25,7 +25,7 @@ export const sendEmail = async ({
   attachments = [],
   alignment = "left",
   signal,
-  mode,
+  mode = "create",
   selectedSentEmailId,
   ...props
 }: SendEmailProps) => {

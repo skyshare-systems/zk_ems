@@ -112,8 +112,14 @@ const ConfirmEmailBlast = () => {
           attachments,
           ...propsBuilder(),
         });
+        break;
       }
       case "forward": {
+        if (!selectedSentEmail) {
+          toast.error("No sent email selected for forwarding.");
+          return;
+        }
+
         if (recipients.length === 0) {
           toast.error("Please select at least one recipient.");
           return;
@@ -130,6 +136,11 @@ const ConfirmEmailBlast = () => {
           selectedSentEmailId: selectedSentEmail?.id,
           ...propsBuilder(),
         });
+        break;
+      }
+      default: {
+        toast.error("Invalid mode selected.");
+        break;
       }
     }
   }

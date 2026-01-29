@@ -17,7 +17,6 @@ import {
   Head,
   Html,
   Link,
-  Markdown,
   Row,
   Section,
   Tailwind,
@@ -119,25 +118,19 @@ export const IBA01Template = ({
                   </Column>
                 </Row>
               ) : (
-                <div className="w-full">
-                  <Markdown
-                    markdownContainerStyles={{
-                      imageRendering: "crisp-edges",
-                      container: "prose max-w-none",
-                      containerType: "unset",
-                      aspectRatio: "none",
+                <div className="w-full pb-6">
+                  <div
+                    style={{
                       maxWidth: "680px",
-                      overflowWrap: "break-word",
+                      overflowWrap: "break-word" as const,
                       width: "100%",
+                      lineHeight: "1.6",
+                      fontSize: "14px",
                     }}
-                    markdownCustomStyles={{
-                      p: {
-                        fontSize: "14px",
-                      },
+                    dangerouslySetInnerHTML={{
+                      __html: modifiedBody || "<p>IBA</p>",
                     }}
-                  >
-                    {modifiedBody ?? "# IBA"}
-                  </Markdown>
+                  />
 
                   {/* CTA */}
 

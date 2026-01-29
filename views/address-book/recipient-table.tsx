@@ -73,6 +73,8 @@ interface RecipientTableProps {
   page: number;
   limit: number;
   groupFilter?: string[]; // Changed to array for multiple group filtering
+  onPageChange?: (page: number) => void;
+  onMetaChange?: (meta: { totalPage: number; total: number }) => void;
 }
 
 type ActionType = "edit" | "delete" | null;
@@ -90,6 +92,8 @@ export default function RecipientTable({
   page,
   limit,
   groupFilter = [], // Default to empty array for multiple group filtering
+  onPageChange,
+  onMetaChange,
 }: RecipientTableProps) {
   const { company } = useCompanyStore();
   const queryClient = useQueryClient();
@@ -133,7 +137,20 @@ export default function RecipientTable({
   });
 
   const recipients = recipientsResp?.data ?? [];
+  const meta = recipientsResp?.meta;
   const allGroups = groupsResp?.data ?? [];
+
+  // Notify parent of meta changes for pagination
+  useEffect(() => {
+    if (meta && onMetaChange) {
+      onMetaChange({
+        totalPage: meta.totalPage || 1,
+        total:
+          meta.page * limit -
+          (meta.remaining < 0 ? 0 : limit - recipients.length),
+      });
+    }
+  }, [meta, onMetaChange, limit, recipients.length]);
 
   const [selectedUser, setSelectedUser] =
     useState<AddressBookRecipientWithGroupAndCompany | null>(null);
@@ -277,106 +294,112 @@ export default function RecipientTable({
 
   /* ------------------------------- render ------------------------------ */
   return (
-    <div className="w-full p-6 text-white bg-white_v2-4 rounded-xl">
+    <div className="w-full rounded-md border">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-white">Full Name</TableHead>
-            <TableHead className="text-white">Email</TableHead>
-            <TableHead className="text-white">Group/s</TableHead>
-            <TableHead className="text-white">Action</TableHead>
-          </TableRow>
-        </TableHeader>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[250px]">Full Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Group/s</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
 
-        <TableBody>
-          {isLoading ? (
-            <TableRow>
-              <TableCell
-                colSpan={4}
-                className="py-8 text-center text-white_v2-50"
-              >
-                Loading…
-              </TableCell>
-            </TableRow>
-          ) : isError ? (
-            <TableRow>
-              <TableCell colSpan={4} className="py-8 text-center text-red-400">
-                Failed to load recipients.
-              </TableCell>
-            </TableRow>
-          ) : (recipients?.length ?? 0) === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={4}
-                className="py-8 text-center text-white_v2-50"
-              >
-                No recipients found{getFilterDisplayText()}.
-              </TableCell>
-            </TableRow>
-          ) : (
-            recipients.map((user: AddressBookRecipientWithGroupAndCompany) => (
-              <TableRow key={user.id}>
-                <TableCell className="flex items-center gap-2">
-                  <Avatar className="w-8 h-8">
-                    {user.photoUrl ? (
-                      <AvatarImage src={user.photoUrl} alt={user.name} />
-                    ) : (
-                      <AvatarFallback>
-                        {user.name
-                          .split(" ")
-                          .map((word) => word[0])
-                          .join("")}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                  <span>{user.name}</span>
-                </TableCell>
-                <TableCell>{user.emailAddress}</TableCell>
-                <TableCell className="flex flex-wrap items-center gap-1">
-                  {user?.groups?.map((group) => (
-                    <div
-                      key={group.id}
-                      style={{ color: group.color }}
-                      className="rounded border border-gray_v2-16 bg-gray_v2-4 px-2 py-1"
-                    >
-                      @{group?.tag}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <DotHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuItem
-                        onClick={() => handleAction(user, "edit")}
-                        className={cn(
-                          geist.className,
-                          "text-gold_v2-100 ty-descriptions cursor-pointer",
-                        )}
-                      >
-                        <EditIcon /> Edit Recipient
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleAction(user, "delete")}
-                        className={cn(
-                          geist.className,
-                          "text-red-500 ty-descriptions cursor-pointer",
-                        )}
-                      >
-                        <DeleteIcon /> Delete Recipient
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
+                  Loading…
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : isError ? (
+              <TableRow>
+                <TableCell
+                  colSpan={4}
+                  className="h-24 text-center text-red-400"
+                >
+                  Failed to load recipients.
+                </TableCell>
+              </TableRow>
+            ) : (recipients?.length ?? 0) === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
+                  No recipients found{getFilterDisplayText()}.
+                </TableCell>
+              </TableRow>
+            ) : (
+              recipients.map(
+                (user: AddressBookRecipientWithGroupAndCompany) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          {user.photoUrl ? (
+                            <AvatarImage src={user.photoUrl} alt={user.name} />
+                          ) : (
+                            <AvatarFallback>
+                              {user.name
+                                .split(" ")
+                                .map((word) => word[0])
+                                .join("")}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <span>{user.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{user.emailAddress}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap items-center gap-1">
+                        {user?.groups?.map((group) => (
+                          <Badge
+                            key={group.id}
+                            variant="outline"
+                            style={{
+                              color: group.color,
+                              borderColor: group.color,
+                            }}
+                          >
+                            @{group?.tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <DotHorizontalIcon />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44">
+                          <DropdownMenuItem
+                            onClick={() => handleAction(user, "edit")}
+                            className={cn(
+                              geist.className,
+                              "text-gold_v2-100 ty-descriptions cursor-pointer",
+                            )}
+                          >
+                            <EditIcon /> Edit Recipient
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleAction(user, "delete")}
+                            className={cn(
+                              geist.className,
+                              "text-red-500 ty-descriptions cursor-pointer",
+                            )}
+                          >
+                            <DeleteIcon /> Delete Recipient
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )
+            )}
+          </TableBody>
+        </Table>
 
       {/* Modal */}
       <Dialog open={!!selectedUser && !!actionType} onOpenChange={closeDialog}>

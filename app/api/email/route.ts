@@ -15,7 +15,7 @@ interface EmailRequest {
   templateId: string;
   body: string;
   recipients: string[];
-  alignment: "left" | "center" | "right";
+  alignment?: "left" | "center" | "right";
   mode?: Mode;
   selectedSentEmail?: string | null; // Changed from selectedSentEmailId
   props?: Record<string, any>;
@@ -120,10 +120,18 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     // Generate email content
     let emailContent: string;
-    
-    if (mode === "forward" && sentEmailTemplate) {
+
+    // For forward mode with no edits, use the original sent email body
+    // For forward mode with edits (body differs), regenerate the template
+    const sentEmailFormData = sentEmailTemplate?.formData as any;
+    const originalBody = sentEmailFormData?.rawBody || "";
+    const hasEdits = body && body !== originalBody;
+
+    if (mode === "forward" && sentEmailTemplate && !hasEdits) {
+      // Simple forward - use original email body
       emailContent = sentEmailTemplate.body;
     } else {
+      // New email or edited forward - generate from template
       const htmlTemplate = await getTemplateLookup(templateId, {
         body,
         ...props,
@@ -145,6 +153,21 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     // Create transporter
     const transporter = getTransporter(smtp);
 
+    // Build formData to store structured data for future editing
+    const formData = {
+      rawBody: body,
+      articles: props.articles || [],
+      fromThePeople: props.fromThePeople || [],
+      upcomingPrograms: props.upcomingPrograms || [],
+      products: props.products || [],
+      services: props.services || [],
+      posts: props.posts || [],
+      programs: props.programs || [],
+      cta: props.cta || { link: "", text: "" },
+      sectionOrder: props.sectionOrder || [],
+      isSectionOrderUpdated: props.isSectionOrderUpdated || false,
+    };
+
     // Store sent email details in database transaction
     const sentEmail = await prisma.sentEmail.create({
       data: {
@@ -154,6 +177,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
         footer: template.footer,
         templateId,
         companyId: template.companyId,
+        formData,
         recipients: {
           createMany: {
             data: recipients.map((email) => ({ emailAddress: email })),
@@ -189,8 +213,9 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
     );
   } catch (error) {
     console.error("Email sending error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      createApiResponse("Failed to send email", null),
+      createApiResponse(`Failed to send email: ${errorMessage}`, null),
       { status: 500 }
     );
   }

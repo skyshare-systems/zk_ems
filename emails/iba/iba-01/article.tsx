@@ -14,7 +14,7 @@ export const ArticleCard = ({ article }: { article: Article }) => {
   const { articleLink, content, heading, date: isoDate, image } = article;
 
   const date = new Date(isoDate as Date);
-  const day = date.getUTCDate(); // 16
+  const day = date.getDate();
 
   return (
     <Section className="border-[1px] border-solid border-[#Dfd8e9] bg-4 bg-white rounded-[16px] mb-4">

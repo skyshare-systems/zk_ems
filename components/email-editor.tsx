@@ -7,14 +7,13 @@ import {
 } from "@/emails/utils";
 import { updateFontHtml } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Reorder } from "framer-motion";
 import { Loader, Move, RotateCw } from "lucide-react";
-import { JSX, useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import ArticleEditor from "./article-editor";
 import CtaEditor from "./cta-editor";
 import FromThePeopleEditor from "./from-the-people-editor";
-import { Mdx } from "./mdx/InitializedMDXEditor";
+import { TiptapEditor } from "./tiptap/tiptap-editor";
 import OurProgramsEditor from "./our-programs-editor";
 import OurServicesEditor from "./our-services-editor";
 import ProductsEditor from "./product-editor";
@@ -55,7 +54,6 @@ const EmailEditor = ({
     setIsRearranging,
   } = useCreateEmailStore();
 
-  const ref = useRef<MDXEditorMethods>(null);
   const [iframeUrl, setIframeUrl] = useState<string>("");
 
   useEffect(() => {
@@ -66,10 +64,6 @@ const EmailEditor = ({
 
     return () => URL.revokeObjectURL(url);
   }, [preview.html]);
-
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
 
   if (!selectedTemplate) return null;
 
@@ -113,11 +107,11 @@ const EmailEditor = ({
           <div className="flex flex-col items-center w-full gap-4 my-4 grow">
             <p className="text-black ty-subtext">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
-              Note: Alignment Plugin will make all content follow the selected
-              alignment. Since markdown doesn’t support alignment at all.
+              Use the alignment buttons in the toolbar to align individual
+              blocks.
             </p>
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden min-h-[450px]">
-              <Mdx ref={ref} />
+              <TiptapEditor />
             </div>
             <CtaEditor />
             <div className="flex justify-between self-stretch items-start">

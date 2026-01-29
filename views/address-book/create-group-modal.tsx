@@ -30,7 +30,7 @@ import { geist, inter } from "@/public/fonts";
 import { useModalCreateGroup } from "@/store/modal-create-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import React, { useRef, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import InputColor from "react-input-color";
@@ -39,6 +39,7 @@ import { getAddressBookRecipients } from "@/lib/query/address-book-recipients";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Upload } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Group name is required"),
@@ -81,6 +82,8 @@ export default function CreateGroupModal() {
   // pagination & recipients
   const [page, setPage] = React.useState(1);
   const [allRecipients, setAllRecipients] = React.useState<Recipient[]>([]);
+  const [isProcessingCSV, setIsProcessingCSV] = React.useState(false);
+  const csvInputRef = useRef<HTMLInputElement>(null);
 
   // fetch recipients
   const { data, isFetching } = useQuery({
@@ -172,6 +175,158 @@ export default function CreateGroupModal() {
     const next = Array.from(new Set([...(selectedIds || []), id]));
     form.setValue("recipientIds", next, { shouldValidate: true });
   }
+
+  // CSV import functionality
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  };
+
+  const processCSVContent = (content: string): string[] => {
+    const rows = content.split(/[\r\n]+/);
+    const validEmails: string[] = [];
+    const invalidEmails: string[] = [];
+
+    rows.forEach((row) => {
+      const cleanRow = row.replace(/^\uFEFF/, "");
+      if (!cleanRow) return;
+
+      const matches = cleanRow.match(/(?:^|,)("([^"]*)"|([^,]*))/g);
+      if (!matches) return;
+
+      matches.forEach((match) => {
+        const email = match.replace(/^,/, "").replace(/^"|"$/g, "").trim();
+        if (email) {
+          if (validateEmail(email)) {
+            if (!validEmails.includes(email.toLowerCase())) {
+              validEmails.push(email.toLowerCase());
+            }
+          } else {
+            invalidEmails.push(email);
+          }
+        }
+      });
+    });
+
+    if (invalidEmails.length > 0) {
+      toast.warning(
+        `${invalidEmails.length} invalid email${invalidEmails.length > 1 ? "s" : ""} skipped`,
+      );
+    }
+
+    return validEmails;
+  };
+
+  const handleCSVUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      setIsProcessingCSV(true);
+      const file = event.target.files?.[0];
+
+      if (!file) {
+        toast.error("No file selected");
+        return;
+      }
+
+      if (!file.name.endsWith(".csv")) {
+        toast.error("Please upload a CSV file");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size too large. Maximum size is 5MB");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const text = e.target?.result as string;
+        const emails = processCSVContent(text);
+
+        if (emails.length === 0) {
+          toast.error("No valid email addresses found in the CSV file");
+          return;
+        }
+
+        // Fetch all recipients to match emails
+        try {
+          const response = await fetch(
+            `/api/address-book-recipient?companyId=${company?.id}&limit=1000`,
+          );
+          if (!response.ok) throw new Error("Failed to fetch recipients");
+
+          const result = await response.json();
+          const existingRecipients: Recipient[] = result.data || [];
+
+          // Match emails to recipient IDs
+          const matchedIds: string[] = [];
+          const unmatchedEmails: string[] = [];
+
+          emails.forEach((email) => {
+            const match = existingRecipients.find(
+              (r) => r.emailAddress.toLowerCase() === email.toLowerCase(),
+            );
+            if (match) {
+              if (!selectedIds?.includes(match.id) && !matchedIds.includes(match.id)) {
+                matchedIds.push(match.id);
+              }
+            } else {
+              unmatchedEmails.push(email);
+            }
+          });
+
+          if (matchedIds.length > 0) {
+            // Add matched recipients and update allRecipients for display
+            const newSelectedIds = Array.from(
+              new Set([...(selectedIds || []), ...matchedIds]),
+            );
+            form.setValue("recipientIds", newSelectedIds, {
+              shouldValidate: true,
+            });
+
+            // Add matched recipients to allRecipients for display
+            const matchedRecipients = existingRecipients.filter((r) =>
+              matchedIds.includes(r.id),
+            );
+            setAllRecipients((prev) => mergeUnique(prev, matchedRecipients));
+
+            toast.success(
+              `Added ${matchedIds.length} recipient${matchedIds.length > 1 ? "s" : ""} from CSV`,
+            );
+          }
+
+          if (unmatchedEmails.length > 0) {
+            toast.warning(
+              `${unmatchedEmails.length} email${unmatchedEmails.length > 1 ? "s" : ""} not found in address book`,
+            );
+          }
+
+          if (matchedIds.length === 0 && unmatchedEmails.length > 0) {
+            toast.error(
+              "No matching recipients found. Add recipients to your address book first.",
+            );
+          }
+        } catch (error) {
+          console.error("Error matching CSV emails:", error);
+          toast.error("Failed to match emails with recipients");
+        }
+      };
+
+      reader.onerror = () => {
+        toast.error("Error reading file");
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      toast.error("Error processing CSV file");
+      console.error("CSV processing error:", error);
+    } finally {
+      setIsProcessingCSV(false);
+      if (event.target) {
+        event.target.value = "";
+      }
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -352,12 +507,13 @@ export default function CreateGroupModal() {
                       Recipients
                     </FormLabel>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <button className="w-full text-left text-white_v2-100 bg-white_v2-8 border border-white_v2-8 p-3 rounded-lg text-white_v2-32 ty-descriptions hover:border-white_v2-100 ease-out">
-                            Add a recipient here..
-                          </button>
-                        </PopoverTrigger>
+                      <div className="flex gap-2 w-full">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button className="flex-1 text-left text-white_v2-100 bg-white_v2-8 border border-white_v2-8 p-3 rounded-lg text-white_v2-32 ty-descriptions hover:border-white_v2-100 ease-out">
+                              Add a recipient here..
+                            </button>
+                          </PopoverTrigger>
                         <PopoverContent className="p-0 w-full max-w-sm">
                           <Command>
                             <CommandInput
@@ -420,7 +576,24 @@ export default function CreateGroupModal() {
                             </CommandGroup>
                           </Command>
                         </PopoverContent>
-                      </Popover>
+                        </Popover>
+                        <input
+                          type="file"
+                          accept=".csv"
+                          onChange={handleCSVUpload}
+                          ref={csvInputRef}
+                          style={{ display: "none" }}
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => csvInputRef.current?.click()}
+                          disabled={isProcessingCSV}
+                          className="text-gold_v2-100 flex items-center gap-2 rounded-lg border border-gold_v2-16 bg-gold_v2-4 hover:bg-gold_v2-100 hover:text-black_v2-100 ease-out duration-300"
+                        >
+                          <Upload size={16} />
+                          {isProcessingCSV ? "Processing..." : "CSV"}
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </div>

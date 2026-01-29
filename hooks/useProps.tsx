@@ -1,7 +1,6 @@
 "use client";
 
 import { useCreateEmailStore } from "@/store/create-email";
-import { useSentEmailStore } from "@/store/sent-email";
 import { useCallback } from "react";
 
 const useProps = () => {
@@ -19,7 +18,6 @@ const useProps = () => {
     isSectionOrderUpdated,
   } = useCreateEmailStore();
 
-  const { selectedSentEmail } = useSentEmailStore();
   const propsBuilder = useCallback(() => {
     if (!selectedTemplate) return;
 
@@ -34,7 +32,6 @@ const useProps = () => {
       sectionOrder,
       isSectionOrderUpdated,
       programs,
-      selectedSentEmail,
     };
   }, [
     articles,
@@ -48,7 +45,6 @@ const useProps = () => {
     sectionOrder,
     isSectionOrderUpdated,
     programs,
-    selectedSentEmail,
   ]);
 
   return { propsBuilder };

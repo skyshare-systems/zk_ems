@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { geist, inter } from "@/public/fonts";
 import EditGroup from "./edit-group";
@@ -43,9 +43,11 @@ interface GroupTableProps {
   search: string;
   page: number;
   limit: number;
+  onPageChange?: (page: number) => void;
+  onMetaChange?: (meta: { totalPage: number; total: number }) => void;
 }
 
-export default function GroupTable({ search, page, limit }: GroupTableProps) {
+export default function GroupTable({ search, page, limit, onPageChange, onMetaChange }: GroupTableProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {},
   );
@@ -85,6 +87,18 @@ export default function GroupTable({ search, page, limit }: GroupTableProps) {
     enabled: !!company?.id,
   });
 
+  const meta = groups?.meta;
+
+  // Notify parent of meta changes for pagination
+  useEffect(() => {
+    if (meta && onMetaChange) {
+      onMetaChange({
+        totalPage: meta.totalPage || 1,
+        total: 0,
+      });
+    }
+  }, [meta, onMetaChange]);
+
   // Delete mutation
   const { mutate: deleteGroup, isPending: isDeleting } = useMutation({
     mutationFn: (groupId: string) => deleteAddressBookGroup(groupId),
@@ -106,102 +120,114 @@ export default function GroupTable({ search, page, limit }: GroupTableProps) {
     }
   };
 
-  return (
-    <div className="w-full p-6 text-white bg-white_v2-4 rounded-xl">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[160px]">Group Tag</TableHead>
-            <TableHead>Group Name</TableHead>
-            <TableHead>Recipients</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {groups?.data?.map((group) => {
-            const isExpanded = expandedGroups[group.tag];
-            const visibleRecipients = isExpanded
-              ? group.recipients
-              : group.recipients.slice(0, 3);
+  const groupsData = groups?.data || [];
 
-            return (
-              <TableRow key={group.tag}>
-                <TableCell>
-                  <span
-                    style={{
-                      color: group.color,
-                    }}
-                  >
-                    @{group.tag}
-                  </span>
-                </TableCell>
-                <TableCell className="font-medium">{group.name}</TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {visibleRecipients.map((r, idx) => (
-                      <div
-                        key={`${group.tag}-${r.name}-${idx}`}
-                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-white_v2-4"
-                      >
-                        <Avatar className="w-5 h-5">
-                          <AvatarImage src={r.photoUrl || ""} alt={r.name} />
-                          <AvatarFallback>
-                            {r.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="ty-descriptions">{r.name}</span>
-                      </div>
-                    ))}
-                    {group.recipients.length > 3 && (
-                      <button
-                        className="h-6 px-2 ty-descriptions py-1 bg-white_v2-4 rounded-full"
-                        onClick={() => toggleExpand(group.tag)}
-                      >
-                        {isExpanded
-                          ? "View less"
-                          : `+${group.recipients.length - 3} more`}
-                      </button>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost">
-                        ⋮
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuItem
-                        onClick={() => openActionModal(group, "edit")}
-                        className="text-yellow-400 cursor-pointer"
-                      >
-                        ✏️ Edit Group
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openActionModal(group, "delete")}
-                        className="text-red-500 cursor-pointer"
-                      >
-                        🗑️ Delete Group
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+  return (
+    <div className="w-full rounded-md border">
+      <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[160px]">Group Tag</TableHead>
+              <TableHead>Group Name</TableHead>
+              <TableHead>Recipients</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {groupsData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
+                  No groups found.
                 </TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+            ) : (
+              groupsData.map((group) => {
+                const isExpanded = expandedGroups[group.tag];
+                const visibleRecipients = isExpanded
+                  ? group.recipients
+                  : group.recipients.slice(0, 3);
 
-      <p className="mt-4 text-sm text-muted-foreground">
-        {groups?.data
-          ? `1–${Math.min(limit, groups.data.length)} of ${groups.data.length}`
-          : "Loading..."}
-      </p>
+                return (
+                  <TableRow key={group.tag}>
+                    <TableCell className="font-medium">
+                      <span style={{ color: group.color }}>@{group.tag}</span>
+                    </TableCell>
+                    <TableCell>{group.name}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {visibleRecipients.map((r, idx) => (
+                          <div
+                            key={`${group.tag}-${r.name}-${idx}`}
+                            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted border"
+                          >
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage src={r.photoUrl || ""} alt={r.name} />
+                              <AvatarFallback className="text-[10px]">
+                                {r.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .slice(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs">{r.name}</span>
+                          </div>
+                        ))}
+                        {group.recipients.length > 3 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-xs rounded-full"
+                            onClick={() => toggleExpand(group.tag)}
+                          >
+                            {isExpanded
+                              ? "View less"
+                              : `+${group.recipients.length - 3} more`}
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <circle cx="12" cy="5" r="2"/>
+                              <circle cx="12" cy="12" r="2"/>
+                              <circle cx="12" cy="19" r="2"/>
+                            </svg>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44">
+                          <DropdownMenuItem
+                            onClick={() => openActionModal(group, "edit")}
+                            className="text-gold_v2-100 cursor-pointer"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            Edit Group
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => openActionModal(group, "delete")}
+                            className="text-red-500 cursor-pointer"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
+                              <path d="M3 6h18"/>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Delete Group
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
 
       {/* Modal */}
       <Dialog open={!!group && !!actionType} onOpenChange={closeModal}>

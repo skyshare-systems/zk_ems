@@ -81,6 +81,21 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
 
     const arrayFileName = attachments.map((file) => file.name);
 
+    // Build formData to store structured data for future editing
+    const structuredFormData = {
+      rawBody: body,
+      articles: allFormData.articles ? JSON.parse(allFormData.articles as string) : [],
+      fromThePeople: allFormData.fromThePeople ? JSON.parse(allFormData.fromThePeople as string) : [],
+      upcomingPrograms: allFormData.upcomingPrograms ? JSON.parse(allFormData.upcomingPrograms as string) : [],
+      products: allFormData.products ? JSON.parse(allFormData.products as string) : [],
+      services: allFormData.services ? JSON.parse(allFormData.services as string) : [],
+      posts: allFormData.posts ? JSON.parse(allFormData.posts as string) : [],
+      programs: allFormData.programs ? JSON.parse(allFormData.programs as string) : [],
+      cta: allFormData.cta ? JSON.parse(allFormData.cta as string) : { link: "", text: "" },
+      sectionOrder: allFormData.sectionOrder ? JSON.parse(allFormData.sectionOrder as string) : [],
+      isSectionOrderUpdated: allFormData.isSectionOrderUpdated === "true",
+    };
+
     await prisma.sentEmail.create({
       data: {
         subject,
@@ -90,6 +105,7 @@ export const POST = authorize(async (request: AuthenticatedRequest) => {
         templateId,
         companyId: template.companyId,
         attachments: arrayFileName,
+        formData: structuredFormData,
         recipients: {
           createMany: {
             data: recipients.map((email) => ({ emailAddress: email })),

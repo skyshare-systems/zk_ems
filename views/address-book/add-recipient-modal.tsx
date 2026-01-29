@@ -22,9 +22,10 @@ import ImageUploader from "@/components/modals/image-uploader-no-context";
 import Image from "next/image";
 import { getAddressBookGroup } from "@/lib/query/address-book-groups";
 import { MultiSelect } from "@/components/multi-select";
-import { useState } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { Upload } from "lucide-react";
 
 const AddRecipientModal = () => {
   const { isOpen, onOpen, onClose } = useModalAddRecipient((store) => store);
@@ -70,6 +71,8 @@ const AddRecipientModal = () => {
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]); // Track selected values in MultiSelect
   const [groupBadges, setGroupBadges] = useState<string[]>([]); // Track added group IDs for badges
+  const [isProcessingCSV, setIsProcessingCSV] = useState(false);
+  const csvInputRef = useRef<HTMLInputElement>(null);
 
   const handlePhotoUpload = (url: string) => {
     form.setValue("photoUrl", url); // Update the photoUrl in the form state
@@ -101,6 +104,174 @@ const AddRecipientModal = () => {
   // Filter out selected groups from the MultiSelect options
   const filteredOptions =
     groups?.data.filter((group) => !groupBadges.includes(group.id)) || [];
+
+  // CSV import handlers
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  };
+
+  const processCSVContent = (content: string): { emailAddress: string; name?: string; photoUrl?: string; groups?: string[] }[] => {
+    const rows = content.split(/[\r\n]+/);
+    const recipients: { emailAddress: string; name?: string; photoUrl?: string; groups?: string[] }[] = [];
+    const seenEmails = new Set<string>();
+
+    // Check if first row is a header
+    let startIndex = 0;
+    let headerMap: Record<string, number> = {};
+
+    if (rows.length > 0) {
+      const firstRow = rows[0].replace(/^\uFEFF/, "").trim().toLowerCase();
+      const firstParts = firstRow.split(",").map((p) => p.replace(/^"|"$/g, "").trim());
+
+      // Check if first row contains header keywords
+      if (firstParts.some(p => ["emailaddress", "email", "name", "photourl", "groups", "group"].includes(p))) {
+        startIndex = 1;
+        firstParts.forEach((header, index) => {
+          headerMap[header] = index;
+        });
+      }
+    }
+
+    for (let i = startIndex; i < rows.length; i++) {
+      const cleanRow = rows[i].replace(/^\uFEFF/, "").trim();
+      if (!cleanRow) continue;
+
+      // Handle quoted fields with commas inside
+      const parts: string[] = [];
+      let current = "";
+      let inQuotes = false;
+      for (const char of cleanRow) {
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          parts.push(current.trim());
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      parts.push(current.trim());
+
+      let emailAddress: string;
+      let name: string | undefined;
+      let photoUrl: string | undefined;
+      let groups: string[] | undefined;
+
+      if (Object.keys(headerMap).length > 0) {
+        // Use header mapping
+        const emailIndex = headerMap["emailaddress"] ?? headerMap["email"] ?? 0;
+        const nameIndex = headerMap["name"] ?? 1;
+        const photoIndex = headerMap["photourl"];
+        const groupsIndex = headerMap["groups"] ?? headerMap["group"];
+
+        emailAddress = parts[emailIndex]?.toLowerCase() || "";
+        name = parts[nameIndex] || undefined;
+        photoUrl = photoIndex !== undefined ? parts[photoIndex] || undefined : undefined;
+
+        // Groups are semicolon-separated within the field
+        if (groupsIndex !== undefined && parts[groupsIndex]) {
+          groups = parts[groupsIndex].split(";").map(g => g.trim()).filter(Boolean);
+        }
+      } else {
+        // Default: first column is email, second is name
+        emailAddress = parts[0]?.toLowerCase() || "";
+        name = parts[1] || undefined;
+      }
+
+      if (emailAddress && validateEmail(emailAddress) && !seenEmails.has(emailAddress)) {
+        seenEmails.add(emailAddress);
+        recipients.push({ emailAddress, name, photoUrl, groups });
+      }
+    }
+
+    return recipients;
+  };
+
+  const handleCSVUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      setIsProcessingCSV(true);
+      const file = event.target.files?.[0];
+
+      if (!file) {
+        toast.error("No file selected");
+        return;
+      }
+
+      if (!file.name.endsWith(".csv")) {
+        toast.error("Please upload a CSV file");
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("File size too large. Maximum size is 10MB");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const text = e.target?.result as string;
+        const recipients = processCSVContent(text);
+
+        if (recipients.length === 0) {
+          toast.error("No valid email addresses found in the CSV file");
+          return;
+        }
+
+        toast.info(`Processing ${recipients.length} recipients...`);
+
+        try {
+          const response = await fetch("/api/address-book-recipient/bulk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              companyId: company?.id,
+              recipients,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            toast.error(result.message || "Failed to import recipients");
+            return;
+          }
+
+          const { created, duplicatesSkipped, invalidSkipped } = result.data;
+
+          queryClient.invalidateQueries({
+            queryKey: ["address-book-recipients", company?.id],
+          });
+
+          toast.success(
+            `Imported ${created} recipient${created !== 1 ? "s" : ""}` +
+              (duplicatesSkipped > 0 ? `, ${duplicatesSkipped} duplicates skipped` : "") +
+              (invalidSkipped > 0 ? `, ${invalidSkipped} invalid skipped` : "")
+          );
+
+          onClose();
+        } catch (error) {
+          console.error("Error importing recipients:", error);
+          toast.error("Failed to import recipients");
+        }
+      };
+
+      reader.onerror = () => {
+        toast.error("Error reading file");
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      toast.error("Error processing CSV file");
+      console.error("CSV processing error:", error);
+    } finally {
+      setIsProcessingCSV(false);
+      if (event.target) {
+        event.target.value = "";
+      }
+    }
+  };
 
   const onSubmit = (values: z.infer<typeof addRecipientSchema>) => {
     mutate({
@@ -291,7 +462,28 @@ const AddRecipientModal = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end w-full">
+            <div className="flex justify-between w-full">
+              <div className="flex gap-2">
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleCSVUpload}
+                  ref={csvInputRef}
+                  style={{ display: "none" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => csvInputRef.current?.click()}
+                  disabled={isProcessingCSV}
+                  className={cn(
+                    geist.className,
+                    "text-gold_v2-100 flex items-center gap-2 rounded-lg border border-gold_v2-16 bg-gold_v2-4 hover:bg-gold_v2-100 hover:text-black_v2-100 ease-out duration-300 py-3 px-4 ty-descriptions",
+                  )}
+                >
+                  <Upload size={16} />
+                  {isProcessingCSV ? "Importing..." : "Import CSV"}
+                </button>
+              </div>
               <button
                 type="submit"
                 className={cn(

@@ -15,10 +15,13 @@ export async function getAddressBookRecipients({
   search,
   groupIds,
 }: AddressBookRecipientParams) {
+  // Convert offset to page number (API expects page, not offset)
+  const page = Math.floor(offset / limit) + 1;
+
   const params = {
     companyId,
     limit,
-    offset,
+    page,
     search,
     groupIds: groupIds?.length ? groupIds.join(",") : undefined, // normalize array → comma-separated
   };

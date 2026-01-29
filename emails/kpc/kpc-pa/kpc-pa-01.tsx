@@ -19,7 +19,6 @@ import {
   Html,
   Img,
   Link,
-  Markdown,
   Row,
   Section,
   Tailwind,
@@ -142,20 +141,19 @@ export const KPCPA01Template = ({
                   </Column>
                 </Row>
               ) : (
-                <div className="w-full">
-                  <Markdown
-                    markdownContainerStyles={{
-                      imageRendering: "crisp-edges",
-                      container: "prose max-w-none",
-                      containerType: "unset",
-                      aspectRatio: "none",
+                <div className="w-full pb-6">
+                  <div
+                    style={{
                       maxWidth: "680px",
-                      overflowWrap: "break-word",
+                      overflowWrap: "break-word" as const,
                       width: "100%",
+                      lineHeight: "1.6",
+                      fontSize: "14px",
                     }}
-                  >
-                    {modifiedBody ?? "# KPC PA"}
-                  </Markdown>
+                    dangerouslySetInnerHTML={{
+                      __html: modifiedBody || "<p>KPC PA</p>",
+                    }}
+                  />
 
                   {cta && cta.link && cta.text && (
                     <div className="my-[32px]">

@@ -13,7 +13,11 @@ export type SentEmailWithTemplateAndCount = Prisma.SentEmailGetPayload<{
     _count: {
       select: { recipients: true };
     };
-    template: true;
+    template: {
+      include: {
+        company: true;
+      };
+    };
     recipients: true;
   };
 }>;

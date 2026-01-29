@@ -51,7 +51,11 @@ export const GET = authorize( async (request: AuthenticatedRequest) => {
         _count: {
           select: { recipients: true },
         },
-        template: true,
+        template: {
+          include: {
+            company: true,
+          },
+        },
         recipients: true,
       },
       take: parseInt(limit ?? "10"),

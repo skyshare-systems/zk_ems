@@ -1,7 +1,6 @@
 import { companies } from "@/lib/constant";
 import { cn, colorizeButton } from "@/lib/utils";
 import { useCompanyStore } from "@/store/company";
-import { insertImage$, usePublisher } from "@mdxeditor/editor";
 import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -11,9 +10,13 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { inter } from "@/public/fonts";
 import CloudUpload from "../icons/cloud-upload";
 
-const ImageUploader = () => {
-  const insertImage = usePublisher(insertImage$);
-  const [openImageDialog, setOpenImageDialog] = useState(false);
+interface ImageUploaderProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onInsert: (src: string, alt: string) => void;
+}
+
+const ImageUploader = ({ open, onOpenChange, onInsert }: ImageUploaderProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
@@ -93,31 +96,28 @@ const ImageUploader = () => {
   // Insert uploaded image into editor
   const handleUseImage = () => {
     if (uploadedUrl) {
-      insertImage({
-        src: uploadedUrl,
-        altText: file?.name || "Uploaded image",
-        title: file?.name || "Uploaded image",
-      });
+      onInsert(uploadedUrl, file?.name || "Uploaded image");
       // Reset state
       setFile(null);
       setPreviewUrl(null);
       setUploadedUrl(null);
-      setOpenImageDialog(false);
+      onOpenChange(false);
     }
   };
 
   return (
     <>
       <Button
-        className="bg-none shadow-none bg-transparent p-1 hover:bg-[#E0E1E6]"
-        onClick={() => setOpenImageDialog(true)}
+        type="button"
+        className="bg-none shadow-none bg-transparent p-1 hover:bg-[#E0E1E6] h-8 w-8"
+        onClick={() => onOpenChange(true)}
       >
-        <ImageIcon size={20} />
+        <ImageIcon size={16} />
       </Button>
 
       <Dialog
-        open={openImageDialog}
-        onOpenChange={() => setOpenImageDialog(false)}
+        open={open}
+        onOpenChange={() => onOpenChange(false)}
       >
         <DialogTitle className="hidden">Upload an Image</DialogTitle>
         <DialogContent className="max-w-[420px] w-full flex flex-col items-start rounded-2xl bg-black border border-white/[.16]">
@@ -215,7 +215,6 @@ const ImageUploader = () => {
             disabled={!uploadedUrl}
             className={cn(
               "w-full text-white bg-[#18365A]",
-              // colorizeButton(company?.name as companies),
             )}
             onClick={handleUseImage}
           >

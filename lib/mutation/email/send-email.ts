@@ -2,7 +2,6 @@ import api from "@/lib/axios";
 import { getErrorMessage } from "@/lib/utils";
 import { Mode } from "@/store/create-email";
 import { Template } from "@prisma/client";
-import { marked } from "marked";
 
 export interface SendEmailProps {
   subject: string;
@@ -13,7 +12,7 @@ export interface SendEmailProps {
   alignment?: "left" | "center" | "right";
   signal?: AbortSignal;
   mode?: Mode;
-  selectedSentEmailId?: string;
+  selectedSentEmail?: string;
   props?: Record<string, unknown>;
 }
 
@@ -26,7 +25,7 @@ export const sendEmail = async ({
   alignment = "left",
   signal,
   mode = "create",
-  selectedSentEmailId,
+  selectedSentEmail,
   ...props
 }: SendEmailProps) => {
   try {
@@ -36,11 +35,11 @@ export const sendEmail = async ({
         subject,
         templateId: selectedTemplate.id,
         recipients,
-        body: marked(body),
+        body,
         attachments,
         alignment,
         mode,
-        selectedSentEmailId,
+        selectedSentEmail,
         ...props,
       },
       {

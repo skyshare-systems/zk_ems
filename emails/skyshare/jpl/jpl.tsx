@@ -7,7 +7,6 @@ import {
   Head,
   Html,
   Img,
-  Markdown,
   Row,
   Section,
   Tailwind,
@@ -91,142 +90,18 @@ export const SkyshareLabsJPLTemplate = ({
                   </Column>
                 </Row>
               ) : (
-                <Markdown
-                  markdownCustomStyles={{
-                    h1: {
-                      fontSize: "2rem",
-                      fontWeight: "700",
-                      marginBlock: "1rem",
-                    },
-                    h2: {
-                      fontSize: "1.8rem",
-                      fontWeight: "700",
-                      marginBlock: "1rem",
-                    },
-                    h3: {
-                      fontSize: "1.5rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h4: {
-                      fontSize: "1.25rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h5: {
-                      fontSize: "1.1rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    h6: {
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                      marginBlock: "1rem",
-                    },
-                    blockQuote: {
-                      borderLeft: "4px solid #e2e8f0",
-                      paddingLeft: "1rem",
-                      marginLeft: "0",
-                      marginRight: "0",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      fontStyle: "italic",
-                      color: "#4a5568",
-                    },
-                    bold: {
-                      fontWeight: "700",
-                    },
-                    italic: {
-                      fontStyle: "italic",
-                    },
-                    link: {
-                      color: "#3182ce",
-                      textDecoration: "none",
-                      borderBottom: "1px solid transparent",
-                      transition: "border-color 0.2s ease",
-                    },
-                    codeBlock: {
-                      backgroundColor: "#f7fafc",
-                      padding: "1rem",
-                      borderRadius: "0.375rem",
-                      overflowX: "auto",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      fontFamily: "monospace",
-                    },
-                    codeInline: {
-                      fontFamily: "monospace",
-                      backgroundColor: "#f7fafc",
-                      padding: "0.2rem 0.4rem",
-                      borderRadius: "0.25rem",
-                      fontSize: "0.9em",
-                    },
-                    p: {
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                      lineHeight: "1.6",
-                    },
-                    li: {
-                      marginBottom: "0.5rem",
-                    },
-                    ul: {
-                      paddingLeft: "1.5rem",
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                    },
-                    ol: {
-                      paddingLeft: "1.5rem",
-                      marginTop: "0.75rem",
-                      marginBottom: "0.75rem",
-                    },
-                    image: {
-                      maxWidth: "100%",
-                      height: "auto",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      borderRadius: "0.375rem",
-                    },
-                    br: {
-                      marginTop: "0.5rem",
-                    },
-                    hr: {
-                      height: "1px",
-                      backgroundColor: "#e2e8f0",
-                      border: "0",
-                      marginTop: "2rem",
-                      marginBottom: "2rem",
-                    },
-                    table: {
-                      width: "100%",
-                      borderCollapse: "collapse",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                    },
-                    thead: {
-                      backgroundColor: "#f7fafc",
-                    },
-                    tbody: {},
-                    tr: {
-                      borderBottom: "1px solid #e2e8f0",
-                    },
-                    th: {
-                      padding: "0.75rem",
-                      textAlign: "left",
-                      fontWeight: "600",
-                      borderBottom: "2px solid #e2e8f0",
-                    },
-                    td: {
-                      padding: "0.75rem",
-                      textAlign: "left",
-                    },
-                    strikethrough: {
-                      textDecoration: "line-through",
-                      color: "#718096",
-                    },
+                <div
+                  style={{
+                    maxWidth: "680px",
+                    overflowWrap: "break-word" as const,
+                    width: "100%",
+                    lineHeight: "1.6",
+                    fontSize: "14px",
                   }}
-                >
-                  {body ?? "# Test"}
-                </Markdown>
+                  dangerouslySetInnerHTML={{
+                    __html: body || "<p>Fallback</p>",
+                  }}
+                />
               )}
             </Section>
 

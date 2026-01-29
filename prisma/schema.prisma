@@ -82,6 +82,7 @@ model SentEmail {
   header      String
   subject     String
   attachments String[]
+  formData    Json?       // Stores structured data: articles, fromThePeople, upcomingPrograms, products, services, posts, programs, cta, sectionOrder, rawBody
   recipients  Recipient[]
   company     Company     @relation(fields: [companyId], references: [id])
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)

@@ -1,10 +1,4 @@
-import { companies } from "@/lib/constant";
-import { cn, colorizeButton } from "@/lib/utils";
-import { useCompanyStore } from "@/store/company";
-import { insertImage$, usePublisher } from "@mdxeditor/editor";
-import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { geist, inter } from "@/public/fonts";
 

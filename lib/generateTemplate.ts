@@ -1,5 +1,3 @@
-import { marked } from "marked";
-
 interface Template {
   header: string;
   footer: string;
@@ -8,7 +6,7 @@ interface Template {
 export const generateTemplate = (
   template: Template,
   body: string,
-  alignment: string
+  alignment: string = "left"
 ) => {
   // Ensure images in header and footer have max-width: 200px
   const modifiedHeader = template.header.replace(
@@ -109,7 +107,7 @@ Deploy your Next.js app using [Vercel](https://vercel.com/new).
                   "
               >
                   <div style="max-width: 100%; width: 100%;">
-                      ${marked.parse(body)} <!-- Correct markdown parsing -->
+                      ${body}
                   </div>
               </div>
 

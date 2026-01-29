@@ -6,7 +6,6 @@ import { useModalStore } from "@/store/modal";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { TemplateWithCompany, useCreateEmailStore } from "@/store/create-email";
-import { marked } from "marked";
 import { toast } from "sonner";
 import {
   QueryClient,
@@ -37,7 +36,6 @@ const ConfirmEmailBlast = () => {
     body,
     reset,
     attachments,
-    alignment,
     isPreview,
     mode,
   } = useCreateEmailStore();
@@ -54,7 +52,9 @@ const ConfirmEmailBlast = () => {
       abortControllerRef.current = new AbortController();
       const signal = abortControllerRef.current.signal;
 
-      return selectedTemplate?.company.name === "Skyshare Labs"
+      // Use template from params (handles both create and forward modes)
+      const template = params.selectedTemplate as TemplateWithCompany;
+      return template?.company?.name === "Skyshare Labs"
         ? sendEmailSkyshare({ ...params, signal })
         : sendEmail({ ...params, signal });
     },
@@ -108,7 +108,6 @@ const ConfirmEmailBlast = () => {
           selectedTemplate,
           recipients,
           body,
-          alignment,
           attachments,
           ...propsBuilder(),
         });
@@ -125,15 +124,17 @@ const ConfirmEmailBlast = () => {
           return;
         }
 
+        // Use body from store if edited, otherwise use original sent email body
+        const emailBody = body || selectedSentEmail?.body;
+
         sendNow({
           subject,
           selectedTemplate: selectedSentEmail?.template as TemplateWithCompany,
           recipients,
-          body: selectedSentEmail?.body as string,
-          alignment,
+          body: emailBody as string,
           attachments,
           mode: "forward",
-          selectedSentEmailId: selectedSentEmail?.id,
+          selectedSentEmail: selectedSentEmail?.id,
           ...propsBuilder(),
         });
         break;

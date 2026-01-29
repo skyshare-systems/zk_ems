@@ -7,14 +7,13 @@ import {
 } from "@/emails/utils";
 import { updateFontHtml } from "@/lib/utils";
 import { useCreateEmailStore } from "@/store/create-email";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Reorder } from "framer-motion";
 import { Loader, Move, RotateCw } from "lucide-react";
-import { JSX, useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import ArticleEditor from "./article-editor";
 import CtaEditor from "./cta-editor";
 import FromThePeopleEditor from "./from-the-people-editor";
-import { Mdx } from "./mdx/InitializedMDXEditor";
+import { TiptapEditor } from "./tiptap/tiptap-editor";
 import OurProgramsEditor from "./our-programs-editor";
 import OurServicesEditor from "./our-services-editor";
 import ProductsEditor from "./product-editor";
@@ -58,33 +57,40 @@ const EmailEditorSentEmail = ({
     setIsRearranging,
   } = useCreateEmailStore();
 
-  const ref = useRef<MDXEditorMethods>(null);
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
-  const [iframeUrl, setIframeUrl] = useState<string>("");
+  // Use template from sent email if selectedTemplate is null
+  const template = selectedTemplate || (selectedSentEmail?.template as any);
+  const companyName = template?.company?.name as companies;
 
+  // Update iframe URL for preview mode
   useEffect(() => {
-    if (!selectedSentEmail) return;
+    // If we have a generated preview, use it
+    if (preview?.html) {
+      const updatedHtml = updateFontHtml(preview.html);
+      const blob = new Blob([updatedHtml], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      setIframeUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
 
-    const updatedHtml = updateFontHtml(selectedSentEmail.body);
+    // Otherwise use the sent email body
+    if (selectedSentEmail?.body) {
+      const updatedHtml = updateFontHtml(selectedSentEmail.body);
+      const blob = new Blob([updatedHtml], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      setIframeUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
 
-    const blob = new Blob([updatedHtml], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-
-    setIframeUrl(url);
-
-    return () => URL.revokeObjectURL(url);
-  }, [selectedSentEmail]);
-
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
+    setIframeUrl(null);
+  }, [selectedSentEmail, preview?.html]);
 
   if (!selectedSentEmail) return null;
 
   const defaultSections = getDefaultOrder(
-    defaultSectionOrders[selectedTemplate?.company.name as companies] ||
-      defaultSectionOrders["default"],
-    selectedTemplate?.company.name as companies,
+    defaultSectionOrders[companyName] || defaultSectionOrders["default"],
+    companyName,
     isSectionOrderUpdated,
   );
 
@@ -106,6 +112,11 @@ const EmailEditorSentEmail = ({
               </p>
               <p className="text-red-800 text-[14px]">{error as string}</p>
             </div>
+          ) : !iframeUrl ? (
+            <div className="flex flex-col items-center justify-center w-full gap-4 grow">
+              <Loader size={24} className="animate-spin text-black/[.32]" />
+              <p className="text-black/[.5] text-[10.24px]">Loading Preview</p>
+            </div>
           ) : (
             <div className="flex flex-col grow h-full min-h-[1000px] items-center justify-center">
               <iframe
@@ -122,11 +133,11 @@ const EmailEditorSentEmail = ({
           <div className="flex flex-col items-center w-full gap-4 my-4 grow">
             <p className="text-black ty-subtext">Edit Email Body</p>
             <p className="text-black/[.5] text-[10.24px]">
-              Note: Alignment Plugin will make all content follow the selected
-              alignment. Since markdown doesn’t support alignment at all.
+              Use the alignment buttons in the toolbar to align individual
+              blocks.
             </p>
             <div className="flex flex-col border border-black/[.32] border-dashed grow h-full w-full rounded-2xl overflow-hidden min-h-[450px]">
-              <Mdx ref={ref} />
+              <TiptapEditor />
             </div>
             <CtaEditor />
             <div className="flex justify-between self-stretch items-start">

@@ -68,13 +68,11 @@ export interface Program {
 }
 
 interface CreateEmailState {
-  editorData: { blocks: any[] };
   body: string;
   subject: string;
   recipients: string[];
   selectedTemplate: TemplateWithCompany | TemplateWithCompany | null;
   userTemplates: Template[];
-  alignment: "left" | "center" | "right";
   attachments: File[];
   preview: GenerateTemplateResponse;
   articles: Article[];
@@ -97,7 +95,6 @@ interface CreateEmailState {
 export type Mode = "create" | "forward";
 
 interface CreateEmailActions {
-  setEditorData: (data: { blocks: any[] }) => void;
   setBody: (body: string) => void;
   setSubject: (subject: string) => void;
   setRecipients: (recipients: string[]) => void;
@@ -105,7 +102,6 @@ interface CreateEmailActions {
     template: TemplateWithCompany | TemplateWithCompany | null,
   ) => void;
   getUserTemplates: () => Promise<void>;
-  setAlignment: (alignment: "left" | "center" | "right") => void;
   setAttachments: (file: File[]) => void;
   setPreview: (preview: string) => void;
   setArticles: (articles: Article[]) => void;
@@ -126,13 +122,11 @@ interface CreateEmailActions {
 }
 
 const initialState: CreateEmailState = {
-  editorData: { blocks: [] },
   body: "",
   subject: "",
   recipients: [],
   selectedTemplate: null,
   userTemplates: [],
-  alignment: "left",
   attachments: [],
   preview: {
     html: "",
@@ -191,7 +185,6 @@ export const useCreateEmailStore = create<
       // set({ availableSections }),
       setPreview: (preview) => set({ preview: { html: preview } }),
       setAttachments: (attachments) => set({ attachments }),
-      setEditorData: (data) => set({ editorData: data }),
       setBody: (body) => set({ body }),
       setSubject: (subject) => set({ subject }),
       setRecipients: (recipients) => set({ recipients }),
@@ -202,7 +195,6 @@ export const useCreateEmailStore = create<
         set({ userTemplates: response.data });
       },
       setMode: (mode) => set({ mode }),
-      setAlignment: (alignment) => set({ alignment }),
       setIsPreview: (isPreview) => set({ isPreview }),
       reset: () => set(initialState),
       resetSectionOrder: () =>
